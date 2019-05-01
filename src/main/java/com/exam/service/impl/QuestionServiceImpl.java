@@ -172,7 +172,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             List<TrueFalseDO> list = tfPage.getList();
             BeanUtils.copyProperties(tfPage, voPage);
 
-            voPage.setList(QuestionUtils.trueFalse2VO(list));
+            voPage.setList(QuestionUtils.trueFalse2Vo(list));
         } else if (TypeEnum.COMPLETION.getCode().toString().equals(voPage.getParams().get(PageParamsConstant.TYPE_ID).toString())) {
             // 是填空题
             Page<CompletionDO> compPage = new Page<>();
@@ -185,7 +185,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             List<CompletionDO> list = compPage.getList();
             BeanUtils.copyProperties(compPage, voPage);
 
-            voPage.setList(QuestionUtils.completion2VO(list));
+            voPage.setList(QuestionUtils.completion2Vo(list));
         } else if (TypeEnum.ONE_CHOICE.getCode().toString().equals(voPage.getParams().get(PageParamsConstant.TYPE_ID).toString()) ||
                 TypeEnum.MANY_CHOICE.getCode().toString().equals(voPage.getParams().get(PageParamsConstant.TYPE_ID).toString())) {
             // 是选择题
@@ -199,7 +199,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             List<ChoiceDO> list = choicePage.getList();
             BeanUtils.copyProperties(choicePage, voPage);
 
-            voPage.setList(QuestionUtils.Choice2VO(list));
+            voPage.setList(QuestionUtils.choice2Vo(list));
         } else if (TypeEnum.PROGRAMMING.getCode().toString().equals(voPage.getParams().get(PageParamsConstant.TYPE_ID).toString())) {
             // 是编程题
             Page<CodeDO> codePage = new Page<>();
@@ -212,7 +212,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             List<CodeDO> list = codePage.getList();
             BeanUtils.copyProperties(codePage, voPage);
 
-            voPage.setList(QuestionUtils.code2VO(list));
+            voPage.setList(QuestionUtils.code2Vo(list));
         } else {
             // 是其他题
             Page<QuestionDO> questionPage = new Page<>();
@@ -225,7 +225,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             List<QuestionDO> list = questionPage.getList();
             BeanUtils.copyProperties(questionPage, voPage);
 
-            voPage.setList(QuestionUtils.question2VO(list));
+            voPage.setList(QuestionUtils.question2Vo(list));
         }
         return voPage;
     }

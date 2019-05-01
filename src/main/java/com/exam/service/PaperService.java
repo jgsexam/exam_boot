@@ -29,8 +29,16 @@ public interface PaperService extends IService<PaperDO> {
     PaperDO getQuestion(String paperId);
 
     /**
-     * 提交组卷请求
+     * 提交组卷
      * @param paperId
+     * @throws Exception
      */
-    void submit(String paperId);
+    void submit(String paperId) throws Exception;
+
+    /**
+     * 根据试卷id和题目id从试卷中删除题目
+     * @param paperId
+     * @param questionId
+     */
+    void deleteQuestion(String paperId, String questionId);
 }

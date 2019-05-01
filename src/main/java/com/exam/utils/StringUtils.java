@@ -46,19 +46,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return remoteIp != null ? remoteIp : request.getRemoteAddr();
     }
 
-    public static String getFormatId(Long id, String prefix) {
-        return getFormatId(id, prefix, "000000000000");
-    }
-
-    public static String getFormatId(Long id, String prefix, String format) {
-        if (id == null) {
-            return null;
-        } else {
-            DecimalFormat decimalFormat = new DecimalFormat(format);
-            return prefix + decimalFormat.format(id);
-        }
-    }
-
     public static String getReplaced(String str, List<String> beforeList, String after) {
         String result = trim(str);
         if (StringUtils.isNotBlank(result)) {
@@ -290,6 +277,11 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return sb.toString();
     }
 
+    /**
+     * 清除bom
+     * @param str
+     * @return
+     */
     public static String clearUtf8bm4(String str) {
         if (isEmpty(str)) {
             return "";

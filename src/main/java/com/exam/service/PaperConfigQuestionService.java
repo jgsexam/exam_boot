@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-03-28
  */
 public interface PaperConfigQuestionService extends IService<PaperConfigQuestionDO> {
-
 }

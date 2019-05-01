@@ -2,6 +2,7 @@ package com.exam.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.pojo.PaperConfigDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,4 +29,12 @@ public interface PaperConfigMapper extends BaseMapper<PaperConfigDO> {
      * @return
      */
     List<PaperConfigDO> getQuestionNum(String paperId);
+
+    /**
+     * 根据试卷id和题目id查询配置
+     * @param paperId
+     * @param questionId
+     * @return
+     */
+    PaperConfigDO getByPaperAndQuestion(@Param("paperId") String paperId, @Param("questionId") String questionId);
 }

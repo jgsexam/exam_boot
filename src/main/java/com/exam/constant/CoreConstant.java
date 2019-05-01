@@ -18,14 +18,24 @@ public class CoreConstant {
     public final static String IMG_URL = "D:\\ProjectFile\\exam\\photo\\";
 
     /**
-     * 试卷下载路径
+     * 试卷保存路径
      */
     public final static String PAPER_URL = "D:\\ProjectFile\\exam\\paper\\";
 
     /**
-     * 服务器地址
+     * freemarker模板所在的目录
      */
-    public final static String SERVER_URL = "http://tn20898453.51mypc.cn/file/";
+    public static final String TEMPLATE_FOLD = "/static/";
+
+    /**
+     * freemarker模板名
+     */
+    public static final String TEMPLATE_FILE_NAME = "试卷导出模板.ftl";
+
+    /**
+     * 服务器文件地址
+     */
+    public final static String SERVER_FILE_URL = "http://tn20898453.51mypc.cn/file/";
 
     /**
      * redis过期时间

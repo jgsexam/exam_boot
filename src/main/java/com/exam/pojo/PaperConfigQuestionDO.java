@@ -2,7 +2,6 @@ package com.exam.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
@@ -43,12 +42,6 @@ public class PaperConfigQuestionDO implements Serializable {
     @Version
     private Integer questionVersion;
 
-    /**
-     * 0删除1正常
-     */
-    @TableLogic
-    private Integer questionDelete;
-
     @Override
     public String toString() {
         return "PaperConfigQuestionDO{" +
@@ -56,7 +49,6 @@ public class PaperConfigQuestionDO implements Serializable {
                 ", questionConfig=" + questionConfig +
                 ", questionId=" + questionId +
                 ", questionVersion=" + questionVersion +
-                ", questionDelete=" + questionDelete +
                 "}";
     }
 

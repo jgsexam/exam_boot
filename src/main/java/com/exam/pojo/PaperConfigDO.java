@@ -53,6 +53,7 @@ public class PaperConfigDO implements Serializable {
     /**
      * 题型
      */
+    @TableField(exist = false)
     private TypeDO type;
 
     /**

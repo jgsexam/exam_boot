@@ -25,7 +25,6 @@ import com.exam.service.PaperConfigQuestionService;
 import com.exam.service.PaperConfigService;
 import com.exam.service.PaperService;
 import com.exam.utils.IdWorker;
-import com.exam.vo.PaperQuestionNumVO;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -186,8 +185,10 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
         paperDO.setPaperQuestionNum(questionNum + questionList.size());
         // 计算难度系数
         BigDecimal newDiff = new BigDecimal(difficulty).add(sumDiff);
+
         newDiff = newDiff.divide(new BigDecimal(paperDO.getPaperQuestionNum()), NumberConstant.ONE);
         // 设置难度系数
+
         paperDO.setPaperDifficulty(newDiff);
         paperService.updateById(paperDO);
     }

@@ -1,7 +1,7 @@
 package com.exam.mapper;
 
-import com.exam.pojo.PaperConfigQuestionDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.exam.pojo.PaperConfigQuestionDO;
 
 /**
  * <p>
@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2019-03-28
  */
 public interface PaperConfigQuestionMapper extends BaseMapper<PaperConfigQuestionDO> {
-
 }

@@ -4,6 +4,7 @@ import com.exam.pojo.PaperConfigQuestionDO;
 import com.exam.mapper.PaperConfigQuestionMapper;
 import com.exam.service.PaperConfigQuestionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +17,4 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PaperConfigQuestionServiceImpl extends ServiceImpl<PaperConfigQuestionMapper, PaperConfigQuestionDO> implements PaperConfigQuestionService {
-
 }

@@ -1,7 +1,12 @@
 package com.exam.controller;
 
-
+import com.exam.constant.ResultEnum;
+import com.exam.service.PaperService;
+import com.exam.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,6 +20,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/paperConfigQuestion")
 public class PaperConfigQuestionController {
+
+    @Autowired
+    private PaperService paperService;
+
+    /**
+     * 根据config和id删除
+     * 因为后端没有给前端传id
+     * 而 相同的config下，题目id只会有一个
+     */
+    @RequestMapping(value = "/delete/{paperId}/{questionId}", method = RequestMethod.DELETE)
+    public Result delete(@PathVariable String paperId, @PathVariable String questionId) {
+        try {
+            paperService.deleteQuestion(paperId, questionId);
+            return Result.ok("删除成功！");
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "删除失败！");
+        }
+    }
 
 }
 

@@ -67,7 +67,7 @@ public class CompletionServiceImpl extends ServiceImpl<CompletionMapper, Complet
             List<CompletionAnswerDO> answerList = e.getAnswerList();
             answerList.forEach(answer -> {
                 Matcher matcher = UNDER_LINE_PATTERN.matcher(e.getCompTitle());
-                String newAnswer = matcher.replaceFirst("<span style='color: red;text-decoration:underline;font-size: 14px'>" + answer.getAnswerContent() + "</span>");
+                String newAnswer = matcher.replaceFirst("<span style='color: red;text-decoration:underline;font-size: 12px'>" + answer.getAnswerContent() + "</span>");
                 e.setCompTitle(newAnswer);
             });
         });

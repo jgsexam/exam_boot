@@ -1,8 +1,10 @@
 package com.exam.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.exam.constant.CoreConstant;
 import com.exam.pojo.PaperDO;
+import com.exam.service.PaperConfigService;
 import com.exam.service.PaperService;
+import com.exam.utils.ToWordUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,22 @@ public class PaperServiceImplTest {
 
     @Autowired
     private PaperService paperService;
+    @Autowired
+    private PaperConfigService paperConfigService;
 
     /**
-     * 测试查询试卷所有题目
+     * 生成试卷
      */
     @Test
-    public void getQuestion() {
+    public void getQuestion() throws Exception {
         String paperId = "1119583466745303040";
         PaperDO paper = paperService.getQuestion(paperId);
-        System.out.println(JSONObject.toJSONString(paper));
+
+        ToWordUtil toWordUtil = new ToWordUtil(CoreConstant.TEMPLATE_FOLD);
+        toWordUtil.setTemplateName(CoreConstant.TEMPLATE_FILE_NAME);
+        String filename = paper.getPaperTitle()+".doc";
+        toWordUtil.setFileName(filename);
+        toWordUtil.setFilePath(CoreConstant.PAPER_URL);
+        toWordUtil.createWord(paper);
     }
 }

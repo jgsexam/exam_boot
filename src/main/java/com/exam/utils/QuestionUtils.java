@@ -24,7 +24,7 @@ public class QuestionUtils {
     /**
      * 选择题转VO
      */
-    public static List<QuestionVO> Choice2VO(List<ChoiceDO> list) {
+    public static List<QuestionVO> choice2Vo(List<ChoiceDO> list) {
 
         List<QuestionVO> questionList = Lists.newArrayList();
 
@@ -44,7 +44,7 @@ public class QuestionUtils {
     /**
      * 判断题转VO
      */
-    public static List<QuestionVO> trueFalse2VO(List<TrueFalseDO> list) {
+    public static List<QuestionVO> trueFalse2Vo(List<TrueFalseDO> list) {
         List<QuestionVO> questionList = Lists.newArrayList();
 
         list.forEach(e->{
@@ -63,7 +63,7 @@ public class QuestionUtils {
     /**
      * 填空题转VO
      */
-    public static List<QuestionVO> completion2VO(List<CompletionDO> list) {
+    public static List<QuestionVO> completion2Vo(List<CompletionDO> list) {
         List<QuestionVO> questionList = Lists.newArrayList();
 
         list.forEach(e->{
@@ -82,7 +82,7 @@ public class QuestionUtils {
     /**
      * 编程题转VO
      */
-    public static List<QuestionVO> code2VO(List<CodeDO> list) {
+    public static List<QuestionVO> code2Vo(List<CodeDO> list) {
         List<QuestionVO> questionList = Lists.newArrayList();
 
         list.forEach(e->{
@@ -101,7 +101,7 @@ public class QuestionUtils {
     /**
      * 主观题转VO
      */
-    public static List<QuestionVO> question2VO(List<QuestionDO> list) {
+    public static List<QuestionVO> question2Vo(List<QuestionDO> list) {
         List<QuestionVO> questionList = Lists.newArrayList();
 
         list.forEach(e->{

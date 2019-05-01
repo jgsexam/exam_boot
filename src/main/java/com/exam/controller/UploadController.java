@@ -35,7 +35,7 @@ public class UploadController {
             e.printStackTrace();
         }
 
-        String fileServerName = CoreConstant.SERVER_URL + fileName;
+        String fileServerName = CoreConstant.SERVER_FILE_URL + fileName;
 
         Map<String, Object> data = Maps.newHashMap();
         data.put("fileUrl", fileServerName);

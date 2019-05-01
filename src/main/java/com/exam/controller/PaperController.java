@@ -1,6 +1,6 @@
 package com.exam.controller;
 
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.pojo.Page;
 import com.exam.pojo.PaperDO;
@@ -38,13 +38,18 @@ public class PaperController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Result add(@RequestBody PaperDO paper) {
         try {
+            PaperDO paperDO = paperService.getOne(new QueryWrapper<PaperDO>().eq("paper_title", paper.getPaperTitle()));
+            if (paperDO != null) {
+                return Result.build(ResultEnum.ERROR.getCode(), "试卷标题已存在！");
+            }
+
             // 补全属性
-            paper.setPaperId(idWorker.nextId()+"");
+            paper.setPaperId(idWorker.nextId() + "");
             paper.setPaperCreateTime(DateUtils.newDate());
             paper.setPaperUpdateTime(DateUtils.newDate());
             paperService.save(paper);
             return Result.ok("创建成功！请及时组卷！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "创建失败！");
         }
@@ -58,7 +63,7 @@ public class PaperController {
         try {
             PaperDO paper = paperService.getById(paperId);
             return Result.ok(paper);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
@@ -73,7 +78,7 @@ public class PaperController {
             paper.setPaperUpdateTime(DateUtils.newDate());
             paperService.updateById(paper);
             return Result.ok("修改成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "修改失败！");
         }
@@ -87,7 +92,7 @@ public class PaperController {
         try {
             paperService.removeById(paperId);
             return Result.ok("删除成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "删除失败！");
         }
@@ -101,23 +106,9 @@ public class PaperController {
         try {
             page = paperService.getByPage(page);
             return Result.ok(page);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
-        }
-    }
-
-    /**
-     * 提交组卷请求
-     */
-    @RequestMapping(value = "/submit/{paperId}", method = RequestMethod.GET)
-    public Result submit(@PathVariable String paperId) {
-        try {
-            paperService.submit(paperId);
-            return Result.ok("组卷已提交！");
-        }catch (Exception e) {
-            e.printStackTrace();
-            return Result.build(ResultEnum.ERROR.getCode(), "提交失败！");
         }
     }
 
@@ -129,9 +120,26 @@ public class PaperController {
         try {
             PaperDO paper = paperService.getQuestion(paperId);
             return Result.ok(paper);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+    }
+
+    /**
+     * 提交组卷请求，组卷完毕后，试卷将不可以修改
+     *
+     * @param paperId
+     * @return
+     */
+    @RequestMapping(value = "/submit/{paperId}", method = RequestMethod.GET)
+    public Result submit(@PathVariable String paperId) {
+        try {
+            paperService.submit(paperId);
+            return Result.ok("提交成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "提交失败！");
         }
     }
 

@@ -40,6 +40,7 @@
 
     <select id="getQuestionNum" resultMap="BaseResultMap">
         SELECT
+            config_paper,
             config_type,
             type_name,
             count( question_id ) AS config_question_num,
@@ -53,6 +54,14 @@
             config_paper = #{value}
         GROUP BY
             config_type
+    </select>
+
+    <select id="getByPaperAndQuestion" resultMap="BaseResultMap">
+        select * from
+        ex_paper_config
+        inner join ex_paper_config_question on config_id = question_config
+        where config_paper = #{paperId}
+        and question_id = #{questionId}
     </select>
 
 </mapper>

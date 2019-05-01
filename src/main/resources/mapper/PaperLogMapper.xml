@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.mapper.PaperLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.exam.pojo.PaperLogDO">
+        <id column="pl_id" property="plId" />
+        <result column="pl_teacher" property="plTeacher" />
+        <result column="pl_difficulty" property="plDifficulty" />
+        <result column="pl_score" property="plScore" />
+        <result column="pl_time" property="plTime" />
+        <result column="pl_version" property="plVersion" />
+        <result column="pl_delete" property="plDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pl_id, pl_teacher, pl_difficulty, pl_score, pl_time, pl_version, pl_delete
+    </sql>
+
+</mapper>

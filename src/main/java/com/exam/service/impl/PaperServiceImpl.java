@@ -1,5 +1,6 @@
 package com.exam.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
 import com.exam.constant.PatternConstant;
@@ -15,7 +16,6 @@ import com.exam.mapper.TrueFalseMapper;
 import com.exam.pojo.ChoiceAnswerDO;
 import com.exam.pojo.ChoiceDO;
 import com.exam.pojo.CodeDO;
-import com.exam.pojo.CompletionAnswerDO;
 import com.exam.pojo.CompletionDO;
 import com.exam.pojo.Page;
 import com.exam.pojo.PaperConfigDO;
@@ -23,18 +23,20 @@ import com.exam.pojo.PaperConfigQuestionDO;
 import com.exam.pojo.PaperDO;
 import com.exam.pojo.QuestionDO;
 import com.exam.pojo.TrueFalseDO;
+import com.exam.service.PaperConfigQuestionService;
 import com.exam.service.PaperService;
 import com.exam.utils.StringUtils;
+import com.exam.utils.ToWordUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,8 @@ import java.util.stream.Collectors;
 @Service
 public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implements PaperService {
 
+    @Autowired
+    private PaperConfigQuestionService paperConfigQuestionService;
     @Autowired
     private PaperMapper paperMapper;
     @Autowired
@@ -139,15 +143,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
             } else if (key.equals(TypeEnum.COMPLETION.getCode().toString())) {
                 // 填空题
                 List<CompletionDO> completionDOList = completionMapper.getByIds(questionIds);
-                // 将下划线设置为答案
-                completionDOList.forEach(e -> {
-                    List<CompletionAnswerDO> answerList = e.getAnswerList();
-                    answerList.forEach(answer -> {
-                        Matcher matcher = UNDER_LINE_PATTERN.matcher(e.getCompTitle());
-                        String newAnswer = matcher.replaceFirst("<span style='color: red;text-decoration:underline;font-size: 14px'>" + answer.getAnswerContent() + "</span>");
-                        e.setCompTitle(newAnswer);
-                    });
-                });
                 paperConfigDO.setQuestionDetailList(completionDOList);
             } else if (key.equals(TypeEnum.PROGRAMMING.getCode().toString())) {
                 // 编程题
@@ -177,14 +172,94 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void submit(String paperId) {
+    public void submit(String paperId) throws Exception {
         // 先生成试卷
         PaperDO paper = getQuestion(paperId);
+        // 下面生成一份试卷在服务器里
+        ToWordUtil toWordUtil = new ToWordUtil(CoreConstant.TEMPLATE_FOLD);
+        toWordUtil.setTemplateName(CoreConstant.TEMPLATE_FILE_NAME);
+
+        String filename = paper.getPaperTitle() + ".docx";
+
+        toWordUtil.setFileName(filename);
+        toWordUtil.setFilePath(CoreConstant.PAPER_URL);
+        toWordUtil.createWord(paper);
+        // 创建试卷成功
         // 更新状态为已提交
         paper.setPaperSubmit(SubmitConstant.SUBMIT.getCode());
-        // 下面生成一份试卷在服务器里
-
-
+        // 更新试卷下载链接
+        String downloadUrl = CoreConstant.SERVER_FILE_URL + filename;
+        paper.setPaperDownload(downloadUrl);
         paperMapper.updateById(paper);
+    }
+
+    /**
+     * 根据分类id和题目id从试卷中删除题目
+     *
+     * @param paperId
+     * @param questionId
+     */
+    @Override
+    public void deleteQuestion(String paperId, String questionId) {
+
+        // 查询到配置、试卷
+        PaperDO paperDO = paperMapper.selectById(paperId);
+
+        // 先查询试卷配置
+        PaperConfigDO paperConfigDO = paperConfigMapper.getByPaperAndQuestion(paperId, questionId);
+
+        String configType = paperConfigDO.getConfigType();
+
+        // 删除试卷配置
+        paperConfigQuestionService.remove(new QueryWrapper<PaperConfigQuestionDO>()
+                .eq("question_config", paperConfigDO.getConfigId())
+                .eq("question_id", questionId));
+
+        // 删除之后，根据配置id和题目id查询题目，获取到分值和难度系数
+        BigDecimal score;
+        Integer difficulty;
+        if (TypeEnum.ONE_CHOICE.getCode().toString().equalsIgnoreCase(configType) ||
+                TypeEnum.MANY_CHOICE.getCode().toString().equals(configType)) {
+            // 是选择题
+            ChoiceDO choiceDO = choiceMapper.selectById(questionId);
+            score = choiceDO.getChoiceScore();
+            difficulty = choiceDO.getChoiceDifficulty();
+        } else if (TypeEnum.JUDGEMENT.getCode().toString().equals(configType)) {
+            // 判断题
+            TrueFalseDO trueFalseDO = trueFalseMapper.selectById(questionId);
+            score = trueFalseDO.getTfScore();
+            difficulty = trueFalseDO.getTfDifficulty();
+        } else if (TypeEnum.COMPLETION.getCode().toString().equals(configType)) {
+            // 填空题
+            CompletionDO completionDO = completionMapper.selectById(questionId);
+            score = completionDO.getCompScore();
+            difficulty = completionDO.getCompDifficulty();
+        } else if (TypeEnum.PROGRAMMING.getCode().toString().equals(configType)) {
+            CodeDO codeDO = codeMapper.selectById(questionId);
+            score = codeDO.getCodeScore();
+            difficulty = codeDO.getCodeDifficulty();
+        } else {
+            // 是其他题
+            QuestionDO questionDO = questionMapper.selectById(questionId);
+            score = questionDO.getQuestionScore();
+            difficulty = questionDO.getQuestionDifficulty();
+        }
+
+        // 重新计算配置和试卷的分值、题目亮、难度系数
+        // 计算配置的
+        paperConfigDO.setConfigScore(paperConfigDO.getConfigScore().subtract(score));
+        paperConfigDO.setConfigQuestionNum(paperConfigDO.getConfigQuestionNum() - 1);
+        paperConfigMapper.updateById(paperConfigDO);
+
+        // 计算试卷的
+        Integer oldNum = paperDO.getPaperQuestionNum();
+        BigDecimal oldDiff = paperDO.getPaperDifficulty();
+        Integer newNum = oldNum - 1;
+        BigDecimal newDiff = oldDiff.multiply(new BigDecimal(oldNum)).subtract(new BigDecimal(difficulty)).divide(new BigDecimal(newNum), 1);
+
+        paperDO.setPaperDifficulty(newDiff);
+        paperDO.setPaperScore(paperDO.getPaperScore().subtract(score));
+        paperDO.setPaperQuestionNum(newNum);
+        paperMapper.updateById(paperDO);
     }
 }
