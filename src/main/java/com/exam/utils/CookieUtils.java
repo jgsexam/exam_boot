@@ -217,7 +217,7 @@ public class CookieUtils {
             if (len > NumberConstant.THREE) {
                 // www.xxx.com.cn
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
-            } else if (len <= NumberConstant.THREE && len > NumberConstant.ONE) {
+            } else if (len <= NumberConstant.THREE && len > NumberConstant.DEFAULT_DECIMAL_RETAIN) {
                 // xxx.com or xxx.cn
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
             } else {

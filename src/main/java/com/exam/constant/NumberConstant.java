@@ -26,4 +26,9 @@ public class NumberConstant {
     public static final Integer THIRTY_TWO = 32;
     public static final Integer ONE_M = 1024;
 
+    /**
+     * BigDecimal默认保留的位数
+     */
+    public static final Integer DEFAULT_DECIMAL_RETAIN = 1;
+
 }

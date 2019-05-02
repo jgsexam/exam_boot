@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * <p>
@@ -80,16 +81,33 @@ public class TrueFalseDO implements Serializable {
     @Override
     public String toString() {
         return "TrueFalseDO{" +
-        "tfId=" + tfId +
-        ", tfTitle=" + tfTitle +
-        ", tfScore=" + tfScore +
-        ", tfDifficulty=" + tfDifficulty +
-        ", tfBank=" + tfBank +
-        ", tfResolve=" + tfResolve +
-        ", tfTrue=" + tfTrue +
-        ", tfKnow=" + tfKnow +
-        ", tfVersion=" + tfVersion +
-        ", tfDelete=" + tfDelete +
-        "}";
+                "tfId=" + tfId +
+                ", tfTitle=" + tfTitle +
+                ", tfScore=" + tfScore +
+                ", tfDifficulty=" + tfDifficulty +
+                ", tfBank=" + tfBank +
+                ", tfResolve=" + tfResolve +
+                ", tfTrue=" + tfTrue +
+                ", tfKnow=" + tfKnow +
+                ", tfVersion=" + tfVersion +
+                ", tfDelete=" + tfDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TrueFalseDO that = (TrueFalseDO) o;
+        return tfId.equals(that.tfId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tfId);
     }
 }

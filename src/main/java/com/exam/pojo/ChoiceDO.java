@@ -11,6 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -81,6 +82,7 @@ public class ChoiceDO implements Serializable {
 
     /**
      * 选项
+     *
      * @return
      */
     @TableField(exist = false)
@@ -88,6 +90,7 @@ public class ChoiceDO implements Serializable {
 
     /**
      * 正确答案
+     *
      * @return
      */
     @TableField(exist = false)
@@ -96,14 +99,31 @@ public class ChoiceDO implements Serializable {
     @Override
     public String toString() {
         return "ChoiceDO{" +
-        "choiceId=" + choiceId +
-        ", choiceTitle=" + choiceTitle +
-        ", choiceType=" + choiceType +
-        ", choiceScore=" + choiceScore +
-        ", choiceDifficulty=" + choiceDifficulty +
-        ", choiceBank=" + choiceBank +
-        ", choiceVersion=" + choiceVersion +
-        ", choiceDelete=" + choiceDelete +
-        "}";
+                "choiceId=" + choiceId +
+                ", choiceTitle=" + choiceTitle +
+                ", choiceType=" + choiceType +
+                ", choiceScore=" + choiceScore +
+                ", choiceDifficulty=" + choiceDifficulty +
+                ", choiceBank=" + choiceBank +
+                ", choiceVersion=" + choiceVersion +
+                ", choiceDelete=" + choiceDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChoiceDO choiceDO = (ChoiceDO) o;
+        return choiceId.equals(choiceDO.choiceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(choiceId);
     }
 }

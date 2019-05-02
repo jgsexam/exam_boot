@@ -96,7 +96,7 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
         // 批量添加题目
         paperConfigQuestionService.saveBatch(questionList);
         BigDecimal score = new BigDecimal(0);
-        Integer difficulty = 0;
+        double difficulty = 0;
         // 查询出所有的题目
         if (TypeEnum.ONE_CHOICE.getCode().toString().equals(config.getConfigType()) ||
                 TypeEnum.MANY_CHOICE.getCode().toString().equals(config.getConfigType())) {
@@ -104,35 +104,35 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
             List<ChoiceDO> choiceList = choiceMapper.selectBatchIds(questionIds);
             for (ChoiceDO choiceDO : choiceList) {
                 score = score.add(choiceDO.getChoiceScore());
-                difficulty += choiceDO.getChoiceDifficulty();
+                difficulty += score.multiply(new BigDecimal(choiceDO.getChoiceDifficulty())).doubleValue();
             }
         } else if (TypeEnum.JUDGEMENT.getCode().toString().equals(config.getConfigType())) {
             // 是判断题
             List<TrueFalseDO> trueFalseList = trueFalseMapper.selectBatchIds(questionIds);
             for (TrueFalseDO trueFalseDO : trueFalseList) {
                 score = score.add(trueFalseDO.getTfScore());
-                difficulty += trueFalseDO.getTfDifficulty();
+                difficulty += score.multiply(new BigDecimal(trueFalseDO.getTfDifficulty())).doubleValue();
             }
         } else if (TypeEnum.COMPLETION.getCode().toString().equals(config.getConfigType())) {
             // 是填空题
             List<CompletionDO> completionList = completionMapper.selectBatchIds(questionIds);
             for (CompletionDO completionDO : completionList) {
                 score = score.add(completionDO.getCompScore());
-                difficulty += completionDO.getCompDifficulty();
+                difficulty += score.multiply(new BigDecimal(completionDO.getCompDifficulty())).doubleValue();
             }
         } else if (TypeEnum.PROGRAMMING.getCode().toString().equals(config.getConfigType())) {
             // 是编程题
             List<CodeDO> codeList = codeMapper.selectBatchIds(questionIds);
             for (CodeDO codeDO : codeList) {
                 score = score.add(codeDO.getCodeScore());
-                difficulty += codeDO.getCodeDifficulty();
+                difficulty += score.multiply(new BigDecimal(codeDO.getCodeDifficulty())).doubleValue();
             }
         } else {
             // 是其他题
             List<QuestionDO> questions = questionMapper.selectBatchIds(questionIds);
             for (QuestionDO questionDO : questions) {
                 score = score.add(questionDO.getQuestionScore());
-                difficulty += questionDO.getQuestionDifficulty();
+                difficulty += score.multiply(new BigDecimal(questionDO.getQuestionDifficulty())).doubleValue();
             }
         }
         if (configDO == null) {
@@ -167,26 +167,26 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
      * @param score
      * @param difficulty
      */
-    private void updatePaper(PaperConfigDO config, List<PaperConfigQuestionDO> questionList, BigDecimal score, Integer difficulty) {
+    private void updatePaper(PaperConfigDO config, List<PaperConfigQuestionDO> questionList, BigDecimal score, double difficulty) {
         // 试卷状态需要更新
         // 先查询试卷
         PaperDO paperDO = paperService.getById(config.getConfigPaper());
-        // 获取总题量
-        Integer questionNum = paperDO.getPaperQuestionNum();
+        // 获取总分数
+        BigDecimal paperScore = paperDO.getPaperScore();
         // 获取难度系数
         BigDecimal paperDifficulty = paperDO.getPaperDifficulty();
         // 计算总难度系数
-        BigDecimal sumDiff = paperDifficulty.multiply(new BigDecimal(questionNum));
+        BigDecimal sumDiff = paperDifficulty.multiply(paperScore);
         // 状态改成手动组卷
         paperDO.setPaperType(TestEnum.MANUAL.getCode());
         // 设置总分
-        paperDO.setPaperScore(paperDO.getPaperScore().add(score));
+        paperDO.setPaperScore(paperScore.add(score));
         // 设置总题数
-        paperDO.setPaperQuestionNum(questionNum + questionList.size());
+        paperDO.setPaperQuestionNum(paperDO.getPaperQuestionNum() + questionList.size());
         // 计算难度系数
         BigDecimal newDiff = new BigDecimal(difficulty).add(sumDiff);
 
-        newDiff = newDiff.divide(new BigDecimal(paperDO.getPaperQuestionNum()), NumberConstant.ONE);
+        newDiff = newDiff.divide(paperDO.getPaperScore(), NumberConstant.DEFAULT_DECIMAL_RETAIN);
         // 设置难度系数
 
         paperDO.setPaperDifficulty(newDiff);

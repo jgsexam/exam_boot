@@ -3,6 +3,7 @@ package com.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.constant.NumberConstant;
 import com.exam.constant.PatternConstant;
 import com.exam.constant.SubmitConstant;
 import com.exam.constant.TypeEnum;
@@ -217,32 +218,32 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
 
         // 删除之后，根据配置id和题目id查询题目，获取到分值和难度系数
         BigDecimal score;
-        Integer difficulty;
+        double difficulty;
         if (TypeEnum.ONE_CHOICE.getCode().toString().equalsIgnoreCase(configType) ||
                 TypeEnum.MANY_CHOICE.getCode().toString().equals(configType)) {
             // 是选择题
             ChoiceDO choiceDO = choiceMapper.selectById(questionId);
             score = choiceDO.getChoiceScore();
-            difficulty = choiceDO.getChoiceDifficulty();
+            difficulty = score.multiply(new BigDecimal(choiceDO.getChoiceDifficulty())).doubleValue();
         } else if (TypeEnum.JUDGEMENT.getCode().toString().equals(configType)) {
             // 判断题
             TrueFalseDO trueFalseDO = trueFalseMapper.selectById(questionId);
             score = trueFalseDO.getTfScore();
-            difficulty = trueFalseDO.getTfDifficulty();
+            difficulty = score.multiply(new BigDecimal(trueFalseDO.getTfDifficulty())).doubleValue();
         } else if (TypeEnum.COMPLETION.getCode().toString().equals(configType)) {
             // 填空题
             CompletionDO completionDO = completionMapper.selectById(questionId);
             score = completionDO.getCompScore();
-            difficulty = completionDO.getCompDifficulty();
+            difficulty = score.multiply(new BigDecimal(completionDO.getCompDifficulty())).doubleValue();
         } else if (TypeEnum.PROGRAMMING.getCode().toString().equals(configType)) {
             CodeDO codeDO = codeMapper.selectById(questionId);
             score = codeDO.getCodeScore();
-            difficulty = codeDO.getCodeDifficulty();
+            difficulty = score.multiply(new BigDecimal(codeDO.getCodeDifficulty())).doubleValue();
         } else {
             // 是其他题
             QuestionDO questionDO = questionMapper.selectById(questionId);
             score = questionDO.getQuestionScore();
-            difficulty = questionDO.getQuestionDifficulty();
+            difficulty = score.multiply(new BigDecimal(questionDO.getQuestionDifficulty())).doubleValue();
         }
 
         // 重新计算配置和试卷的分值、题目亮、难度系数
@@ -253,12 +254,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
 
         // 计算试卷的
         Integer oldNum = paperDO.getPaperQuestionNum();
+        BigDecimal oldScore = paperDO.getPaperScore();
+        BigDecimal newScore = oldScore.subtract(score);
         BigDecimal oldDiff = paperDO.getPaperDifficulty();
         Integer newNum = oldNum - 1;
-        BigDecimal newDiff = oldDiff.multiply(new BigDecimal(oldNum)).subtract(new BigDecimal(difficulty)).divide(new BigDecimal(newNum), 1);
+
+        BigDecimal newDiff = oldDiff.multiply(oldScore).subtract(new BigDecimal(difficulty)).divide(newScore, NumberConstant.DEFAULT_DECIMAL_RETAIN);
 
         paperDO.setPaperDifficulty(newDiff);
-        paperDO.setPaperScore(paperDO.getPaperScore().subtract(score));
+        paperDO.setPaperScore(newScore);
         paperDO.setPaperQuestionNum(newNum);
         paperMapper.updateById(paperDO);
     }

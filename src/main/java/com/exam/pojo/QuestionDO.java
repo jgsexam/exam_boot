@@ -11,6 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -88,6 +89,7 @@ public class QuestionDO implements Serializable {
 
     /**
      * 问题/答案列表(简答题可能多问)
+     *
      * @return
      */
     @TableField(exist = false)
@@ -96,17 +98,34 @@ public class QuestionDO implements Serializable {
     @Override
     public String toString() {
         return "QuestionDO{" +
-        "questionId=" + questionId +
-        ", questionTitle=" + questionTitle +
-        ", questionImg=" + questionImg +
-        ", questionType=" + questionType +
-        ", questionScore=" + questionScore +
-        ", questionDifficulty=" + questionDifficulty +
-        ", questionBank=" + questionBank +
-        ", questionStyle=" + questionStyle +
-        ", questionKnow=" + questionKnow +
-        ", questionVersion=" + questionVersion +
-        ", questionDelete=" + questionDelete +
-        "}";
+                "questionId=" + questionId +
+                ", questionTitle=" + questionTitle +
+                ", questionImg=" + questionImg +
+                ", questionType=" + questionType +
+                ", questionScore=" + questionScore +
+                ", questionDifficulty=" + questionDifficulty +
+                ", questionBank=" + questionBank +
+                ", questionStyle=" + questionStyle +
+                ", questionKnow=" + questionKnow +
+                ", questionVersion=" + questionVersion +
+                ", questionDelete=" + questionDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        QuestionDO that = (QuestionDO) o;
+        return questionId.equals(that.questionId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(questionId);
     }
 }

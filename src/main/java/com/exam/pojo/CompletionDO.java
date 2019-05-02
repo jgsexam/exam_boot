@@ -11,6 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -73,6 +74,7 @@ public class CompletionDO implements Serializable {
 
     /**
      * 答案
+     *
      * @return
      */
     @TableField(exist = false)
@@ -81,13 +83,30 @@ public class CompletionDO implements Serializable {
     @Override
     public String toString() {
         return "CompletionDO{" +
-        "compId=" + compId +
-        ", compTitle=" + compTitle +
-        ", compScore=" + compScore +
-        ", compDifficulty=" + compDifficulty +
-        ", compBank=" + compBank +
-        ", compVersion=" + compVersion +
-        ", compDelete=" + compDelete +
-        "}";
+                "compId=" + compId +
+                ", compTitle=" + compTitle +
+                ", compScore=" + compScore +
+                ", compDifficulty=" + compDifficulty +
+                ", compBank=" + compBank +
+                ", compVersion=" + compVersion +
+                ", compDelete=" + compDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CompletionDO that = (CompletionDO) o;
+        return compId.equals(that.compId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(compId);
     }
 }

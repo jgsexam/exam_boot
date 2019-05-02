@@ -11,6 +11,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -95,17 +96,34 @@ public class CodeDO implements Serializable {
     @Override
     public String toString() {
         return "CodeDO{" +
-        "codeId=" + codeId +
-        ", codeTitle=" + codeTitle +
-        ", codeImgs=" + codeImgs +
-        ", codeType=" + codeType +
-        ", codeScore=" + codeScore +
-        ", codeDifficulty=" + codeDifficulty +
-        ", codeBank=" + codeBank +
-        ", codeKnow=" + codeKnow +
-        ", codeCompile=" + codeCompile +
-        ", codeVersion=" + codeVersion +
-        ", codeDelete=" + codeDelete +
-        "}";
+                "codeId=" + codeId +
+                ", codeTitle=" + codeTitle +
+                ", codeImgs=" + codeImgs +
+                ", codeType=" + codeType +
+                ", codeScore=" + codeScore +
+                ", codeDifficulty=" + codeDifficulty +
+                ", codeBank=" + codeBank +
+                ", codeKnow=" + codeKnow +
+                ", codeCompile=" + codeCompile +
+                ", codeVersion=" + codeVersion +
+                ", codeDelete=" + codeDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CodeDO codeDO = (CodeDO) o;
+        return codeId.equals(codeDO.codeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codeId);
     }
 }
