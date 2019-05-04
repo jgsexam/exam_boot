@@ -14,7 +14,12 @@ import java.util.List;
 public class GaPaperDTO {
 
     /**
-     * 用户选择多个配置，所以这里的DTO只需要有配置即可
+     * 试卷id
+     */
+    private String paperId;
+
+    /**
+     * 用户选择多个配置
      */
     private List<GaConfigDTO> configList;
 

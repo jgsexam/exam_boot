@@ -1,9 +1,12 @@
 package com.exam.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.Page;
 import com.exam.pojo.QuestionDO;
 import com.exam.vo.QuestionVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -41,4 +44,18 @@ public interface QuestionService extends IService<QuestionDO> {
      * @return
      */
     Page<QuestionVO> getVoByPage(Page<QuestionVO> voPage);
+
+    /**
+     * 随机查询列表（遗传算法专用）
+     * @param configDTO
+     * @return
+     */
+    List<QuestionDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param questionDO
+     * @return
+     */
+    List<QuestionDO> getMutateList(QuestionDO questionDO);
 }

@@ -3,6 +3,7 @@ package com.exam.config;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.injector.LogicSqlInjector;
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
+import com.exam.ga.Population;
 import com.exam.utils.IdWorker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,19 @@ public class OtherConfig {
     @Bean
     public ISqlInjector sqlInjector() {
         return new LogicSqlInjector();
+    }
+
+    /**
+     * population
+     */
+    @Bean
+    public Population pop() {
+        return new Population();
+    }
+
+    @Bean
+    public Population newPopulation() {
+        return new Population();
     }
 
 }

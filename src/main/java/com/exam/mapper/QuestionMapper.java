@@ -1,6 +1,7 @@
 package com.exam.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.Page;
 import com.exam.pojo.QuestionDO;
 
@@ -36,4 +37,18 @@ public interface QuestionMapper extends BaseMapper<QuestionDO> {
      * @return
      */
     List<QuestionDO> getByIds(List<String> ids);
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    List<QuestionDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param questionDO
+     * @return
+     */
+    List<QuestionDO> getMutateList(QuestionDO questionDO);
 }

@@ -108,4 +108,24 @@
         </foreach>
     </select>
 
+    <select id="getGaList" parameterType="com.exam.dto.GaConfigDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ex_choice
+        where choice_delete = 1
+        and choice_bank = #{bankId}
+        <foreach collection="knowledgeIds" open="and choice_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
+        </foreach>
+        order by rand()
+    </select>
+
+    <select id="getMutateList" parameterType="com.exam.pojo.ChoiceDO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ex_choice
+        where choice_score = #{choiceScore}
+        and choice_id != #{choiceId}
+    </select>
+
 </mapper>

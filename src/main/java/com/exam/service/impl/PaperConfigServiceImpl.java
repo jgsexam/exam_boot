@@ -186,7 +186,7 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
         // 计算难度系数
         BigDecimal newDiff = new BigDecimal(difficulty).add(sumDiff);
 
-        newDiff = newDiff.divide(paperDO.getPaperScore(), NumberConstant.DEFAULT_DECIMAL_RETAIN);
+        newDiff = newDiff.divide(paperDO.getPaperScore(), NumberConstant.DEFAULT_DECIMAL_RETAIN, BigDecimal.ROUND_HALF_DOWN);
         // 设置难度系数
 
         paperDO.setPaperDifficulty(newDiff);

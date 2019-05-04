@@ -1,5 +1,6 @@
 package com.exam.mapper;
 
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.Page;
 import com.exam.pojo.TrueFalseDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -29,4 +30,18 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
      * @return
      */
     Integer getCountByPage(Page<TrueFalseDO> page);
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    List<TrueFalseDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param trueFalseDO
+     * @return
+     */
+    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO);
 }

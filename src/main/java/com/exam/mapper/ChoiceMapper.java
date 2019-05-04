@@ -1,5 +1,6 @@
 package com.exam.mapper;
 
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.ChoiceDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.pojo.Page;
@@ -37,4 +38,18 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
      * @return
      */
     List<ChoiceDO> getListByMap(Map<String,Object> paramsMap);
+
+    /**
+     * 随机查询列表（遗传算法专用）
+     * @param configDTO
+     * @return
+     */
+    List<ChoiceDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param choiceDO
+     * @return
+     */
+    List<ChoiceDO> getMutateList(ChoiceDO choiceDO);
 }

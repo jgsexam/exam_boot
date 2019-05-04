@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
 import com.exam.constant.PatternConstant;
 import com.exam.constant.ResultEnum;
+import com.exam.dto.GaConfigDTO;
 import com.exam.mapper.CompletionMapper;
 import com.exam.pojo.CompletionAnswerDO;
 import com.exam.pojo.CompletionDO;
@@ -139,5 +140,25 @@ public class CompletionServiceImpl extends ServiceImpl<CompletionMapper, Complet
 
             return Result.ok("修改成功！");
         }
+    }
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    @Override
+    public List<CompletionDO> getGaList(GaConfigDTO configDTO) {
+        return completionMapper.getGaList(configDTO);
+    }
+
+    /**
+     * 遗传算法专用变异查询
+     * @param completionDO
+     * @return
+     */
+    @Override
+    public List<CompletionDO> getMutateList(CompletionDO completionDO) {
+        return completionMapper.getMutateList(completionDO);
     }
 }

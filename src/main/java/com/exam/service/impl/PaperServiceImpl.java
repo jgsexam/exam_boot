@@ -3,10 +3,16 @@ package com.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.constant.GaConstant;
 import com.exam.constant.NumberConstant;
 import com.exam.constant.PatternConstant;
 import com.exam.constant.SubmitConstant;
 import com.exam.constant.TypeEnum;
+import com.exam.dto.GaConfigDTO;
+import com.exam.dto.GaPaperDTO;
+import com.exam.exception.ExamException;
+import com.exam.ga.Generation;
+import com.exam.ga.Population;
 import com.exam.mapper.ChoiceMapper;
 import com.exam.mapper.CodeMapper;
 import com.exam.mapper.CompletionMapper;
@@ -259,11 +265,44 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         BigDecimal oldDiff = paperDO.getPaperDifficulty();
         Integer newNum = oldNum - 1;
 
-        BigDecimal newDiff = oldDiff.multiply(oldScore).subtract(new BigDecimal(difficulty)).divide(newScore, NumberConstant.DEFAULT_DECIMAL_RETAIN);
+        BigDecimal newDiff = oldDiff.multiply(oldScore).subtract(new BigDecimal(difficulty)).divide(newScore, NumberConstant.DEFAULT_DECIMAL_RETAIN, BigDecimal.ROUND_HALF_DOWN);
 
         paperDO.setPaperDifficulty(newDiff);
         paperDO.setPaperScore(newScore);
         paperDO.setPaperQuestionNum(newNum);
         paperMapper.updateById(paperDO);
+    }
+
+    /**
+     * 遗传算法智能组卷
+     * @param paperDTO
+     */
+    @Override
+    public void gaSubmitPaper(GaPaperDTO paperDTO) throws ExamException {
+        // 循环组卷
+        PaperDO paperDO = new PaperDO();
+        for (GaConfigDTO configDTO : paperDTO.getConfigList()) {
+            int count = 0;
+            int runCount = GaConstant.MAX_EVOLVE;
+            double expand = GaConstant.DEFAULT_ADAPTATION_DEGREE;
+
+            // 初始化种群
+            Population population = new Population();
+            population.initPopulation(GaConstant.POPULATION_SIZE, configDTO);
+            System.out.println("初次适应度：" + population.getFitness(0).getAdaptationDegree() + "，知识点覆盖率为：" + population.getFitness(0).getKpCoverage());
+
+            Generation generation = new Generation();
+            while(count < runCount && population.getFitness(0).getAdaptationDegree() < expand) {
+                count++;
+                population = generation.evolvePopulation(population, configDTO);
+            }
+            PaperConfigDO config = population.getFitness(0);
+
+            paperDO.getConfigList().add(config);
+        }
+
+        // 处理一下试卷，添加进题库
+
+
     }
 }

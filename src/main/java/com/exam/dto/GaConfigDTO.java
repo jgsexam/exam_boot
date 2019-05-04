@@ -40,6 +40,12 @@ public class GaConfigDTO implements Serializable {
      */
     private Integer difficulty;
 
+    /**
+     * 题库
+     * @return
+     */
+    private String bankId;
+
     @Override
     public String toString() {
         return "GaConfigDTO{" +

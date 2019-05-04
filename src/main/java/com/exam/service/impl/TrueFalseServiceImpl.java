@@ -2,6 +2,7 @@ package com.exam.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.dto.GaConfigDTO;
 import com.exam.mapper.TrueFalseMapper;
 import com.exam.pojo.Page;
 import com.exam.pojo.TrueFalseDO;
@@ -25,7 +26,11 @@ public class TrueFalseServiceImpl extends ServiceImpl<TrueFalseMapper, TrueFalse
     @Autowired
     private TrueFalseMapper trueFalseMapper;
 
-
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
     @Override
     public Page<TrueFalseDO> getByPage(Page<TrueFalseDO> page) {
         // 处理参数
@@ -45,5 +50,25 @@ public class TrueFalseServiceImpl extends ServiceImpl<TrueFalseMapper, TrueFalse
         // 计算总页数
         page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
         return page;
+    }
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    @Override
+    public List<TrueFalseDO> getGaList(GaConfigDTO configDTO) {
+        return trueFalseMapper.getGaList(configDTO);
+    }
+
+    /**
+     * 遗传算法专用变异查询
+     * @param trueFalseDO
+     * @return
+     */
+    @Override
+    public List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO) {
+        return trueFalseMapper.getMutateList(trueFalseDO);
     }
 }

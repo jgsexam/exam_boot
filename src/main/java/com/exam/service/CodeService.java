@@ -1,8 +1,11 @@
 package com.exam.service;
 
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.CodeDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.pojo.Page;
+
+import java.util.List;
 
 /**
  * <p>
@@ -32,4 +35,18 @@ public interface CodeService extends IService<CodeDO> {
      * @return
      */
     Page<CodeDO> getByPage(Page<CodeDO> page);
+
+    /**
+     * 随机查询列表（遗传算法专用）
+     * @param configDTO
+     * @return
+     */
+    List<CodeDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param codeDO
+     * @return
+     */
+    List<CodeDO> getMutateList(CodeDO codeDO);
 }

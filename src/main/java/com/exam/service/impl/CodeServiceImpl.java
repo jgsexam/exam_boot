@@ -3,6 +3,7 @@ package com.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.dto.GaConfigDTO;
 import com.exam.mapper.CodeMapper;
 import com.exam.pojo.CodeAnswerDO;
 import com.exam.pojo.CodeDO;
@@ -122,5 +123,25 @@ public class CodeServiceImpl extends ServiceImpl<CodeMapper, CodeDO> implements 
         // 计算总页数
         page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
         return page;
+    }
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    @Override
+    public List<CodeDO> getGaList(GaConfigDTO configDTO) {
+        return codeMapper.getGaList(configDTO);
+    }
+
+    /**
+     * 遗传算法专用变异查询
+     * @param codeDO
+     * @return
+     */
+    @Override
+    public List<CodeDO> getMutateList(CodeDO codeDO) {
+        return codeMapper.getMutateList(codeDO);
     }
 }

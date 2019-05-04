@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
 import com.exam.constant.PageParamsConstant;
 import com.exam.constant.TypeEnum;
+import com.exam.dto.GaConfigDTO;
 import com.exam.mapper.QuestionMapper;
 import com.exam.pojo.ChoiceDO;
 import com.exam.pojo.CodeDO;
@@ -228,5 +229,25 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
             voPage.setList(QuestionUtils.question2Vo(list));
         }
         return voPage;
+    }
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    @Override
+    public List<QuestionDO> getGaList(GaConfigDTO configDTO) {
+        return questionMapper.getGaList(configDTO);
+    }
+
+    /**
+     * 遗传算法专用变异查询
+     * @param questionDO
+     * @return
+     */
+    @Override
+    public List<QuestionDO> getMutateList(QuestionDO questionDO) {
+        return questionMapper.getMutateList(questionDO);
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
 import com.exam.constant.ResultEnum;
+import com.exam.dto.GaConfigDTO;
 import com.exam.mapper.ChoiceMapper;
 import com.exam.pojo.ChoiceAnswerDO;
 import com.exam.pojo.ChoiceDO;
@@ -123,6 +124,25 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
         return updateChoice(choice, answerList);
     }
 
+    /**
+     * 随机查询列表（遗传算法专用）
+     * @param configDTO
+     * @return
+     */
+    @Override
+    public List<ChoiceDO> getGaList(GaConfigDTO configDTO) {
+        return choiceMapper.getGaList(configDTO);
+    }
+
+    /**
+     * 遗传算法专用变异查询
+     * @param choiceDO
+     * @return
+     */
+    @Override
+    public List<ChoiceDO> getMutateList(ChoiceDO choiceDO) {
+        return choiceMapper.getMutateList(choiceDO);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     protected Result updateChoice(ChoiceDO choice, List<ChoiceAnswerDO> answerList) {

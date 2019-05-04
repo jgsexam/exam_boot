@@ -1,9 +1,12 @@
 package com.exam.service;
 
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.ChoiceDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.pojo.Page;
 import com.exam.utils.Result;
+
+import java.util.List;
 
 /**
  * <p>
@@ -35,4 +38,18 @@ public interface ChoiceService extends IService<ChoiceDO> {
      * @return
      */
     Result addOrUpdateManyChoice(ChoiceDO choice);
+
+    /**
+     * 随机查询列表（遗传算法专用）
+     * @param configDTO
+     * @return
+     */
+    List<ChoiceDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用 变异查询
+     * @param choiceDO
+     * @return
+     */
+    List<ChoiceDO> getMutateList(ChoiceDO choiceDO);
 }

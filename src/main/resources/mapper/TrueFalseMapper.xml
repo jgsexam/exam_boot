@@ -69,4 +69,24 @@
         </where>
     </select>
 
+    <select id="getGaList" parameterType="com.exam.dto.GaConfigDTO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ex_true_false
+        where tf_delete = 1
+        and tf_bank = #{bankId}
+        <foreach collection="knowledgeIds" open="and tf_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
+        </foreach>
+        order by rand()
+    </select>
+
+    <select id="getMutateList" parameterType="com.exam.pojo.TrueFalseDO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ex_true_false
+        where tf_score = #{tfScore}
+        and tf_id != #{tfId}
+    </select>
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.exam.mapper;
 
+import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.CompletionDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.pojo.Page;
@@ -36,4 +37,18 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
      * @return
      */
     List<CompletionDO> getByIds(List<String> ids);
+
+    /**
+     * 遗传算法专用查询列表
+     * @param configDTO
+     * @return
+     */
+    List<CompletionDO> getGaList(GaConfigDTO configDTO);
+
+    /**
+     * 遗传算法专用变异查询
+     * @param completionDO
+     * @return
+     */
+    List<CompletionDO> getMutateList(CompletionDO completionDO);
 }
