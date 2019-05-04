@@ -27,6 +27,16 @@
     <sql id="Base_Column_List">
         config_id, config_paper, config_question_num, config_score, config_type, config_know, config_version, config_delete
     </sql>
+
+    <insert id="saveBatch" parameterType="com.exam.pojo.PaperConfigDO">
+        insert into ex_paper_config (
+        config_id, config_paper, config_question_num, config_score, config_type
+        ) values
+        <foreach collection="list" item="config" separator="," open="(" close=")">
+            #{config.configId}, #{config.configPaper}, #{config.configQuestionNum}, #{config.configScore}, #{config.configType}
+        </foreach>
+    </insert>
+
     <select id="getByConfig" parameterType="com.exam.pojo.PaperConfigDO" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>

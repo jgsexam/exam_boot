@@ -37,4 +37,10 @@ public interface PaperConfigMapper extends BaseMapper<PaperConfigDO> {
      * @return
      */
     PaperConfigDO getByPaperAndQuestion(@Param("paperId") String paperId, @Param("questionId") String questionId);
+
+    /**
+     * 批量插入
+     * @param configList
+     */
+    void saveBatch(List<PaperConfigDO> configList);
 }

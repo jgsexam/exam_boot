@@ -29,4 +29,12 @@ public interface PaperConfigService extends IService<PaperConfigDO> {
      * @return
      */
     List<PaperConfigDO> getQuestionNum(String paperId);
+
+    /**
+     * 根据试卷id和题目id查询
+     * @param paperId
+     * @param questionId
+     * @return
+     */
+    PaperConfigDO getByPaperAndQuestion(String paperId, String questionId);
 }

@@ -9,7 +9,7 @@ import lombok.Getter;
  * @date: 2019/4/24 0024 下午 8:01
  */
 @Getter
-public enum SubmitConstant {
+public enum SubmitEnum {
 
     /**
      * 提交状态
@@ -21,7 +21,7 @@ public enum SubmitConstant {
     private Integer code;
     private String msg;
 
-    SubmitConstant(Integer code, String msg) {
+    SubmitEnum(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }

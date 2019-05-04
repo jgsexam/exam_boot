@@ -161,6 +161,17 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
     }
 
     /**
+     * 根据试卷id和题目id查询
+     * @param paperId
+     * @param questionId
+     * @return
+     */
+    @Override
+    public PaperConfigDO getByPaperAndQuestion(String paperId, String questionId) {
+        return paperConfigMapper.getByPaperAndQuestion(paperId, questionId);
+    }
+
+    /**
      * 更新试卷状态
      * @param config
      * @param questionList

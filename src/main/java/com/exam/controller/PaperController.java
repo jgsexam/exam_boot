@@ -3,7 +3,6 @@ package com.exam.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.dto.GaPaperDTO;
-import com.exam.exception.ExamException;
 import com.exam.pojo.Page;
 import com.exam.pojo.PaperDO;
 import com.exam.service.PaperService;
@@ -145,8 +144,14 @@ public class PaperController {
         }
     }
 
+    /**
+     * 智能组卷
+     * @param paperDTO
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/gaSubmit", method = RequestMethod.POST)
-    public Result  gaSubmit(@RequestBody GaPaperDTO paperDTO) throws ExamException {
+    public Result gaSubmit(@RequestBody GaPaperDTO paperDTO) throws Exception {
         paperService.gaSubmitPaper(paperDTO);
         return Result.ok("组卷成功！");
     }

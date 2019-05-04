@@ -6,11 +6,11 @@ import com.exam.constant.CoreConstant;
 import com.exam.constant.GaConstant;
 import com.exam.constant.NumberConstant;
 import com.exam.constant.PatternConstant;
-import com.exam.constant.SubmitConstant;
+import com.exam.constant.SubmitEnum;
+import com.exam.constant.TestEnum;
 import com.exam.constant.TypeEnum;
 import com.exam.dto.GaConfigDTO;
 import com.exam.dto.GaPaperDTO;
-import com.exam.exception.ExamException;
 import com.exam.ga.Generation;
 import com.exam.ga.Population;
 import com.exam.mapper.ChoiceMapper;
@@ -32,6 +32,8 @@ import com.exam.pojo.QuestionDO;
 import com.exam.pojo.TrueFalseDO;
 import com.exam.service.PaperConfigQuestionService;
 import com.exam.service.PaperService;
+import com.exam.utils.DateUtils;
+import com.exam.utils.IdWorker;
 import com.exam.utils.StringUtils;
 import com.exam.utils.ToWordUtil;
 import com.google.common.collect.Lists;
@@ -74,6 +76,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
     private CodeMapper codeMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private IdWorker idWorker;
 
     private static final Pattern UNDER_LINE_PATTERN = PatternConstant.THREE_UNDER_LINE_PATTERN;
 
@@ -193,7 +197,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         toWordUtil.createWord(paper);
         // 创建试卷成功
         // 更新状态为已提交
-        paper.setPaperSubmit(SubmitConstant.SUBMIT.getCode());
+        paper.setPaperSubmit(SubmitEnum.SUBMIT.getCode());
         // 更新试卷下载链接
         String downloadUrl = CoreConstant.SERVER_FILE_URL + filename;
         paper.setPaperDownload(downloadUrl);
@@ -278,9 +282,10 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
      * @param paperDTO
      */
     @Override
-    public void gaSubmitPaper(GaPaperDTO paperDTO) throws ExamException {
+    public void gaSubmitPaper(GaPaperDTO paperDTO) throws Exception {
         // 循环组卷
-        PaperDO paperDO = new PaperDO();
+        PaperDO paperDO = paperMapper.selectById(paperDTO.getPaperId());
+        paperDO.setConfigList(Lists.newArrayList());
         for (GaConfigDTO configDTO : paperDTO.getConfigList()) {
             int count = 0;
             int runCount = GaConstant.MAX_EVOLVE;
@@ -302,7 +307,80 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         }
 
         // 处理一下试卷，添加进题库
+        saveGaPaper(paperDO);
+    }
 
+    /**
+     * 智能组卷，处理试卷和配置
+     * @param paperDO
+     */
+    @Transactional(rollbackFor = Exception.class)
+    protected void saveGaPaper(PaperDO paperDO) throws Exception {
+        String paperId = paperDO.getPaperId();
+        List<PaperConfigDO> configList = paperDO.getConfigList();
+        List<PaperConfigQuestionDO> configQuestionDOList = Lists.newArrayList();
+        for (PaperConfigDO config : configList) {
 
+            config.setConfigPaper(paperId);
+            List questionList = config.getQuestionDetailList();
+            config.setConfigQuestionNum(questionList.size());
+
+            for (Object tmpQuestion : questionList) {
+
+                PaperConfigQuestionDO paperConfigQuestionDO = new PaperConfigQuestionDO();
+                paperConfigQuestionDO.setId(idWorker.nextId()+"");
+                paperConfigQuestionDO.setQuestionConfig(config.getConfigId());
+                if (tmpQuestion instanceof ChoiceDO) {
+                    // 选择题
+                    ChoiceDO choiceDO = (ChoiceDO) tmpQuestion;
+                    paperConfigQuestionDO.setQuestionId(choiceDO.getChoiceId());
+                } else if (tmpQuestion instanceof TrueFalseDO) {
+                    // 判断题
+                    TrueFalseDO trueFalseDO = (TrueFalseDO) tmpQuestion;
+                    paperConfigQuestionDO.setQuestionId(trueFalseDO.getTfId());
+                } else if (tmpQuestion instanceof CompletionDO) {
+                    // 填空题
+                    CompletionDO completionDO = (CompletionDO) tmpQuestion;
+                    paperConfigQuestionDO.setQuestionId(completionDO.getCompId());
+                } else if (tmpQuestion instanceof CodeDO) {
+                    // 编程题
+                    CodeDO codeDO = (CodeDO) tmpQuestion;
+                    paperConfigQuestionDO.setQuestionId(codeDO.getCodeId());
+                } else {
+                    // 其他题
+                    QuestionDO questionDO = (QuestionDO) tmpQuestion;
+                    paperConfigQuestionDO.setQuestionId(questionDO.getQuestionId());
+                }
+                configQuestionDOList.add(paperConfigQuestionDO);
+            }
+        }
+
+        // 更改试卷状态：设置总分、难度系数，生成试卷、修改状态、题量
+        BigDecimal totalScore = configList.stream().map(PaperConfigDO::getConfigScore).reduce(BigDecimal::add).get();
+        BigDecimal configDiff = configList.stream().map(e -> e.getConfigScore().multiply(new BigDecimal(e.getConfigDifficulty()))).reduce(BigDecimal::add).get();
+        int questionNum = configList.stream().mapToInt(e -> e.getConfigQuestionNum()).sum();
+        paperDO.setPaperScore(totalScore);
+        paperDO.setPaperQuestionNum(questionNum);
+
+        // 计算难度系数
+        BigDecimal paperDiff = configDiff.divide(totalScore, NumberConstant.DEFAULT_DECIMAL_RETAIN, BigDecimal.ROUND_HALF_DOWN);
+        paperDO.setPaperDifficulty(paperDiff);
+        // 组卷状态智能组卷
+        paperDO.setPaperType(TestEnum.INTELLIGENCE.getCode());
+        // 状态已提交
+        paperDO.setPaperSubmit(SubmitEnum.SUBMIT.getCode());
+
+        // 插入题目数据
+        paperConfigQuestionService.saveBatch(configQuestionDOList);
+
+        // 插入配置数据
+        paperConfigMapper.saveBatch(configList);
+
+        // 修改试卷信息
+        paperDO.setPaperUpdateTime(DateUtils.newDate());
+        updateById(paperDO);
+
+        // 生成试卷
+        submit(paperId);
     }
 }

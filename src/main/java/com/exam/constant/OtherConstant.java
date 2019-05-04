@@ -18,7 +18,7 @@ public class OtherConstant {
     /**
      * 年月日格式化
      */
-    public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-d");
+    public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * localhost

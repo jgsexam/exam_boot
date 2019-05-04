@@ -48,5 +48,5 @@ public interface PaperService extends IService<PaperDO> {
      * 遗传算法智能组卷
      * @param paperDTO
      */
-    void gaSubmitPaper(GaPaperDTO paperDTO) throws ExamException;
+    void gaSubmitPaper(GaPaperDTO paperDTO) throws Exception;
 }
