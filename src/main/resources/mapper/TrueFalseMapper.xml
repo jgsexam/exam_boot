@@ -85,8 +85,11 @@
         select
         <include refid="Base_Column_List"></include>
         from ex_true_false
-        where tf_score = #{tfScore}
-        and tf_id != #{tfId}
+        where tf_score = #{tf.tfScore}
+        and tf_delete = 1
+        <foreach collection="ids" open="and tf_id not in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
     </select>
 
 </mapper>

@@ -75,6 +75,7 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
 
     /**
      * 添加或修改单选题
+     *
      * @param choice
      * @return
      */
@@ -101,6 +102,7 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
 
     /**
      * 添加或修改多选题
+     *
      * @param choice
      * @return
      */
@@ -126,6 +128,7 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
 
     /**
      * 随机查询列表（遗传算法专用）
+     *
      * @param configDTO
      * @return
      */
@@ -136,12 +139,12 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
 
     /**
      * 遗传算法专用变异查询
-     * @param choiceDO
+     *
      * @return
      */
     @Override
-    public List<ChoiceDO> getMutateList(ChoiceDO choiceDO) {
-        return choiceMapper.getMutateList(choiceDO);
+    public List<ChoiceDO> getMutateList(ChoiceDO choiceDO, List<String> ids) {
+        return choiceMapper.getMutateList(choiceDO, ids);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -187,6 +190,5 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
             return Result.ok("修改成功！");
         }
     }
-
 
 }

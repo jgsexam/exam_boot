@@ -4,6 +4,7 @@ import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.CompletionDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.pojo.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -26,6 +28,7 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 查询总数
+     *
      * @param page
      * @return
      */
@@ -33,6 +36,7 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 根据id列表查询
+     *
      * @param ids
      * @return
      */
@@ -40,6 +44,7 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 遗传算法专用查询列表
+     *
      * @param configDTO
      * @return
      */
@@ -47,8 +52,10 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 遗传算法专用变异查询
+     *
      * @param completionDO
+     * @param ids
      * @return
      */
-    List<CompletionDO> getMutateList(CompletionDO completionDO);
+    List<CompletionDO> getMutateList(@Param("comp") CompletionDO completionDO, @Param("ids") List<String> ids);
 }

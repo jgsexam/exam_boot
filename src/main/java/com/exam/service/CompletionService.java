@@ -44,5 +44,5 @@ public interface CompletionService extends IService<CompletionDO> {
      * @param completionDO
      * @return
      */
-    List<CompletionDO> getMutateList(CompletionDO completionDO);
+    List<CompletionDO> getMutateList(CompletionDO completionDO, List<String> ids);
 }

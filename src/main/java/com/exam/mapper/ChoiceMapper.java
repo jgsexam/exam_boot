@@ -4,6 +4,7 @@ import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.ChoiceDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.pojo.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -27,6 +29,7 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
 
     /**
      * 查询总数
+     *
      * @param page
      * @return
      */
@@ -34,13 +37,15 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
 
     /**
      * 根据map中的参数查询全部
+     *
      * @param paramsMap
      * @return
      */
-    List<ChoiceDO> getListByMap(Map<String,Object> paramsMap);
+    List<ChoiceDO> getListByMap(Map<String, Object> paramsMap);
 
     /**
      * 随机查询列表（遗传算法专用）
+     *
      * @param configDTO
      * @return
      */
@@ -48,8 +53,10 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
 
     /**
      * 遗传算法专用变异查询
+     *
      * @param choiceDO
+     * @param ids
      * @return
      */
-    List<ChoiceDO> getMutateList(ChoiceDO choiceDO);
+    List<ChoiceDO> getMutateList(@Param("choice") ChoiceDO choiceDO, @Param("ids") List<String> ids);
 }

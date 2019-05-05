@@ -211,6 +211,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
      * @param questionId
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteQuestion(String paperId, String questionId) {
 
         // 查询到配置、试卷
@@ -282,11 +283,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
      * @param paperDTO
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void gaSubmitPaper(GaPaperDTO paperDTO) throws Exception {
         // 循环组卷
         PaperDO paperDO = paperMapper.selectById(paperDTO.getPaperId());
         paperDO.setConfigList(Lists.newArrayList());
         for (GaConfigDTO configDTO : paperDTO.getConfigList()) {
+
+            configDTO.setBankId(paperDO.getPaperBank());
+
             int count = 0;
             int runCount = GaConstant.MAX_EVOLVE;
             double expand = GaConstant.DEFAULT_ADAPTATION_DEGREE;
@@ -358,7 +363,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         // 更改试卷状态：设置总分、难度系数，生成试卷、修改状态、题量
         BigDecimal totalScore = configList.stream().map(PaperConfigDO::getConfigScore).reduce(BigDecimal::add).get();
         BigDecimal configDiff = configList.stream().map(e -> e.getConfigScore().multiply(new BigDecimal(e.getConfigDifficulty()))).reduce(BigDecimal::add).get();
-        int questionNum = configList.stream().mapToInt(e -> e.getConfigQuestionNum()).sum();
+        int questionNum = configList.stream().mapToInt(PaperConfigDO::getConfigQuestionNum).sum();
         paperDO.setPaperScore(totalScore);
         paperDO.setPaperQuestionNum(questionNum);
 

@@ -72,4 +72,19 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, TypeDO> implements 
         List<String> typeIds = bankTypeList.stream().map(BankTypeDO::getBankType).collect(Collectors.toList());
         return typeMapper.selectBatchIds(typeIds);
     }
+
+    /**
+     * 根据知识点数组查询所有
+     * @param knowIds
+     * @return
+     */
+    @Override
+    public List<TypeDO> getByKnowIds(List<String> knowIds) {
+        List<BankTypeDO> bankTypeList = bankTypeService.list(new QueryWrapper<BankTypeDO>().in("bank_know", knowIds));
+        if(bankTypeList.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<String> typeIds = bankTypeList.stream().map(BankTypeDO::getBankType).collect(Collectors.toList());
+        return typeMapper.selectBatchIds(typeIds);
+    }
 }

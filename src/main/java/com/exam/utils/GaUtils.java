@@ -29,8 +29,8 @@ public class GaUtils {
         return gaService.getGaList(configDTO);
     }
 
-    public static List getMutateList(Object question) {
-        return gaService.getMutateList(question);
+    public static List getMutateList(Object question, PaperConfigDO parent2) {
+        return gaService.getMutateList(question, parent2);
     }
 
     @Autowired(required = true)

@@ -2,7 +2,6 @@ package com.exam.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.dto.GaPaperDTO;
-import com.exam.exception.ExamException;
 import com.exam.pojo.Page;
 import com.exam.pojo.PaperDO;
 
@@ -18,6 +17,7 @@ public interface PaperService extends IService<PaperDO> {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -25,6 +25,7 @@ public interface PaperService extends IService<PaperDO> {
 
     /**
      * 查询题目列表
+     *
      * @param paperId
      * @return
      */
@@ -32,6 +33,7 @@ public interface PaperService extends IService<PaperDO> {
 
     /**
      * 提交组卷
+     *
      * @param paperId
      * @throws Exception
      */
@@ -39,6 +41,7 @@ public interface PaperService extends IService<PaperDO> {
 
     /**
      * 根据试卷id和题目id从试卷中删除题目
+     *
      * @param paperId
      * @param questionId
      */
@@ -47,6 +50,7 @@ public interface PaperService extends IService<PaperDO> {
     /**
      * 遗传算法智能组卷
      * @param paperDTO
+     * @throws Exception
      */
     void gaSubmitPaper(GaPaperDTO paperDTO) throws Exception;
 }

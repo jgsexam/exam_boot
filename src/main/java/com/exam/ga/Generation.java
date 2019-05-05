@@ -6,7 +6,6 @@ import com.exam.pojo.PaperConfigDO;
 import com.exam.utils.GaUtils;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -49,8 +48,6 @@ public class Generation {
         PaperConfigDO child = new PaperConfigDO(parent1.getQuestionDetailList().size());
         child.setConfigType(parent1.getConfigType());
 
-        BigDecimal score = new BigDecimal(0);
-
         int s1 = (int) (Math.random() * parent1.getQuestionDetailList().size());
         int s2 = (int) (Math.random() * parent1.getQuestionDetailList().size());
 
@@ -65,11 +62,11 @@ public class Generation {
         // 继承parent2中未被child继承的question
         // 防止出现重复的元素
         for (int i = 0; i < startPos; i++) {
-            saveChildQuestion(parent2, configDTO, child, i);
+            saveChildQuestion(parent2, child, i);
         }
 
         for (int i = endPos; i < parent2.getQuestionDetailList().size(); i++) {
-            saveChildQuestion(parent2, configDTO, child, i);
+            saveChildQuestion(parent2, child, i);
         }
 
         child.getScoreGa();
@@ -89,8 +86,8 @@ public class Generation {
             if (Math.random() < GaConstant.MUTATION_RATE) {
                 // 进行突变，第i道
                 Object tmpQuestion = config.getQuestion(i);
-                // 从题库中获取和变异的题目类型一样分数相同的题目（不包含变异题目）
-                list = GaUtils.getMutateList(tmpQuestion);
+                // 从题库中获取和变异的题目类型一样分数相同的题目（不能重复）
+                list = GaUtils.getMutateList(tmpQuestion, config);
                 if (list.size() > 0) {
                     // 随机获取一道
                     index = (int) (Math.random() * list.size());
@@ -104,15 +101,14 @@ public class Generation {
      * 将亲代的题目遗传给子代
      *
      * @param parent2
-     * @param configDTO
      * @param child
      * @param i
      */
-    private void saveChildQuestion(PaperConfigDO parent2, GaConfigDTO configDTO, PaperConfigDO child, int i) {
+    private void saveChildQuestion(PaperConfigDO parent2, PaperConfigDO child, int i) {
         if (!child.containsQuestion(parent2.getQuestion(i))) {
             child.saveQuestion(i, parent2.getQuestion(i));
         } else {
-            List list = GaUtils.getGaList(configDTO);
+            List list = GaUtils.getMutateList(parent2.getQuestion(i), parent2);
             child.saveQuestion(i, list.get((int) (Math.random() * list.size())));
         }
     }

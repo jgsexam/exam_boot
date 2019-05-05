@@ -95,8 +95,10 @@ public class Population {
             templateQuestion = list.get(list.size() - i - 1);
             list.set(list.size() - i - 1, list.get(index));
             list.set(index, templateQuestion);
-
         }
+
+        // 重新抽题之后，重新计算分数
+        config.getScoreGa();
 
     }
 

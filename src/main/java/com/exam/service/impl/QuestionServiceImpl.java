@@ -247,7 +247,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
      * @return
      */
     @Override
-    public List<QuestionDO> getMutateList(QuestionDO questionDO) {
-        return questionMapper.getMutateList(questionDO);
+    public List<QuestionDO> getMutateList(QuestionDO questionDO, List<String> ids) {
+        return questionMapper.getMutateList(questionDO, ids);
     }
 }

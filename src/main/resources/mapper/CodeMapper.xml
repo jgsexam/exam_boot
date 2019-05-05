@@ -134,8 +134,11 @@
         select
         <include refid="Base_Column_List"></include>
         from ex_code
-        where code_score = #{codeScore}
-        and code_id != #{codeId}
+        where code_score = #{code.codeScore}
+        and code_delete = 1
+        <foreach collection="ids" open="and code_id not in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
     </select>
 
 </mapper>

@@ -1,9 +1,9 @@
 package com.exam.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.Page;
 import com.exam.pojo.TrueFalseDO;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
@@ -36,5 +36,5 @@ public interface TrueFalseService extends IService<TrueFalseDO> {
      * @param trueFalseDO
      * @return
      */
-    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO);
+    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO, List<String> ids);
 }

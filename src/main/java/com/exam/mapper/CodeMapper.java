@@ -50,5 +50,5 @@ public interface CodeMapper extends BaseMapper<CodeDO> {
      * @param codeDO
      * @return
      */
-    List<CodeDO> getMutateList(CodeDO codeDO);
+    List<CodeDO> getMutateList(CodeDO codeDO, List<String> ids);
 }

@@ -118,8 +118,11 @@
         select
         <include refid="Base_Column_List"></include>
         from ex_question
-        where question_score = #{questionScore}
-        and question_id != #{questionId}
+        where question_score = #{question.questionScore}
+        and question_delete = 1
+        <foreach collection="ids" open="and question_id not in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
     </select>
 
 </mapper>

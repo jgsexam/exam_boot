@@ -141,7 +141,7 @@ public class CodeServiceImpl extends ServiceImpl<CodeMapper, CodeDO> implements 
      * @return
      */
     @Override
-    public List<CodeDO> getMutateList(CodeDO codeDO) {
-        return codeMapper.getMutateList(codeDO);
+    public List<CodeDO> getMutateList(CodeDO codeDO, List<String> ids) {
+        return codeMapper.getMutateList(codeDO, ids);
     }
 }

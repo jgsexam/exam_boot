@@ -51,5 +51,5 @@ public interface ChoiceService extends IService<ChoiceDO> {
      * @param choiceDO
      * @return
      */
-    List<ChoiceDO> getMutateList(ChoiceDO choiceDO);
+    List<ChoiceDO> getMutateList(ChoiceDO choiceDO, List<String> ids);
 }

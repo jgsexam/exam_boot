@@ -68,7 +68,7 @@ public class TrueFalseServiceImpl extends ServiceImpl<TrueFalseMapper, TrueFalse
      * @return
      */
     @Override
-    public List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO) {
-        return trueFalseMapper.getMutateList(trueFalseDO);
+    public List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO, List<String> ids) {
+        return trueFalseMapper.getMutateList(trueFalseDO, ids);
     }
 }

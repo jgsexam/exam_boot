@@ -161,35 +161,36 @@ public class PaperConfigDO implements Serializable {
      * 计算总分
      */
     public double getScoreGa() {
-        if (this.configScore == null || this.configScore.compareTo(new BigDecimal(NumberConstant.ZERO)) == 0) {
-            BigDecimal score = new BigDecimal(NumberConstant.ZERO);
-
-            if(StringUtils.isNotBlank(this.configType) && !questionDetailList.isEmpty()) {
-                if (this.configType.equals(TypeEnum.ONE_CHOICE.getCode().toString()) ||
-                        this.configType.equals(TypeEnum.MANY_CHOICE.getCode().toString())) {
-                    List<ChoiceDO> choiceDOList = questionDetailList;
-                    score = choiceDOList.stream().map(ChoiceDO::getChoiceScore).reduce(BigDecimal::add).get();
-                } else if (this.configType.equals(TypeEnum.JUDGEMENT.getCode().toString())) {
-                    // 判断题
-                    List<TrueFalseDO> trueFalseDOList = questionDetailList;
-                    score = trueFalseDOList.stream().map(TrueFalseDO::getTfScore).reduce(BigDecimal::add).get();
-                } else if (this.configType.equals(TypeEnum.COMPLETION.getCode().toString())) {
-                    // 填空题
-                    List<CompletionDO> completionDOList = questionDetailList;
-                    score = completionDOList.stream().map(CompletionDO::getCompScore).reduce(BigDecimal::add).get();
-                } else if (this.configType.equals(TypeEnum.PROGRAMMING.getCode().toString())) {
-                    // 编程题
-                    List<CodeDO> codeDOList = questionDetailList;
-                    score = codeDOList.stream().map(CodeDO::getCodeScore).reduce(BigDecimal::add).get();
-                } else {
-                    // 其他题
-                    List<QuestionDO> questionDOList = questionDetailList;
-                    score = questionDOList.stream().map(QuestionDO::getQuestionScore).reduce(BigDecimal::add).get();
-                }
-            }
-
-            this.configScore = score;
+        if(this.configScore == null) {
+            this.configScore = new BigDecimal(NumberConstant.ZERO);
         }
+        BigDecimal score = new BigDecimal(NumberConstant.ZERO);
+
+        if (StringUtils.isNotBlank(this.configType) && !questionDetailList.isEmpty()) {
+            if (this.configType.equals(TypeEnum.ONE_CHOICE.getCode().toString()) ||
+                    this.configType.equals(TypeEnum.MANY_CHOICE.getCode().toString())) {
+                List<ChoiceDO> choiceDOList = questionDetailList;
+                score = choiceDOList.stream().map(ChoiceDO::getChoiceScore).reduce(BigDecimal::add).get();
+            } else if (this.configType.equals(TypeEnum.JUDGEMENT.getCode().toString())) {
+                // 判断题
+                List<TrueFalseDO> trueFalseDOList = questionDetailList;
+                score = trueFalseDOList.stream().map(TrueFalseDO::getTfScore).reduce(BigDecimal::add).get();
+            } else if (this.configType.equals(TypeEnum.COMPLETION.getCode().toString())) {
+                // 填空题
+                List<CompletionDO> completionDOList = questionDetailList;
+                score = completionDOList.stream().map(CompletionDO::getCompScore).reduce(BigDecimal::add).get();
+            } else if (this.configType.equals(TypeEnum.PROGRAMMING.getCode().toString())) {
+                // 编程题
+                List<CodeDO> codeDOList = questionDetailList;
+                score = codeDOList.stream().map(CodeDO::getCodeScore).reduce(BigDecimal::add).get();
+            } else {
+                // 其他题
+                List<QuestionDO> questionDOList = questionDetailList;
+                score = questionDOList.stream().map(QuestionDO::getQuestionScore).reduce(BigDecimal::add).get();
+            }
+        }
+
+        this.configScore = score;
         return this.configScore.doubleValue();
     }
 
@@ -306,12 +307,8 @@ public class PaperConfigDO implements Serializable {
                 }
             }
         } else {
-            for (Object o : questionDetailList) {
-                if (o != null) {
-                    if (questionDetailList.equals(questionObject)) {
-                        return true;
-                    }
-                }
+            if (questionDetailList.contains(questionObject)) {
+                return true;
             }
         }
         return false;

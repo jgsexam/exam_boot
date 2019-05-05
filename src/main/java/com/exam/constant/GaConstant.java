@@ -48,5 +48,5 @@ public class GaConstant {
     /**
      * 适应度大小
      */
-    public static final double DEFAULT_ADAPTATION_DEGREE = 0.9;
+    public static final double DEFAULT_ADAPTATION_DEGREE = 0.95;
 }

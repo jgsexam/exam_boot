@@ -4,6 +4,7 @@ import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.Page;
 import com.exam.pojo.TrueFalseDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -26,6 +28,7 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
 
     /**
      * 查询总数
+     *
      * @param page
      * @return
      */
@@ -33,6 +36,7 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
 
     /**
      * 遗传算法专用查询列表
+     *
      * @param configDTO
      * @return
      */
@@ -40,8 +44,10 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
 
     /**
      * 遗传算法专用变异查询
+     *
      * @param trueFalseDO
+     * @param ids
      * @return
      */
-    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO);
+    List<TrueFalseDO> getMutateList(@Param("tf") TrueFalseDO trueFalseDO, @Param("ids") List<String> ids);
 }

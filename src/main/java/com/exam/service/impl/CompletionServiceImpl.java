@@ -158,7 +158,7 @@ public class CompletionServiceImpl extends ServiceImpl<CompletionMapper, Complet
      * @return
      */
     @Override
-    public List<CompletionDO> getMutateList(CompletionDO completionDO) {
-        return completionMapper.getMutateList(completionDO);
+    public List<CompletionDO> getMutateList(CompletionDO completionDO, List<String> ids) {
+        return completionMapper.getMutateList(completionDO, ids);
     }
 }

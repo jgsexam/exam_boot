@@ -32,8 +32,8 @@
         insert into ex_paper_config (
         config_id, config_paper, config_question_num, config_score, config_type
         ) values
-        <foreach collection="list" item="config" separator="," open="(" close=")">
-            #{config.configId}, #{config.configPaper}, #{config.configQuestionNum}, #{config.configScore}, #{config.configType}
+        <foreach collection="list" item="config" separator=",">
+            (#{config.configId}, #{config.configPaper}, #{config.configQuestionNum}, #{config.configScore}, #{config.configType})
         </foreach>
     </insert>
 

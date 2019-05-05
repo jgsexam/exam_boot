@@ -111,6 +111,15 @@ public class TypeController {
     }
 
     /**
+     * 根据知识点id数组查询所有
+     */
+    @RequestMapping(value = "/all", method = RequestMethod.POST)
+    public Result getAll(@RequestBody List<String> knowIds) {
+        List<TypeDO> list = typeService.getByKnowIds(knowIds);
+        return Result.ok(list);
+    }
+
+    /**
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)

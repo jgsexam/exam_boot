@@ -110,8 +110,11 @@
         select
         <include refid="Base_Column_List"></include>
         from ex_completion
-        where comp_score = #{compScore}
-        and comp_id != #{compId}
+        where comp_score = #{comp.compScore}
+        and comp_delete = 1
+        <foreach collection="ids" open="and comp_id not in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
     </select>
 
 </mapper>

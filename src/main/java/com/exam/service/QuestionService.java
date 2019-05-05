@@ -57,5 +57,5 @@ public interface QuestionService extends IService<QuestionDO> {
      * @param questionDO
      * @return
      */
-    List<QuestionDO> getMutateList(QuestionDO questionDO);
+    List<QuestionDO> getMutateList(QuestionDO questionDO, List<String> ids);
 }

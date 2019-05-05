@@ -29,4 +29,11 @@ public interface TypeService extends IService<TypeDO> {
      * @return
      */
     List<TypeDO> getByKnowId(String knowId);
+
+    /**
+     * 根据知识点id数组查询所有
+     * @param knowIds
+     * @return
+     */
+    List<TypeDO> getByKnowIds(List<String> knowIds);
 }
