@@ -10,6 +10,7 @@ import com.exam.service.QuestionAnswerService;
 import com.exam.service.QuestionService;
 import com.exam.utils.Result;
 import com.exam.vo.QuestionVO;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ public class QuestionController {
      * 添加其他题
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("question:add")
     public Result add(@RequestBody QuestionDO question) {
         try {
             if (question.getAnswerList().isEmpty()) {
@@ -57,6 +59,7 @@ public class QuestionController {
      * 修改其他题
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("question:update")
     public Result update(@RequestBody QuestionDO question) {
         try {
             if (question.getAnswerList().isEmpty()) {
@@ -90,6 +93,7 @@ public class QuestionController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{questionId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("question:delete")
     public Result delete(@PathVariable String questionId) {
         try {
             questionService.removeById(questionId);
@@ -104,6 +108,7 @@ public class QuestionController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("question:list")
     public Result list(@RequestBody Page<QuestionDO> page) {
         try {
             page = questionService.getByPage(page);

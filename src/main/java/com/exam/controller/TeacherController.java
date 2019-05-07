@@ -1,25 +1,26 @@
 package com.exam.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
+import com.exam.pojo.AuthDO;
 import com.exam.pojo.Page;
 import com.exam.pojo.PwdDO;
 import com.exam.pojo.RoleDO;
 import com.exam.pojo.TeacherDO;
 import com.exam.pojo.TeacherRoleDO;
 import com.exam.service.PwdService;
+import com.exam.service.RoleAuthService;
 import com.exam.service.RoleService;
 import com.exam.service.TeacherRoleService;
 import com.exam.service.TeacherService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Md5Utils;
 import com.exam.utils.Result;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -61,6 +62,8 @@ public class TeacherController {
     private TeacherRoleService teacherRoleService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RoleAuthService roleAuthService;
 
     /**
      * 教师登录
@@ -90,6 +93,7 @@ public class TeacherController {
      * 添加教师
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("user:teacher:add")
     public Result add(@RequestBody TeacherDO teacherDO) {
         try {
             // 根据工号、账号、身份证号分别查询一次，这几列都是唯一的
@@ -134,6 +138,7 @@ public class TeacherController {
      * 修改教师
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("user:teacher:update")
     public Result update(@RequestBody TeacherDO teacherDO) {
         try {
             TeacherDO teacher = teacherService.getById(teacherDO.getTeacherId());
@@ -194,6 +199,7 @@ public class TeacherController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{teacherId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("user:teacher:delete")
     public Result delete(@PathVariable String teacherId) {
         try {
             teacherService.removeById(teacherId);
@@ -207,6 +213,7 @@ public class TeacherController {
      * 分页查询教师
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("user:teacher:list")
     public Result list(@RequestBody Page<TeacherDO> page) {
         try {
             page = teacherService.getByPage(page);
@@ -226,21 +233,21 @@ public class TeacherController {
             Session session = SecurityUtils.getSecurityManager().getSession(key);
             SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
             TeacherDO teacherDO = (TeacherDO) principalCollection.getPrimaryPrincipal();
-            // 查询教师的角色信息，封装到教师中
             // 查询角色， 封装成集合
-            QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
-                    .eq("tr_teacher", teacherDO.getTeacherId());
-            List<TeacherRoleDO> list = teacherRoleService.list(wrapper);
+            List<TeacherRoleDO> roleList = teacherRoleService.getByTeacher(teacherDO);
             // Lambda表达式取出集合中指定元素封装成另一个集合
-            List<String> roleIds = list.stream().map(TeacherRoleDO::getTrRole).collect(Collectors.toList());
+            List<String> roleIds = roleList.stream().map(TeacherRoleDO::getTrRole).collect(Collectors.toList());
             // 使用roleIds查询所有的角色，将角色名封装成集合
-            List<String> roleList = Lists.newArrayList();
-            if(!roleIds.isEmpty()) {
-                roleList = roleService.listByIds(roleIds).stream().map(RoleDO::getRoleName).collect(Collectors.toList());
-            }
-            teacherDO.setRoleList(roleList);
+            List<String> roleNames = roleService.listByIds(roleIds).stream().map(RoleDO::getRoleName).collect(Collectors.toList());
+            teacherDO.setRoleList(roleNames);
+
+            // 根据roles查询权限
+            List<AuthDO> authList = roleAuthService.getByRoleIds(roleIds);
+            List<String> authCodes = authList.stream().map(AuthDO::getAuthCode).collect(Collectors.toList());
+            teacherDO.setAuthList(authCodes);
+
             return Result.ok(teacherDO);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "您未登录，请登录");
         }

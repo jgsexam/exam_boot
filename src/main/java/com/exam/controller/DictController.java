@@ -9,6 +9,8 @@ import com.exam.service.DictService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
 import com.exam.utils.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +49,7 @@ public class DictController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions(value = {"sys:college:add","sys:major:add","sys:job:add","sys:title:add","sys:subject:add"}, logical = Logical.OR)
     public Result add(@RequestBody DictDO dict) {
         try {
             dict.setDictId(idWorker.nextId() + "");
@@ -62,6 +65,7 @@ public class DictController {
      * 修改数据字典
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions(value = {"sys:college:update","sys:major:update","sys:job:update","sys:title:update","sys:subject:update"}, logical = Logical.OR)
     public Result update(@RequestBody DictDO dict) {
         try {
             dictService.updateById(dict);
@@ -77,6 +81,7 @@ public class DictController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{dictId}", method = RequestMethod.DELETE)
+    @RequiresPermissions(value = {"sys:college:delete","sys:major:delete","sys:job:delete","sys:title:delete","sys:subject:delete"}, logical = Logical.OR)
     public Result deleteById(@PathVariable String dictId) {
         try {
             dictService.removeById(dictId);
@@ -91,6 +96,7 @@ public class DictController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions(value = {"sys:college:list","sys:major:list","sys:job:list","sys:title:list","sys:subject:list"}, logical = Logical.OR)
     public Result list(@RequestBody Page<DictDO> page) {
         try {
             page = dictService.getListByPage(page);

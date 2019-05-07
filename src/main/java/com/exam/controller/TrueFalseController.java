@@ -7,6 +7,7 @@ import com.exam.pojo.TrueFalseDO;
 import com.exam.service.TrueFalseService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ public class TrueFalseController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("question:add")
     public Result add(@RequestBody TrueFalseDO trueFalse) {
         try {
             // 生成id
@@ -53,6 +55,7 @@ public class TrueFalseController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("question:list")
     public Result list(@RequestBody Page<TrueFalseDO> page) {
         try {
             page = trueFalseService.getByPage(page);
@@ -81,6 +84,7 @@ public class TrueFalseController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{tfId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("question:delete")
     public Result delete(@PathVariable String tfId) {
         try {
             trueFalseService.removeById(tfId);
@@ -95,6 +99,7 @@ public class TrueFalseController {
      * 修改选择题
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("question:update")
     public Result update(@RequestBody TrueFalseDO trueFalse) {
         try {
             trueFalseService.updateById(trueFalse);

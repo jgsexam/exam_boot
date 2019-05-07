@@ -1,10 +1,18 @@
 package com.exam.service.impl;
 
-import com.exam.pojo.TeacherRoleDO;
-import com.exam.mapper.TeacherRoleMapper;
-import com.exam.service.TeacherRoleService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.exam.mapper.TeacherRoleMapper;
+import com.exam.pojo.TeacherDO;
+import com.exam.pojo.TeacherRoleDO;
+import com.exam.service.TeacherRoleService;
+import com.exam.utils.IdWorker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -17,4 +25,47 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeacherRoleServiceImpl extends ServiceImpl<TeacherRoleMapper, TeacherRoleDO> implements TeacherRoleService {
 
+    @Autowired
+    private TeacherRoleMapper teacherRoleMapper;
+    @Autowired
+    private IdWorker idWorker;
+
+    /**
+     * 查询教师角色
+     *
+     * @param teacherDO
+     * @return
+     */
+    @Override
+    public List<TeacherRoleDO> getByTeacher(TeacherDO teacherDO) {
+        QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
+                .eq("tr_teacher", teacherDO.getTeacherId());
+        return teacherRoleMapper.selectList(wrapper);
+    }
+
+    /**
+     * 为教师添加角色
+     *
+     * @param roleList
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void addRole(List<TeacherRoleDO> roleList) {
+        if (!roleList.isEmpty()) {
+            String teacherId = roleList.get(0).getTrTeacher();
+            QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
+                    .eq("tr_teacher", teacherId);
+            teacherRoleMapper.delete(wrapper);
+
+            // 设置id
+            roleList = roleList.stream().map(e -> {
+                TeacherRoleDO tr = new TeacherRoleDO();
+                tr.setTrId(idWorker.nextId() + "");
+                tr.setTrRole(e.getTrRole());
+                tr.setTrTeacher(e.getTrTeacher());
+                return tr;
+            }).collect(Collectors.toList());
+            teacherRoleMapper.saveBatch(roleList);
+        }
+    }
 }

@@ -11,6 +11,7 @@ import com.exam.service.StudentService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Md5Utils;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,7 @@ public class StudentController {
      * 新增学生
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("user:student:add")
     public Result add(@RequestBody StudentDO studentDO) {
         try {
 
@@ -78,6 +80,7 @@ public class StudentController {
      * 修改学生
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("user:student:update")
     public Result update(@RequestBody StudentDO studentDO) {
         try {
             String studentDOStuId = studentDO.getStuId();
@@ -130,6 +133,7 @@ public class StudentController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{studentId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("user:student:delete")
     public Result delete(@PathVariable String studentId) {
         try {
             studentService.removeById(studentId);
@@ -144,6 +148,7 @@ public class StudentController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("user:student:list")
     public Result list(@RequestBody Page<StudentDO> page) {
         try {
             page = studentService.getByPage(page);

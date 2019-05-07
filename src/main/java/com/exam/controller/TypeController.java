@@ -8,6 +8,7 @@ import com.exam.pojo.TypeDO;
 import com.exam.service.TypeService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,7 @@ public class TypeController {
      * 新增题型
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("type:add")
     public Result add(@RequestBody TypeDO type) {
         try {
             type.setTypeId(idWorker.nextId() + "");
@@ -53,6 +55,7 @@ public class TypeController {
      * 修改题型
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("type:update")
     public Result update(@RequestBody TypeDO typeDO) {
         try {
             String typeId = typeDO.getTypeId();
@@ -75,6 +78,7 @@ public class TypeController {
      * 删除题型
      */
     @RequestMapping(value = "/delete/{typeId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("type:delete")
     public Result delete(@PathVariable String typeId) {
         try {
             if (typeId.equals(TypeEnum.ONE_CHOICE.getCode().toString())
@@ -89,6 +93,21 @@ public class TypeController {
         } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "新增失败！");
+        }
+    }
+
+
+    /**
+     * 分页查询
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("type:list")
+    public Result list(@RequestBody Page<TypeDO> page) {
+        try {
+            page = typeService.getListByPage(page);
+            return Result.ok(page);
+        } catch (Exception e) {
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
     }
 
@@ -117,19 +136,6 @@ public class TypeController {
     public Result getAll(@RequestBody List<String> knowIds) {
         List<TypeDO> list = typeService.getByKnowIds(knowIds);
         return Result.ok(list);
-    }
-
-    /**
-     * 分页查询
-     */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public Result list(@RequestBody Page<TypeDO> page) {
-        try {
-            page = typeService.getListByPage(page);
-            return Result.ok(page);
-        } catch (Exception e) {
-            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
-        }
     }
 
     /**

@@ -1,9 +1,16 @@
 package com.exam.pojo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -14,6 +21,7 @@ import java.io.Serializable;
  * @since 2019-04-01
  */
 @TableName("ex_auth")
+@Data
 public class AuthDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +29,7 @@ public class AuthDO implements Serializable {
     /**
      * 权限id
      */
-    @TableId(value = "auth_id", type = IdType.AUTO)
+    @TableId(value = "auth_id", type = IdType.INPUT)
     private String authId;
 
     /**
@@ -40,129 +48,52 @@ public class AuthDO implements Serializable {
     private String authFather;
 
     /**
-     * 菜单名
-     */
-    private String authMenu;
-
-    /**
-     * url
-     */
-    private String authUrl;
-
-    /**
      * 排序字段
      */
     private Integer authIndex;
 
     /**
-     * 是否生成菜单，1生成0不生成
-     */
-    private Integer authIsmenu;
-
-    /**
      * 乐观锁
      */
+    @Version
     private Integer authVersion;
 
     /**
      * 1正常0删除
      */
+    @TableLogic
     private Integer authDelete;
 
-
-    public String getAuthId() {
-        return authId;
-    }
-
-    public void setAuthId(String authId) {
-        this.authId = authId;
-    }
-
-    public String getAuthName() {
-        return authName;
-    }
-
-    public void setAuthName(String authName) {
-        this.authName = authName;
-    }
-
-    public String getAuthCode() {
-        return authCode;
-    }
-
-    public void setAuthCode(String authCode) {
-        this.authCode = authCode;
-    }
-
-    public String getAuthFather() {
-        return authFather;
-    }
-
-    public void setAuthFather(String authFather) {
-        this.authFather = authFather;
-    }
-
-    public String getAuthMenu() {
-        return authMenu;
-    }
-
-    public void setAuthMenu(String authMenu) {
-        this.authMenu = authMenu;
-    }
-
-    public String getAuthUrl() {
-        return authUrl;
-    }
-
-    public void setAuthUrl(String authUrl) {
-        this.authUrl = authUrl;
-    }
-
-    public Integer getAuthIndex() {
-        return authIndex;
-    }
-
-    public void setAuthIndex(Integer authIndex) {
-        this.authIndex = authIndex;
-    }
-
-    public Integer getAuthIsmenu() {
-        return authIsmenu;
-    }
-
-    public void setAuthIsmenu(Integer authIsmenu) {
-        this.authIsmenu = authIsmenu;
-    }
-
-    public Integer getAuthVersion() {
-        return authVersion;
-    }
-
-    public void setAuthVersion(Integer authVersion) {
-        this.authVersion = authVersion;
-    }
-
-    public Integer getAuthDelete() {
-        return authDelete;
-    }
-
-    public void setAuthDelete(Integer authDelete) {
-        this.authDelete = authDelete;
-    }
+    @TableField(exist = false)
+    private List<AuthDO> list;
 
     @Override
     public String toString() {
         return "AuthDO{" +
-        "authId=" + authId +
-        ", authName=" + authName +
-        ", authCode=" + authCode +
-        ", authFather=" + authFather +
-        ", authMenu=" + authMenu +
-        ", authUrl=" + authUrl +
-        ", authIndex=" + authIndex +
-        ", authIsmenu=" + authIsmenu +
-        ", authVersion=" + authVersion +
-        ", authDelete=" + authDelete +
-        "}";
+                "authId=" + authId +
+                ", authName=" + authName +
+                ", authCode=" + authCode +
+                ", authFather=" + authFather +
+                ", authIndex=" + authIndex +
+                ", authVersion=" + authVersion +
+                ", authDelete=" + authDelete +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AuthDO authDO = (AuthDO) o;
+        return authId.equals(authDO.authId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authId);
     }
 }

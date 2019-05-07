@@ -9,9 +9,9 @@ import com.exam.pojo.ChoiceDO;
 import com.exam.pojo.Page;
 import com.exam.service.ChoiceAnswerService;
 import com.exam.service.ChoiceService;
-import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
 import com.exam.utils.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,13 +37,12 @@ public class ChoiceController {
     private ChoiceService choiceService;
     @Autowired
     private ChoiceAnswerService choiceAnswerService;
-    @Autowired
-    private IdWorker idWorker;
 
     /**
      * 添加选择、多选、判断题
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("question:add")
     public Result add(@RequestBody ChoiceDO choice) {
         try {
             Result result = Result.ok("添加成功！");
@@ -65,6 +64,7 @@ public class ChoiceController {
      * 查询选择题
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("question:list")
     public Result list(@RequestBody Page<ChoiceDO> page, String bankId, String typeId) {
         try {
             if (StringUtils.isNotBlank(bankId)) {
@@ -86,6 +86,7 @@ public class ChoiceController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{choiceId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("question:delete")
     public Result delete(@PathVariable String choiceId) {
         try {
             // 根据id删除
@@ -118,6 +119,7 @@ public class ChoiceController {
      * 修改
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("question:update")
     public Result update(@RequestBody ChoiceDO choice) {
         try {
             Result result = Result.ok("修改成功！");

@@ -14,4 +14,11 @@
         ra_id, ra_role, ra_auth
     </sql>
 
+    <insert id="saveBatch" parameterType="com.exam.pojo.RoleAuthDO">
+        insert into ex_role_auth (ra_id, ra_role, ra_auth) values
+        <foreach collection="list" item="ra" separator=",">
+            (#{ra.raId}, #{ra.raRole}, #{ra.raAuth})
+        </foreach>
+    </insert>
+
 </mapper>

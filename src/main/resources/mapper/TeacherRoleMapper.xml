@@ -14,4 +14,11 @@
         tr_id, tr_teacher, tr_role
     </sql>
 
+    <insert id="saveBatch" parameterType="com.exam.pojo.TeacherRoleDO">
+        insert into ex_teacher_role (tr_id, tr_teacher, tr_role) values
+        <foreach collection="list" separator="," item="tr">
+            (#{tr.trId}, #{tr.trTeacher}, #{tr.trRole})
+        </foreach>
+    </insert>
+
 </mapper>

@@ -133,10 +133,15 @@ public class TeacherDO implements Serializable {
 
     /**
      * 角色
-     * @return
      */
     @TableField(exist = false)
     private List<String> roleList;
+
+    /**
+     * 权限
+     */
+    @TableField(exist = false)
+    private List<String> authList;
 
     @Override
     public String toString() {

@@ -3,6 +3,8 @@ package com.exam.mapper;
 import com.exam.pojo.TeacherRoleDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 教师-角色表 Mapper 接口
@@ -13,4 +15,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface TeacherRoleMapper extends BaseMapper<TeacherRoleDO> {
 
+    /**
+     * 批量添加
+     * @param list
+     */
+    void saveBatch(List<TeacherRoleDO> list);
 }

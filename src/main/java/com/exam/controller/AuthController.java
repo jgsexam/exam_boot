@@ -1,9 +1,18 @@
 package com.exam.controller;
 
-
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exam.constant.ResultEnum;
+import com.exam.pojo.AuthDO;
+import com.exam.service.AuthService;
+import com.exam.utils.Result;
+import com.exam.utils.TreeUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.stereotype.Controller;
+import java.util.List;
 
 /**
  * <p>
@@ -13,9 +22,26 @@ import org.springframework.stereotype.Controller;
  * @author 杨德石
  * @since 2019-04-01
  */
-@Controller
-@RequestMapping("/authDO")
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
+
+    @Autowired
+    private AuthService authService;
+
+    @RequestMapping(value = "/treeList", method = RequestMethod.GET)
+    @RequiresPermissions("ar:auth:list")
+    public Result treeList() {
+        try {
+            QueryWrapper<AuthDO> wrapper = new QueryWrapper<AuthDO>().orderByAsc("auth_index");
+            List<AuthDO> list = authService.list(wrapper);
+            List<AuthDO> authList = TreeUtils.getAuthList(list);
+            return Result.ok(authList);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败");
+        }
+    }
 
 }
 

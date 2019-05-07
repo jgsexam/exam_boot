@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.pojo.BankTypeDO;
 import com.exam.service.BankTypeService;
-import com.exam.service.TypeService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,13 +33,12 @@ public class BankTypeController {
     private BankTypeService bankTypeService;
     @Autowired
     private IdWorker idWorker;
-    @Autowired
-    private TypeService typeService;
 
     /**
      * 根据知识点id查询题型
      */
     @RequestMapping(value = "/list/{knowId}", method = RequestMethod.GET)
+    @RequiresPermissions("know:type:list")
     public Result list(@PathVariable String knowId) {
         try {
             List<BankTypeDO> list = bankTypeService.getListByKnow(knowId);
@@ -54,6 +53,7 @@ public class BankTypeController {
      * 分配题型
      */
     @RequestMapping(value = "/addType", method = RequestMethod.POST)
+    @RequiresPermissions("know:type:add")
     public Result addType(@RequestBody BankTypeDO bankTypeDO) {
         try {
             // 查询该题库该知识点是否已有这个题型
@@ -76,6 +76,7 @@ public class BankTypeController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    @RequiresPermissions("know:type:delete")
     public Result delete(@PathVariable String id) {
         try {
             bankTypeService.removeById(id);

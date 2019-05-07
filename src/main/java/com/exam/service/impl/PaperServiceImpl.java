@@ -3,6 +3,7 @@ package com.exam.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.constant.ExtConstant;
 import com.exam.constant.GaConstant;
 import com.exam.constant.NumberConstant;
 import com.exam.constant.PatternConstant;
@@ -190,7 +191,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         ToWordUtil toWordUtil = new ToWordUtil(CoreConstant.TEMPLATE_FOLD);
         toWordUtil.setTemplateName(CoreConstant.TEMPLATE_FILE_NAME);
 
-        String filename = paper.getPaperTitle() + ".docx";
+        String filename = paper.getPaperTitle() + ExtConstant.WORD_EXT;
 
         toWordUtil.setFileName(filename);
         toWordUtil.setFilePath(CoreConstant.PAPER_URL);

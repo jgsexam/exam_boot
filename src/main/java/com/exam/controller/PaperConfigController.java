@@ -6,6 +6,7 @@ import com.exam.exception.ExamException;
 import com.exam.pojo.PaperConfigDO;
 import com.exam.service.PaperConfigService;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class PaperConfigController {
      * 参数需要题目id、试卷id、题型id
      */
     @RequestMapping(value = "/addToPaper", method = RequestMethod.POST)
+    @RequiresPermissions("paper:submit")
     public Result addToPaper(@RequestBody PaperConfigDO config) {
         try {
             paperConfigService.addQuestionToPaper(config);
@@ -52,6 +54,7 @@ public class PaperConfigController {
      * 查询这个试卷已经有了多少题目
      */
     @RequestMapping(value = "/getQuestionNum/{paperId}", method = RequestMethod.GET)
+    @RequiresPermissions("paper:submit")
     public Result getQuestionNum(@PathVariable String paperId) {
         List<PaperConfigDO> list = paperConfigService.getQuestionNum(paperId);
         return Result.ok(list);

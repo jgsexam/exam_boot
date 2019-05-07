@@ -8,6 +8,7 @@ import com.exam.service.RoleService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
 import com.exam.utils.TreeUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,7 @@ public class RoleController {
      * 新增角色
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("ar:role:add")
     public Result add(@RequestBody RoleDO roleDO) {
         try {
             roleDO.setRoleId(idWorker.nextId() + "");
@@ -52,6 +54,7 @@ public class RoleController {
      * 修改角色
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("ar:role:update")
     public Result update(@RequestBody RoleDO roleDO) {
         try {
             roleService.updateById(roleDO);
@@ -83,6 +86,7 @@ public class RoleController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{roleId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("ar:role:delete")
     public Result delete(@PathVariable String roleId) {
         try {
             roleService.delete(roleId);
@@ -96,6 +100,7 @@ public class RoleController {
      * 树形查询
      */
     @RequestMapping(value = "/treeList", method = RequestMethod.GET)
+    @RequiresPermissions("ar:role:list")
     public Result treeList() {
         try {
             QueryWrapper<RoleDO> wrapper = new QueryWrapper<RoleDO>().orderByAsc("role_index");

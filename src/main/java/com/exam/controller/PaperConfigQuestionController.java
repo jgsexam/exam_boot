@@ -3,6 +3,7 @@ package com.exam.controller;
 import com.exam.constant.ResultEnum;
 import com.exam.service.PaperService;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class PaperConfigQuestionController {
      * 而 相同的config下，题目id只会有一个
      */
     @RequestMapping(value = "/delete/{paperId}/{questionId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("paper:submit")
     public Result delete(@PathVariable String paperId, @PathVariable String questionId) {
         try {
             paperService.deleteQuestion(paperId, questionId);

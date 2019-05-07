@@ -21,6 +21,11 @@ public class OtherConstant {
     public final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
+     * 文件日期格式化
+     */
+    public final static SimpleDateFormat FILE_DEFAULT_DATETIME_FORMATER = new SimpleDateFormat("yyyyMMddHHmmss");
+
+    /**
      * localhost
      */
     public final static String LOCAL_HOST = "localhost";

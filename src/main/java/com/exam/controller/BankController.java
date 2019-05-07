@@ -6,11 +6,10 @@ import com.exam.constant.ResultEnum;
 import com.exam.pojo.BankDO;
 import com.exam.pojo.Page;
 import com.exam.service.BankService;
-import com.exam.service.BankTypeService;
 import com.exam.service.DictService;
-import com.exam.service.TypeService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +34,7 @@ public class BankController {
     @Autowired
     private BankService bankService;
     @Autowired
-    private BankTypeService bankTypeService;
-    @Autowired
     private IdWorker idWorker;
-    @Autowired
-    private TypeService typeService;
     @Autowired
     private DictService dictService;
 
@@ -50,6 +45,7 @@ public class BankController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("bank:add")
     public Result add(@RequestBody BankDO bankDO) {
         try {
             bankDO.setBankId(idWorker.nextId() + "");
@@ -65,6 +61,7 @@ public class BankController {
      * 更新题库
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("bank:update")
     public Result update(@RequestBody BankDO bankDO) {
         try {
             bankService.updateById(bankDO);
@@ -79,12 +76,28 @@ public class BankController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{bankId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("bank:delete")
     public Result delete(@PathVariable String bankId) {
         try {
             bankService.removeById(bankId);
             return Result.ok("删除成功！");
         } catch (Exception e) {
             return Result.build(ResultEnum.ERROR.getCode(), "删除失败！");
+        }
+    }
+
+    /**
+     * 分页查询
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("bank:list")
+    public Result list(@RequestBody Page<BankDO> page) {
+        try {
+            page = bankService.getListByPage(page);
+            return Result.ok(page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
     }
 
@@ -133,20 +146,6 @@ public class BankController {
         wrapper.eq("bank_subject", subjectId);
         List<BankDO> list = bankService.list(wrapper);
         return Result.ok(list);
-    }
-
-    /**
-     * 分页查询
-     */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public Result list(@RequestBody Page<BankDO> page) {
-        try {
-            page = bankService.getListByPage(page);
-            return Result.ok(page);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
-        }
     }
 
 }

@@ -35,8 +35,8 @@ public class DateUtils {
      * 指定日期格式
      * @return
      */
-    public static String newDateByFormat(String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    public static String newDateByFormat(SimpleDateFormat format) {
+        SimpleDateFormat sdf = format;
         return sdf.format(new Date());
     }
 

@@ -9,6 +9,7 @@ import com.exam.pojo.Page;
 import com.exam.service.CodeAnswerService;
 import com.exam.service.CodeService;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,7 @@ public class CodeController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("question:add")
     public Result add(@RequestBody CodeDO code) {
         try {
             codeService.addCode(code);
@@ -71,6 +73,7 @@ public class CodeController {
      * 更新
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("question:update")
     public Result update(@RequestBody CodeDO codeDO) {
         try {
             codeService.updateCode(codeDO);
@@ -85,6 +88,7 @@ public class CodeController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{codeId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("question:delete")
     public Result delete(@PathVariable String codeId) {
         try {
             codeService.removeById(codeId);
@@ -99,6 +103,7 @@ public class CodeController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("question:list")
     public Result list(@RequestBody Page<CodeDO> page) {
         try {
             page = codeService.getByPage(page);

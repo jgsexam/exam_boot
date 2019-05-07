@@ -3,6 +3,8 @@ package com.exam.mapper;
 import com.exam.pojo.RoleAuthDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 角色-权限表 Mapper 接口
@@ -13,4 +15,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface RoleAuthMapper extends BaseMapper<RoleAuthDO> {
 
+    /**
+     * 批量添加
+     * @param list
+     */
+    void saveBatch(List<RoleAuthDO> list);
 }

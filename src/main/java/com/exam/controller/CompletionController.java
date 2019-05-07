@@ -10,6 +10,7 @@ import com.exam.service.CompletionAnswerService;
 import com.exam.service.CompletionService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,7 @@ public class CompletionController {
      * 添加填空题
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("question:add")
     public Result add(@RequestBody CompletionDO completion) {
         try {
             Result result = completionService.saveOrUpdateCompletion(completion);
@@ -74,6 +76,7 @@ public class CompletionController {
      * 修改
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("question:update")
     public Result update(@RequestBody CompletionDO completionDO) {
         try {
             Result result = completionService.saveOrUpdateCompletion(completionDO);
@@ -89,6 +92,7 @@ public class CompletionController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{compId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("question:delete")
     public Result delete(@PathVariable String compId) {
         try {
             completionService.removeById(compId);
@@ -103,6 +107,7 @@ public class CompletionController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("question:list")
     public Result list(@RequestBody Page<CompletionDO> page) {
         try {
             page = completionService.getByPage(page);

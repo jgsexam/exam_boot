@@ -1,7 +1,10 @@
 package com.exam.service;
 
-import com.exam.pojo.RoleAuthDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.exam.pojo.AuthDO;
+import com.exam.pojo.RoleAuthDO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RoleAuthService extends IService<RoleAuthDO> {
 
+    /**
+     * 给角色添加权限
+     * @param list
+     */
+    void addAuth(List<RoleAuthDO> list);
+
+    /**
+     * 根据角色id列表查询出所有权限（包括父权限）
+     * @param roleIds
+     * @return
+     */
+    List<AuthDO> getByRoleIds(List<String> roleIds);
 }

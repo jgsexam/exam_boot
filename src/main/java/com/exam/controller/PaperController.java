@@ -9,6 +9,7 @@ import com.exam.service.PaperService;
 import com.exam.utils.DateUtils;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ public class PaperController {
      * 创建试卷
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("paper:add")
     public Result add(@RequestBody PaperDO paper) {
         try {
             PaperDO paperDO = paperService.getOne(new QueryWrapper<PaperDO>().eq("paper_title", paper.getPaperTitle()));
@@ -74,6 +76,7 @@ public class PaperController {
      * 更新试卷信息
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("paper:update")
     public Result update(@RequestBody PaperDO paper) {
         try {
             paper.setPaperUpdateTime(DateUtils.newDate());
@@ -89,6 +92,7 @@ public class PaperController {
      * 根据id删除
      */
     @RequestMapping(value = "/delete/{paperId}", method = RequestMethod.DELETE)
+    @RequiresPermissions("paper:delete")
     public Result delete(@PathVariable String paperId) {
         try {
             paperService.removeById(paperId);
@@ -103,6 +107,7 @@ public class PaperController {
      * 分页查询
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("paper:list")
     public Result list(@RequestBody Page<PaperDO> page) {
         try {
             page = paperService.getByPage(page);
@@ -117,6 +122,7 @@ public class PaperController {
      * 查询试卷的题目
      */
     @RequestMapping(value = "/questionList/{paperId}", method = RequestMethod.GET)
+    @RequiresPermissions("paper:submit")
     public Result questionList(@PathVariable String paperId) {
         try {
             PaperDO paper = paperService.getQuestion(paperId);
@@ -134,6 +140,7 @@ public class PaperController {
      * @return
      */
     @RequestMapping(value = "/submit/{paperId}", method = RequestMethod.GET)
+    @RequiresPermissions("paper:submit")
     public Result submit(@PathVariable String paperId) {
         try {
             paperService.submit(paperId);
@@ -151,6 +158,7 @@ public class PaperController {
      * @throws Exception
      */
     @RequestMapping(value = "/gaSubmit", method = RequestMethod.POST)
+    @RequiresPermissions("paper:submit")
     public Result gaSubmit(@RequestBody GaPaperDTO paperDTO) throws Exception {
         paperService.gaSubmitPaper(paperDTO);
         return Result.ok("组卷成功！");

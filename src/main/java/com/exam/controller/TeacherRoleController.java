@@ -4,11 +4,10 @@ package com.exam.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.pojo.TeacherRoleDO;
-import com.exam.service.RoleService;
 import com.exam.service.TeacherRoleService;
-import com.exam.service.TeacherService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +30,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/teacherRole")
 public class TeacherRoleController {
 
-    @Autowired
-    private TeacherService teacherService;
-    @Autowired
-    private RoleService roleService;
     @Autowired
     private TeacherRoleService teacherRoleService;
     @Autowired
@@ -61,27 +56,11 @@ public class TeacherRoleController {
      * 修改角色
      */
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @RequiresPermissions("user:teacher:role")
     public Result update(@RequestBody List<TeacherRoleDO> list) {
         try {
-            if (!list.isEmpty()) {
-                String teacherId = list.get(0).getTrTeacher();
-                QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
-                        .eq("tr_teacher", teacherId);
-                teacherRoleService.remove(wrapper);
-
-                // 设置id
-                list = list.stream().map(e -> {
-                    TeacherRoleDO tr = new TeacherRoleDO();
-                    tr.setTrId(idWorker.nextId() + "");
-                    tr.setTrRole(e.getTrRole());
-                    tr.setTrTeacher(e.getTrTeacher());
-                    return tr;
-                }).collect(Collectors.toList());
-                teacherRoleService.saveBatch(list);
-                return Result.ok("修改成功！");
-            }else {
-                return Result.build(ResultEnum.ERROR.getCode(), "请选择至少一个角色！");
-            }
+            teacherRoleService.addRole(list);
+            return Result.ok("修改成功！");
         } catch (Exception e) {
             return Result.build(ResultEnum.ERROR.getCode(), "修改失败！");
         }

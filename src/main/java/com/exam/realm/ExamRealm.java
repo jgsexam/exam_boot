@@ -2,9 +2,11 @@ package com.exam.realm;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exam.pojo.AuthDO;
 import com.exam.pojo.RoleDO;
 import com.exam.pojo.TeacherDO;
 import com.exam.pojo.TeacherRoleDO;
+import com.exam.service.RoleAuthService;
 import com.exam.service.RoleService;
 import com.exam.service.TeacherRoleService;
 import com.exam.service.TeacherService;
@@ -34,6 +36,8 @@ public class ExamRealm extends AuthorizingRealm {
     private RoleService roleService;
     @Autowired
     private TeacherRoleService teacherRoleService;
+    @Autowired
+    private RoleAuthService roleAuthService;
     /**
      * 授权方法
      * @param principalCollection
@@ -48,16 +52,17 @@ public class ExamRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
         // 查询角色， 封装成集合
-        QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
-                .eq("tr_teacher", teacher.getTeacherId());
-        List<TeacherRoleDO> list = teacherRoleService.list(wrapper);
+        List<TeacherRoleDO> roleList = teacherRoleService.getByTeacher(teacher);
         // Lambda表达式取出集合中指定元素封装成另一个集合
-        List<String> roleIds = list.stream().map(TeacherRoleDO::getTrRole).collect(Collectors.toList());
+        List<String> roleIds = roleList.stream().map(TeacherRoleDO::getTrRole).collect(Collectors.toList());
         // 使用roleIds查询所有的角色，将角色名封装成集合
-        List<String> roleList = roleService.listByIds(roleIds).stream().map(RoleDO::getRoleName).collect(Collectors.toList());
-        info.addRoles(roleList);
+        List<String> roleNames = roleService.listByIds(roleIds).stream().map(RoleDO::getRoleName).collect(Collectors.toList());
+        info.addRoles(roleNames);
 
-
+        // 根据roles查询权限
+        List<AuthDO> authList = roleAuthService.getByRoleIds(roleIds);
+        List<String> authCodes = authList.stream().map(AuthDO::getAuthCode).collect(Collectors.toList());
+        info.addStringPermissions(authCodes);
         return info;
     }
 
