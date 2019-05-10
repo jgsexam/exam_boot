@@ -16,16 +16,13 @@ import com.exam.service.TeacherService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Md5Utils;
 import com.exam.utils.Result;
+import com.exam.utils.ShiroUtils;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.DefaultSubjectContext;
-import org.apache.shiro.web.session.mgt.WebSessionKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +30,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -226,13 +221,10 @@ public class TeacherController {
     /**
      * 根据token获取用户信息
      */
-    @RequestMapping(value = "/info/{token}", method = RequestMethod.GET)
-    public Result info(@PathVariable String token, HttpServletRequest request, HttpServletResponse response) {
-        WebSessionKey key = new WebSessionKey(token, request, response);
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public Result info() {
         try {
-            Session session = SecurityUtils.getSecurityManager().getSession(key);
-            SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-            TeacherDO teacherDO = (TeacherDO) principalCollection.getPrimaryPrincipal();
+            TeacherDO teacherDO = ShiroUtils.getLoginTeacher();
             // 查询角色， 封装成集合
             List<TeacherRoleDO> roleList = teacherRoleService.getByTeacher(teacherDO);
             // Lambda表达式取出集合中指定元素封装成另一个集合

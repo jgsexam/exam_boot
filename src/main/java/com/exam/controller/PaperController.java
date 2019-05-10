@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.dto.GaPaperDTO;
 import com.exam.pojo.Page;
+import com.exam.pojo.PaperConfigDO;
 import com.exam.pojo.PaperDO;
 import com.exam.service.PaperService;
 import com.exam.utils.DateUtils;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import com.exam.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -50,6 +54,7 @@ public class PaperController {
             paper.setPaperId(idWorker.nextId() + "");
             paper.setPaperCreateTime(DateUtils.newDate());
             paper.setPaperUpdateTime(DateUtils.newDate());
+            paper.setPaperCreateBy(ShiroUtils.getLoginTeacher().getTeacherId());
             paperService.save(paper);
             return Result.ok("创建成功！请及时组卷！");
         } catch (Exception e) {
@@ -162,6 +167,20 @@ public class PaperController {
     public Result gaSubmit(@RequestBody GaPaperDTO paperDTO) throws Exception {
         paperService.gaSubmitPaper(paperDTO);
         return Result.ok("组卷成功！");
+    }
+
+    /**
+     * 查看试卷题型中的题目数
+     */
+    @RequestMapping(value = "/typeNum/{id}", method = RequestMethod.GET)
+    public Result typeNum(@PathVariable String id) {
+        try {
+            List<PaperConfigDO> list = paperService.getTypeNum(id);
+            return Result.ok(list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查看失败！");
+        }
     }
 
 }

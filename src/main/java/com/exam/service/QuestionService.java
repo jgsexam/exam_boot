@@ -55,7 +55,8 @@ public interface QuestionService extends IService<QuestionDO> {
     /**
      * 遗传算法专用变异查询
      * @param questionDO
+     * @param configDTO
      * @return
      */
-    List<QuestionDO> getMutateList(QuestionDO questionDO, List<String> ids);
+    List<QuestionDO> getMutateList(QuestionDO questionDO, GaConfigDTO configDTO);
 }

@@ -56,20 +56,20 @@ public class Generation {
         int endPos = s1 > s2 ? s1 : s2;
 
         for (int i = startPos; i < endPos; i++) {
-            child.saveQuestion(i, parent1.getQuestion(i));
+            child.saveQuestion(i, parent1.findQuestion(i));
         }
 
         // 继承parent2中未被child继承的question
         // 防止出现重复的元素
         for (int i = 0; i < startPos; i++) {
-            saveChildQuestion(parent2, child, i);
+            saveChildQuestion(parent2, child, i, configDTO);
         }
 
         for (int i = endPos; i < parent2.getQuestionDetailList().size(); i++) {
-            saveChildQuestion(parent2, child, i);
+            saveChildQuestion(parent2, child, i, configDTO);
         }
 
-        child.getScoreGa();
+        child.calculationScoreGa();
         GaUtils.setConfigId(child);
 
         return child;
@@ -79,15 +79,15 @@ public class Generation {
      * 突变算子 每个个体的每个基因都有可能突变
      * 变异的原理就是从题库中抽取一道跟原题目分数一样的题目
      */
-    public void mutate(PaperConfigDO config) {
+    public void mutate(PaperConfigDO config, GaConfigDTO configDTO) {
         List list;
         int index;
         for (int i = 0; i < config.getQuestionDetailList().size(); i++) {
             if (Math.random() < GaConstant.MUTATION_RATE) {
                 // 进行突变，第i道
-                Object tmpQuestion = config.getQuestion(i);
+                Object tmpQuestion = config.findQuestion(i);
                 // 从题库中获取和变异的题目类型一样分数相同的题目（不能重复）
-                list = GaUtils.getMutateList(tmpQuestion, config);
+                list = GaUtils.getMutateList(tmpQuestion, configDTO);
                 if (list.size() > 0) {
                     // 随机获取一道
                     index = (int) (Math.random() * list.size());
@@ -104,11 +104,11 @@ public class Generation {
      * @param child
      * @param i
      */
-    private void saveChildQuestion(PaperConfigDO parent2, PaperConfigDO child, int i) {
-        if (!child.containsQuestion(parent2.getQuestion(i))) {
-            child.saveQuestion(i, parent2.getQuestion(i));
+    private void saveChildQuestion(PaperConfigDO parent2, PaperConfigDO child, int i, GaConfigDTO configDTO) {
+        if (!child.containsQuestion(parent2.findQuestion(i))) {
+            child.saveQuestion(i, parent2.findQuestion(i));
         } else {
-            List list = GaUtils.getMutateList(parent2.getQuestion(i), parent2);
+            List list = GaUtils.getMutateList(parent2.findQuestion(i), configDTO);
             child.saveQuestion(i, list.get((int) (Math.random() * list.size())));
         }
     }
@@ -145,7 +145,7 @@ public class Generation {
         // 种群变异操作
         for (int i = elitismOffset; i < pop.getConfigSize(); i++) {
             PaperConfigDO configDO = population.getConfig(i);
-            mutate(configDO);
+            mutate(configDO, configDTO);
             // 计算知识点覆盖率与适应度
             configDO.setKpCoverageGa(configDTO);
             configDO.setAdaptationDegreeGa(configDTO);

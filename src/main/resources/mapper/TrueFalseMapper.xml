@@ -87,8 +87,9 @@
         from ex_true_false
         where tf_score = #{tf.tfScore}
         and tf_delete = 1
-        <foreach collection="ids" open="and tf_id not in (" close=")" separator="," item="id">
-            #{id}
+        and tf_id != #{tf.tfId}
+        <foreach collection="config.knowledgeIds" open="and tf_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
         </foreach>
     </select>
 

@@ -52,10 +52,9 @@ public interface QuestionMapper extends BaseMapper<QuestionDO> {
 
     /**
      * 遗传算法专用变异查询
-     *
      * @param questionDO
-     * @param ids
+     * @param configDTO
      * @return
      */
-    List<QuestionDO> getMutateList(@Param("question") QuestionDO questionDO, @Param("ids") List<String> ids);
+    List<QuestionDO> getMutateList(@Param("question") QuestionDO questionDO, @Param("config") GaConfigDTO configDTO);
 }

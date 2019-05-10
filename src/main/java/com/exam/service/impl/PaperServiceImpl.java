@@ -7,6 +7,7 @@ import com.exam.constant.ExtConstant;
 import com.exam.constant.GaConstant;
 import com.exam.constant.NumberConstant;
 import com.exam.constant.PatternConstant;
+import com.exam.constant.SelectEnum;
 import com.exam.constant.SubmitEnum;
 import com.exam.constant.TestEnum;
 import com.exam.constant.TypeEnum;
@@ -18,6 +19,7 @@ import com.exam.mapper.ChoiceMapper;
 import com.exam.mapper.CodeMapper;
 import com.exam.mapper.CompletionMapper;
 import com.exam.mapper.PaperConfigMapper;
+import com.exam.mapper.PaperLogMapper;
 import com.exam.mapper.PaperMapper;
 import com.exam.mapper.QuestionMapper;
 import com.exam.mapper.TrueFalseMapper;
@@ -30,11 +32,14 @@ import com.exam.pojo.PaperConfigDO;
 import com.exam.pojo.PaperConfigQuestionDO;
 import com.exam.pojo.PaperDO;
 import com.exam.pojo.QuestionDO;
+import com.exam.pojo.TeacherDO;
 import com.exam.pojo.TrueFalseDO;
 import com.exam.service.PaperConfigQuestionService;
 import com.exam.service.PaperService;
 import com.exam.utils.DateUtils;
 import com.exam.utils.IdWorker;
+import com.exam.utils.LogUtils;
+import com.exam.utils.ShiroUtils;
 import com.exam.utils.StringUtils;
 import com.exam.utils.ToWordUtil;
 import com.google.common.collect.Lists;
@@ -78,6 +83,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
     @Autowired
     private QuestionMapper questionMapper;
     @Autowired
+    private PaperLogMapper paperLogMapper;
+    @Autowired
     private IdWorker idWorker;
 
     private static final Pattern UNDER_LINE_PATTERN = PatternConstant.THREE_UNDER_LINE_PATTERN;
@@ -89,6 +96,15 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
     public Page<PaperDO> getByPage(Page<PaperDO> page) {
         // 处理参数
         page.filterParams();
+        TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
+        if (SelectEnum.SELECT_COLLEGE.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询学院
+            page.getParams().put("orgCollege", loginTeacher.getTeacherCollege());
+        }
+        if (SelectEnum.SELECT_SELF.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询自己
+            page.getParams().put("orgTeacher", loginTeacher.getTeacherId());
+        }
         // 设置每页显示条数
         if (page.getCurrentCount() == null) {
             page.setCurrentCount(CoreConstant.CURRENT_COUNT);
@@ -116,6 +132,9 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
     public PaperDO getQuestion(String paperId) {
         // 连表一次查询出试卷内容
         PaperDO paper = paperMapper.getPaperQuestion(paperId);
+        if (paper == null) {
+            return null;
+        }
         List<PaperConfigDO> configList = paper.getConfigList();
         // 遍历集合，对集合分组
         Map<String, List<String>> configMap = Maps.newHashMap();
@@ -168,7 +187,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         }
 
         // 排一下序
-        newConfigList.sort(Comparator.comparingInt(c -> Integer.parseInt(c.getConfigType())));
+        newConfigList.sort(Comparator.comparingLong(c -> Long.parseLong(c.getConfigType())));
         // 设置新的配置
         paper.setConfigList(newConfigList);
         return paper;
@@ -202,7 +221,13 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         // 更新试卷下载链接
         String downloadUrl = CoreConstant.SERVER_FILE_URL + filename;
         paper.setPaperDownload(downloadUrl);
+
+        // 修改更新时间
+        paper.setPaperUpdateTime(DateUtils.newDateTime());
         paperMapper.updateById(paper);
+
+        LogUtils.saveLog(paper);
+
     }
 
     /**
@@ -231,7 +256,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         // 删除之后，根据配置id和题目id查询题目，获取到分值和难度系数
         BigDecimal score;
         double difficulty;
-        if (TypeEnum.ONE_CHOICE.getCode().toString().equalsIgnoreCase(configType) ||
+        if (TypeEnum.ONE_CHOICE.getCode().toString().equals(configType) ||
                 TypeEnum.MANY_CHOICE.getCode().toString().equals(configType)) {
             // 是选择题
             ChoiceDO choiceDO = choiceMapper.selectById(questionId);
@@ -271,7 +296,14 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         BigDecimal oldDiff = paperDO.getPaperDifficulty();
         Integer newNum = oldNum - 1;
 
-        BigDecimal newDiff = oldDiff.multiply(oldScore).subtract(new BigDecimal(difficulty)).divide(newScore, NumberConstant.DEFAULT_DECIMAL_RETAIN, BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal newDiff = oldDiff.multiply(oldScore);
+        if (newScore.compareTo(new BigDecimal(NumberConstant.ZERO)) == 0) {
+            newDiff = new BigDecimal(1);
+        } else {
+            newDiff = newDiff.subtract(new BigDecimal(difficulty));
+
+            newDiff = newDiff.divide(newScore, NumberConstant.DEFAULT_DECIMAL_RETAIN, BigDecimal.ROUND_HALF_DOWN);
+        }
 
         paperDO.setPaperDifficulty(newDiff);
         paperDO.setPaperScore(newScore);
@@ -281,6 +313,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
 
     /**
      * 遗传算法智能组卷
+     *
      * @param paperDTO
      */
     @Override
@@ -290,7 +323,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         PaperDO paperDO = paperMapper.selectById(paperDTO.getPaperId());
         paperDO.setConfigList(Lists.newArrayList());
         for (GaConfigDTO configDTO : paperDTO.getConfigList()) {
-
+            System.out.println(configDTO.getTypeId() + "" + configDTO.getQuestionNum());
             configDTO.setBankId(paperDO.getPaperBank());
 
             int count = 0;
@@ -303,7 +336,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
             System.out.println("初次适应度：" + population.getFitness(0).getAdaptationDegree() + "，知识点覆盖率为：" + population.getFitness(0).getKpCoverage());
 
             Generation generation = new Generation();
-            while(count < runCount && population.getFitness(0).getAdaptationDegree() < expand) {
+            while (count < runCount && population.getFitness(0).getAdaptationDegree() < expand) {
                 count++;
                 population = generation.evolvePopulation(population, configDTO);
             }
@@ -317,7 +350,22 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
     }
 
     /**
+     * 查看每个题型的题目数
+     * @param id
+     * @return
+     */
+    @Override
+    public List<PaperConfigDO> getTypeNum(String id) {
+        List<PaperConfigDO> typeList = paperConfigMapper.getTypeNum(id);
+        for (PaperConfigDO configDO : typeList) {
+            configDO.setTypeName(configDO.getType().getTypeName());
+        }
+        return typeList;
+    }
+
+    /**
      * 智能组卷，处理试卷和配置
+     *
      * @param paperDO
      */
     @Transactional(rollbackFor = Exception.class)
@@ -334,7 +382,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
             for (Object tmpQuestion : questionList) {
 
                 PaperConfigQuestionDO paperConfigQuestionDO = new PaperConfigQuestionDO();
-                paperConfigQuestionDO.setId(idWorker.nextId()+"");
+                paperConfigQuestionDO.setId(idWorker.nextId() + "");
                 paperConfigQuestionDO.setQuestionConfig(config.getConfigId());
                 if (tmpQuestion instanceof ChoiceDO) {
                     // 选择题

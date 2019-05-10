@@ -112,8 +112,9 @@
         from ex_completion
         where comp_score = #{comp.compScore}
         and comp_delete = 1
-        <foreach collection="ids" open="and comp_id not in (" close=")" separator="," item="id">
-            #{id}
+        and comp_id != #{comp.compId}
+        <foreach collection="config.knowledgeIds" open="and comp_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
         </foreach>
     </select>
 

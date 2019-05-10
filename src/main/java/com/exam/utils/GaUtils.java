@@ -29,16 +29,16 @@ public class GaUtils {
         return gaService.getGaList(configDTO);
     }
 
-    public static List getMutateList(Object question, PaperConfigDO parent2) {
-        return gaService.getMutateList(question, parent2);
+    public static List getMutateList(Object question, GaConfigDTO configDTO) {
+        return gaService.getMutateList(question, configDTO);
     }
 
-    @Autowired(required = true)
+    @Autowired
     public void setIdWorker(IdWorker idWorker) {
         GaUtils.idWorker = idWorker;
     }
 
-    @Autowired(required = true)
+    @Autowired
     public void setGaService(GaService gaService) {
         GaUtils.gaService = gaService;
     }

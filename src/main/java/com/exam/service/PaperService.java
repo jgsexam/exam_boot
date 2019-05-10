@@ -3,7 +3,10 @@ package com.exam.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.dto.GaPaperDTO;
 import com.exam.pojo.Page;
+import com.exam.pojo.PaperConfigDO;
 import com.exam.pojo.PaperDO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -53,4 +56,11 @@ public interface PaperService extends IService<PaperDO> {
      * @throws Exception
      */
     void gaSubmitPaper(GaPaperDTO paperDTO) throws Exception;
+
+    /**
+     * 查看每个题型的题目数
+     * @param id
+     * @return
+     */
+    List<PaperConfigDO> getTypeNum(String id);
 }

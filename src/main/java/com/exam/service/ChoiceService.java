@@ -20,6 +20,7 @@ public interface ChoiceService extends IService<ChoiceDO> {
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -27,6 +28,7 @@ public interface ChoiceService extends IService<ChoiceDO> {
 
     /**
      * 添加或修改单选题
+     *
      * @param choice
      * @return
      */
@@ -34,6 +36,7 @@ public interface ChoiceService extends IService<ChoiceDO> {
 
     /**
      * 添加或修改多选题
+     *
      * @param choice
      * @return
      */
@@ -41,6 +44,7 @@ public interface ChoiceService extends IService<ChoiceDO> {
 
     /**
      * 随机查询列表（遗传算法专用）
+     *
      * @param configDTO
      * @return
      */
@@ -48,8 +52,10 @@ public interface ChoiceService extends IService<ChoiceDO> {
 
     /**
      * 遗传算法专用 变异查询
+     *
      * @param choiceDO
+     * @param configDTO
      * @return
      */
-    List<ChoiceDO> getMutateList(ChoiceDO choiceDO, List<String> ids);
+    List<ChoiceDO> getMutateList(ChoiceDO choiceDO, GaConfigDTO configDTO);
 }

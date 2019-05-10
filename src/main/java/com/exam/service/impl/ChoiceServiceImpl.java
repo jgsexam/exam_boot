@@ -143,8 +143,8 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
      * @return
      */
     @Override
-    public List<ChoiceDO> getMutateList(ChoiceDO choiceDO, List<String> ids) {
-        return choiceMapper.getMutateList(choiceDO, ids);
+    public List<ChoiceDO> getMutateList(ChoiceDO choiceDO, GaConfigDTO configDTO) {
+        return choiceMapper.getMutateList(choiceDO, configDTO);
     }
 
     @Transactional(rollbackFor = Exception.class)

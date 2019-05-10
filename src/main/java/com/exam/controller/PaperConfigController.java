@@ -54,7 +54,6 @@ public class PaperConfigController {
      * 查询这个试卷已经有了多少题目
      */
     @RequestMapping(value = "/getQuestionNum/{paperId}", method = RequestMethod.GET)
-    @RequiresPermissions("paper:submit")
     public Result getQuestionNum(@PathVariable String paperId) {
         List<PaperConfigDO> list = paperConfigService.getQuestionNum(paperId);
         return Result.ok(list);

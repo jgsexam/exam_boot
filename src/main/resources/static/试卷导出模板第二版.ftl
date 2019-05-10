@@ -1006,7 +1006,9 @@
                         </w:rPr>
                         <#if config??>
                             <#if config.configType=='3'>
-                                <w:t>${numberArr[config_index]}、${config.type.typeName}（${config.configScore}分）（对的打“√”，错的打“×”）</w:t>
+                                <w:t>${numberArr[config_index]}、${config.type.typeName}（${config.configScore}
+                                    分）（对的打“√”，错的打“×”）
+                                </w:t>
                             </#if>
                             <#if config.configType!='3'>
                                 <w:t>${numberArr[config_index]}、${config.type.typeName}（${config.configScore} 分）</w:t>
@@ -1048,36 +1050,19 @@
                                 </w:p>
                                 <#list choice.choiceAnswer as answer>
                                     <w:p>
-                                        <#if answer_index%2==0>
-                                            <w:r>
-                                                <w:t>${answer.answerNumber }</w:t>
-                                            </w:r>
-                                            <w:r>
-                                                <w:rPr>
-                                                    <w:rFonts w:hint="eastAsia" w:ascii="宋体" w:hAnsi="宋体"/>
-                                                    <w:szCs w:val="21"/>
-                                                </w:rPr>
-                                                <w:t>.</w:t>
-                                            </w:r>
-                                            <w:r>
-                                                <w:t>${answer.answerContent! }</w:t>
-                                            </w:r>
-                                        </#if>
-                                        <#if answer_index%2==1>
-                                            <w:r>
-                                                <w:t>${answer.answerNumber }</w:t>
-                                            </w:r>
-                                            <w:r>
-                                                <w:rPr>
-                                                    <w:rFonts w:hint="fareast" w:ascii="宋体" w:hAnsi="宋体"/>
-                                                    <w:szCs w:val="21"/>
-                                                </w:rPr>
-                                                <w:t>.</w:t>
-                                            </w:r>
-                                            <w:r>
-                                                <w:t>${answer.answerContent! }</w:t>
-                                            </w:r>
-                                        </#if>
+                                        <w:r>
+                                            <w:t>${answer.answerNumber }</w:t>
+                                        </w:r>
+                                        <w:r>
+                                            <w:rPr>
+                                                <w:rFonts w:hint="eastAsia" w:ascii="宋体" w:hAnsi="宋体"/>
+                                                <w:szCs w:val="21"/>
+                                            </w:rPr>
+                                            <w:t>.</w:t>
+                                        </w:r>
+                                        <w:r>
+                                            <w:t>${answer.answerContent! }</w:t>
+                                        </w:r>
                                     </w:p>
                                 </#list>
                             </#if>

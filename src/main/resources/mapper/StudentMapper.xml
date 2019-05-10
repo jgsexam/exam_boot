@@ -48,6 +48,9 @@
             <if test="params.collegeId!=null and params.collegeId!=''">
                 and college.dict_id = #{params.collegeId}
             </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and stu_college = #{params.orgCollege}
+            </if>
             <if test="params.stuSex!=null and params.stuSex!=''">
                 and stu_sex = #{params.stuSex}
             </if>
@@ -86,6 +89,9 @@
             </if>
             <if test="params.collegeId!=null and params.collegeId!=''">
                 and college.dict_id = #{params.collegeId}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and stu_college = #{params.orgCollege}
             </if>
             <if test="params.stuSex!=null and params.stuSex!=''">
                 and stu_sex = #{params.stuSex}

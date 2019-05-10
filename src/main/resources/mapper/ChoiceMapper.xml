@@ -128,8 +128,9 @@
         where choice_score = #{choice.choiceScore}
         and choice_type = #{choice.choiceType}
         and choice_delete = 1
-        <foreach collection="ids" open="and choice_id not in (" close=")" separator="," item="id">
-            #{id}
+        and choice_id != #{choice.choiceId}
+        <foreach collection="config.knowledgeIds" open="and choice_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
         </foreach>
     </select>
 

@@ -102,6 +102,11 @@ public class TeacherDO implements Serializable {
     private String teacherCollege;
 
     /**
+     * 数据级权限字段，1只能查看自己，2可以查看学院，3可以查看学校
+     */
+    private Integer teacherOrg;
+
+    /**
      * 乐观锁
      */
     @Version

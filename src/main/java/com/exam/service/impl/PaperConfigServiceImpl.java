@@ -104,35 +104,35 @@ public class PaperConfigServiceImpl extends ServiceImpl<PaperConfigMapper, Paper
             List<ChoiceDO> choiceList = choiceMapper.selectBatchIds(questionIds);
             for (ChoiceDO choiceDO : choiceList) {
                 score = score.add(choiceDO.getChoiceScore());
-                difficulty += score.multiply(new BigDecimal(choiceDO.getChoiceDifficulty())).doubleValue();
+                difficulty += choiceDO.getChoiceScore().multiply(new BigDecimal(choiceDO.getChoiceDifficulty())).doubleValue();
             }
         } else if (TypeEnum.JUDGEMENT.getCode().toString().equals(config.getConfigType())) {
             // 是判断题
             List<TrueFalseDO> trueFalseList = trueFalseMapper.selectBatchIds(questionIds);
             for (TrueFalseDO trueFalseDO : trueFalseList) {
                 score = score.add(trueFalseDO.getTfScore());
-                difficulty += score.multiply(new BigDecimal(trueFalseDO.getTfDifficulty())).doubleValue();
+                difficulty += trueFalseDO.getTfScore().multiply(new BigDecimal(trueFalseDO.getTfDifficulty())).doubleValue();
             }
         } else if (TypeEnum.COMPLETION.getCode().toString().equals(config.getConfigType())) {
             // 是填空题
             List<CompletionDO> completionList = completionMapper.selectBatchIds(questionIds);
             for (CompletionDO completionDO : completionList) {
                 score = score.add(completionDO.getCompScore());
-                difficulty += score.multiply(new BigDecimal(completionDO.getCompDifficulty())).doubleValue();
+                difficulty += completionDO.getCompScore().multiply(new BigDecimal(completionDO.getCompDifficulty())).doubleValue();
             }
         } else if (TypeEnum.PROGRAMMING.getCode().toString().equals(config.getConfigType())) {
             // 是编程题
             List<CodeDO> codeList = codeMapper.selectBatchIds(questionIds);
             for (CodeDO codeDO : codeList) {
                 score = score.add(codeDO.getCodeScore());
-                difficulty += score.multiply(new BigDecimal(codeDO.getCodeDifficulty())).doubleValue();
+                difficulty += codeDO.getCodeScore().multiply(new BigDecimal(codeDO.getCodeDifficulty())).doubleValue();
             }
         } else {
             // 是其他题
             List<QuestionDO> questions = questionMapper.selectBatchIds(questionIds);
             for (QuestionDO questionDO : questions) {
                 score = score.add(questionDO.getQuestionScore());
-                difficulty += score.multiply(new BigDecimal(questionDO.getQuestionDifficulty())).doubleValue();
+                difficulty += questionDO.getQuestionScore().multiply(new BigDecimal(questionDO.getQuestionDifficulty())).doubleValue();
             }
         }
         if (configDO == null) {

@@ -120,8 +120,9 @@
         from ex_question
         where question_score = #{question.questionScore}
         and question_delete = 1
-        <foreach collection="ids" open="and question_id not in (" close=")" separator="," item="id">
-            #{id}
+        and question_id != #{question.questionId}
+        <foreach collection="config.knowledgeIds" open="and question_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
         </foreach>
     </select>
 

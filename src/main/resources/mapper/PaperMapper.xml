@@ -24,6 +24,7 @@
         <result column="paper_question_num" property="paperQuestionNum"/>
         <result column="paper_create_time" property="paperCreateTime"/>
         <result column="paper_update_time" property="paperUpdateTime"/>
+        <result column="paper_create_by" property="paperCreateBy"/>
         <result column="paper_version" property="paperVersion"/>
         <result column="paper_delete" property="paperDelete"/>
         <association property="college" javaType="com.exam.pojo.DictDO">
@@ -38,6 +39,8 @@
             <id column="bank_id" property="bankId"/>
             <result column="bank_name" property="bankName"/>
         </association>
+        <association property="teacher" resultMap="com.exam.mapper.TeacherMapper.BaseResultMap">
+        </association>
         <collection property="configList" resultMap="com.exam.mapper.PaperConfigMapper.BaseResultMap">
         </collection>
     </resultMap>
@@ -46,7 +49,7 @@
     <sql id="Base_Column_List">
         paper_id, paper_title, paper_question_num, paper_seme, paper_start_year, paper_end_year, paper_submit,
         paper_comment, paper_college, paper_major, paper_bank, paper_flag, paper_style, paper_type, paper_download,
-        paper_difficulty, paper_score, paper_create_time, paper_update_time, paper_version, paper_delete
+        paper_difficulty, paper_score, paper_create_time, paper_update_time, paper_create_by, paper_version, paper_delete
     </sql>
     <select id="getListByPage" parameterType="com.exam.pojo.Page" resultMap="BaseResultMap">
         select
@@ -54,10 +57,12 @@
         ,college.dict_id college_id, college.dict_name college_name
         ,major.dict_id major_id, major.dict_name major_name
         ,bank_id, bank_name
+        ,teacher_id, teacher_name
         from ex_paper
         inner join ex_dict college on college.dict_id = paper_college
         inner join ex_dict major on major.dict_id = paper_major
         inner join ex_bank on bank_id = paper_bank
+        inner join ex_teacher on teacher_id = paper_create_by
         <where>
             paper_delete = 1
             <if test="params.paperTitle!=null and params.paperTitle!=''">
@@ -65,6 +70,12 @@
             </if>
             <if test="params.paperCollege!=null and params.paperCollege!=''">
                 and paper_college = #{params.paperCollege}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
+            </if>
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and paper_create_by = #{params.orgTeacher}
             </if>
             <if test="params.paperMajor!=null and params.paperMajor!=''">
                 and paper_major = #{params.paperMajor}
@@ -134,6 +145,12 @@
             </if>
             <if test="params.paperStyle!=null and params.paperStyle!=''">
                 and paper_style = #{params.paperStyle}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
+            </if>
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and paper_create_by = #{params.orgTeacher}
             </if>
             <if test="params.paperType!=null and params.paperType!=''">
                 and paper_type = #{params.paperType}

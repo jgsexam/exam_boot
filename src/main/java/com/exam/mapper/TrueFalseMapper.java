@@ -44,10 +44,9 @@ public interface TrueFalseMapper extends BaseMapper<TrueFalseDO> {
 
     /**
      * 遗传算法专用变异查询
-     *
      * @param trueFalseDO
-     * @param ids
+     * @param configDTO
      * @return
      */
-    List<TrueFalseDO> getMutateList(@Param("tf") TrueFalseDO trueFalseDO, @Param("ids") List<String> ids);
+    List<TrueFalseDO> getMutateList(@Param("tf") TrueFalseDO trueFalseDO, @Param("config") GaConfigDTO configDTO);
 }

@@ -33,7 +33,8 @@
         config_id, config_paper, config_question_num, config_score, config_type
         ) values
         <foreach collection="list" item="config" separator=",">
-            (#{config.configId}, #{config.configPaper}, #{config.configQuestionNum}, #{config.configScore}, #{config.configType})
+            (#{config.configId}, #{config.configPaper}, #{config.configQuestionNum}, #{config.configScore},
+            #{config.configType})
         </foreach>
     </insert>
 
@@ -72,6 +73,15 @@
         inner join ex_paper_config_question on config_id = question_config
         where config_paper = #{paperId}
         and question_id = #{questionId}
+    </select>
+
+    <select id="getTypeNum" resultMap="BaseResultMap">
+        select sum(config_question_num) config_question_num,
+        type_name
+        from ex_paper_config
+        inner join ex_type on type_id = config_type
+        where config_paper = #{value}
+        group by config_type
     </select>
 
 </mapper>

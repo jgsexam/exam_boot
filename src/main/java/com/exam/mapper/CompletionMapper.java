@@ -52,10 +52,9 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
 
     /**
      * 遗传算法专用变异查询
-     *
      * @param completionDO
-     * @param ids
+     * @param configDTO
      * @return
      */
-    List<CompletionDO> getMutateList(@Param("comp") CompletionDO completionDO, @Param("ids") List<String> ids);
+    List<CompletionDO> getMutateList(@Param("comp") CompletionDO completionDO, @Param("config") GaConfigDTO configDTO);
 }

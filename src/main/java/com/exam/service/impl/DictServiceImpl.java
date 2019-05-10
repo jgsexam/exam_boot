@@ -2,10 +2,14 @@ package com.exam.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.constant.CoreConstant;
+import com.exam.constant.DictEnum;
+import com.exam.constant.SelectEnum;
 import com.exam.mapper.DictMapper;
 import com.exam.pojo.DictDO;
 import com.exam.pojo.Page;
+import com.exam.pojo.TeacherDO;
 import com.exam.service.DictService;
+import com.exam.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,8 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, DictDO> implements 
     @Autowired
     private DictMapper dictMapper;
 
+    private final String dictKey = "dictType";
+
     /**
      * 分页查询
      *
@@ -40,6 +46,12 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, DictDO> implements 
     public Page<DictDO> getListByPage(Page<DictDO> page) {
         // 处理参数
         page.filterParams();
+        TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
+        if(!SelectEnum.SELECT_ALL.getCode().equals(loginTeacher.getTeacherOrg()) &&
+                DictEnum.MAJOR.getCode().equals(page.getParams().get(dictKey).toString())) {
+            // 不是查询所有，并且是查询专业，那就只能查看自己学院的专业
+            page.getParams().put("orgCollege", loginTeacher.getTeacherCollege());
+        }
         // 设置每页显示条数
         if (page.getCurrentCount() == null) {
             page.setCurrentCount(CoreConstant.CURRENT_COUNT);

@@ -247,7 +247,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
      * @return
      */
     @Override
-    public List<QuestionDO> getMutateList(QuestionDO questionDO, List<String> ids) {
-        return questionMapper.getMutateList(questionDO, ids);
+    public List<QuestionDO> getMutateList(QuestionDO questionDO, GaConfigDTO configDTO) {
+        return questionMapper.getMutateList(questionDO, configDTO);
     }
 }

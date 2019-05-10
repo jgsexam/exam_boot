@@ -51,7 +51,7 @@ public class Population {
             config = new PaperConfigDO();
             GaUtils.setConfigId(config);
             config.initPaperConfig(configDTO);
-            while (config.getScoreGa() != configDTO.getTotalScore().doubleValue()) {
+            while (config.calculationScoreGa() != configDTO.getTotalScore().doubleValue()) {
                 // 分值不对，重新组卷
                 config.getQuestionDetailList().clear();
                 // 抽题
@@ -98,7 +98,7 @@ public class Population {
         }
 
         // 重新抽题之后，重新计算分数
-        config.getScoreGa();
+        config.calculationScoreGa();
 
     }
 

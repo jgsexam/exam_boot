@@ -123,6 +123,14 @@ public class PaperDO implements Serializable {
     private String paperUpdateTime;
 
     /**
+     * 创建人
+     */
+    private String paperCreateBy;
+
+    @TableField(exist = false)
+    private TeacherDO teacher;
+
+    /**
      * 题量
      */
     private Integer paperQuestionNum;

@@ -3,6 +3,9 @@ package com.exam.service;
 import com.exam.pojo.BankDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.pojo.Page;
+import com.exam.vo.BankVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -20,4 +23,10 @@ public interface BankService extends IService<BankDO> {
      * @return
      */
     Page<BankDO> getListByPage(Page<BankDO> page);
+
+    /**
+     * 获取题库的基本信息：试卷数、题目数
+     * @return
+     */
+    List<BankVO> getBankInfo();
 }

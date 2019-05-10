@@ -136,8 +136,9 @@
         from ex_code
         where code_score = #{code.codeScore}
         and code_delete = 1
-        <foreach collection="ids" open="and code_id not in (" close=")" separator="," item="id">
-            #{id}
+        and code_id != #{code.codeId}
+        <foreach collection="config.knowledgeIds" open="and code_know in (" close=")" item="knowId" separator=",">
+            #{knowId}
         </foreach>
     </select>
 

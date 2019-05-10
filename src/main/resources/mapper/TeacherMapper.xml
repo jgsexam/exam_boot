@@ -19,6 +19,7 @@
         <result column="teacher_img" property="teacherImg"/>
         <result column="teacher_entry_time" property="teacherEntryTime"/>
         <result column="teacher_college" property="teacherCollege"/>
+        <result column="teacher_org" property="teacherOrg"/>
         <result column="teacher_version" property="teacherVersion"/>
         <result column="teacher_delete" property="teacherDelete"/>
         <association property="job" javaType="com.exam.pojo.DictDO">
@@ -37,7 +38,9 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        teacher_id, teacher_number, teacher_username, teacher_password, teacher_card, teacher_name, teacher_sex, teacher_age, teacher_job, teacher_title, teacher_mobile, teacher_email, teacher_img, teacher_entry_time, teacher_college, teacher_version, teacher_delete
+        teacher_id, teacher_number, teacher_username, teacher_password, teacher_card,
+        teacher_name, teacher_sex, teacher_age, teacher_job, teacher_title, teacher_mobile,
+        teacher_email, teacher_img, teacher_entry_time, teacher_college, teacher_org, teacher_version, teacher_delete
     </sql>
     <select id="getListByPage" parameterType="com.exam.pojo.Page" resultMap="BaseResultMap">
         select
@@ -77,6 +80,9 @@
             </if>
             <if test="params.collegeId!='' and params.collegeId!=null">
                 and college.dict_id = #{params.collegeId}
+            </if>
+            <if test="params.orgCollege!='' and params.orgCollege!=null">
+                and teacher_college = #{params.orgCollege}
             </if>
             <if test="params.startTime!='' and params.startTime!=null and params.endTime != '' and params.endTime != null">
                 and teacher_entry_time <![CDATA[ >= ]]> #{params.startTime}
@@ -127,6 +133,9 @@
             </if>
             <if test="params.collegeId!='' and params.collegeId!=null">
                 and college.dict_id = #{params.collegeId}
+            </if>
+            <if test="params.orgCollege!='' and params.orgCollege!=null">
+                and teacher_college = #{params.orgCollege}
             </if>
             <if test="params.startTime!='' and params.startTime!=null and params.endTime != '' and params.endTime != null">
                 and teacher_entry_time <![CDATA[ >= ]]> #{params.startTime}

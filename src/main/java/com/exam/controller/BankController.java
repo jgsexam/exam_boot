@@ -1,14 +1,16 @@
 package com.exam.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
+import com.exam.constant.SelectEnum;
 import com.exam.pojo.BankDO;
 import com.exam.pojo.Page;
+import com.exam.pojo.TeacherDO;
 import com.exam.service.BankService;
 import com.exam.service.DictService;
 import com.exam.utils.IdWorker;
 import com.exam.utils.Result;
+import com.exam.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,7 +121,13 @@ public class BankController {
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Result findAll() {
         try {
-            List<BankDO> list = bankService.list();
+            QueryWrapper<BankDO> wrapper = new QueryWrapper<>();
+            TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
+            if(!SelectEnum.SELECT_ALL.getCode().equals(loginTeacher.getTeacherOrg())) {
+                // 不是查询所有，就只查询自己学院的
+                wrapper.eq("bank_college", loginTeacher.getTeacherCollege());
+            }
+            List<BankDO> list = bankService.list(wrapper);
             return Result.ok(list);
         } catch (Exception e) {
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.CodeDO;
 import com.exam.pojo.Page;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -48,7 +49,8 @@ public interface CodeMapper extends BaseMapper<CodeDO> {
     /**
      * 遗传算法专用变异查询
      * @param codeDO
+     * @param configDTO
      * @return
      */
-    List<CodeDO> getMutateList(CodeDO codeDO, List<String> ids);
+    List<CodeDO> getMutateList(@Param("code") CodeDO codeDO, @Param("config") GaConfigDTO configDTO);
 }

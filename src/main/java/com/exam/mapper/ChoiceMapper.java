@@ -55,8 +55,8 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
      * 遗传算法专用变异查询
      *
      * @param choiceDO
-     * @param ids
+     * @param configDTO
      * @return
      */
-    List<ChoiceDO> getMutateList(@Param("choice") ChoiceDO choiceDO, @Param("ids") List<String> ids);
+    List<ChoiceDO> getMutateList(@Param("choice") ChoiceDO choiceDO, @Param("config") GaConfigDTO configDTO);
 }

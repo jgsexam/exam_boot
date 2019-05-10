@@ -32,6 +32,9 @@
             <if test="params.dictType!=null and params.dictType!=''">
                 and child.dict_type = #{params.dictType}
             </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and father.dict_id = #{params.orgCollege}
+            </if>
             <if test="params.dictName!=null and params.dictName!=''">
                 and child.dict_name like '%${params.dictName}%'
             </if>

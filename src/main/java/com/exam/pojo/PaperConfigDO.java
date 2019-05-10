@@ -63,6 +63,9 @@ public class PaperConfigDO implements Serializable {
     @TableField(exist = false)
     private TypeDO type;
 
+    @TableField
+    private String typeName;
+
     /**
      * 知识点
      */
@@ -160,7 +163,7 @@ public class PaperConfigDO implements Serializable {
     /**
      * 计算总分
      */
-    public double getScoreGa() {
+    public double calculationScoreGa() {
         if(this.configScore == null) {
             this.configScore = new BigDecimal(NumberConstant.ZERO);
         }
@@ -207,7 +210,7 @@ public class PaperConfigDO implements Serializable {
      * 由于计算难度系数最后需要除以总分
      * 因此该方法应该在计算了总分之后再进行使用
      */
-    public double getDifficultyGa() {
+    public double calculationDifficultyGa() {
         double totalDifficulty = 0;
 
         if (this.configType.equals(TypeEnum.ONE_CHOICE.getCode().toString()) ||
@@ -292,7 +295,7 @@ public class PaperConfigDO implements Serializable {
     public void setAdaptationDegreeGa(GaConfigDTO configDTO) {
         if (this.adaptationDegree == null || this.adaptationDegree == 0) {
             adaptationDegree = 1 - (1 - this.getKpCoverage()) * GaConstant.KNOWLEDGE_WEIGHT
-                    - Math.abs(configDTO.getDifficulty() - getDifficultyGa()) * GaConstant.DIFFICULTY_WEIGHT;
+                    - Math.abs(configDTO.getDifficulty() - calculationDifficultyGa()) * GaConstant.DIFFICULTY_WEIGHT;
         }
     }
 
@@ -320,7 +323,7 @@ public class PaperConfigDO implements Serializable {
      * @param i
      * @return
      */
-    public Object getQuestion(int i) {
+    public Object findQuestion(int i) {
         return this.questionDetailList.get(i);
     }
 

@@ -1,10 +1,9 @@
 package com.exam.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.dto.GaConfigDTO;
 import com.exam.pojo.CodeDO;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.pojo.Page;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -50,10 +49,9 @@ public interface CodeService extends IService<CodeDO> {
 
     /**
      * 遗传算法专用变异查询
-     *
      * @param codeDO
-     * @param ids
+     * @param configDTO
      * @return
      */
-    List<CodeDO> getMutateList(@Param("code") CodeDO codeDO, @Param("ids") List<String> ids);
+    List<CodeDO> getMutateList(CodeDO codeDO, GaConfigDTO configDTO);
 }

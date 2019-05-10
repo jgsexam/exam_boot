@@ -43,4 +43,11 @@ public interface PaperConfigMapper extends BaseMapper<PaperConfigDO> {
      * @param configList
      */
     void saveBatch(List<PaperConfigDO> configList);
+
+    /**
+     * 获取试卷每个题型的题量
+     * @param id
+     * @return
+     */
+    List<PaperConfigDO> getTypeNum(String id);
 }

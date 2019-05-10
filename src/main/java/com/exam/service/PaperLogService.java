@@ -1,5 +1,6 @@
 package com.exam.service;
 
+import com.exam.pojo.Page;
 import com.exam.pojo.PaperLogDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface PaperLogService extends IService<PaperLogDO> {
 
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    Page<PaperLogDO> getByPage(Page<PaperLogDO> page);
 }

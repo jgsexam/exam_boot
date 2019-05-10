@@ -34,7 +34,8 @@ public interface TrueFalseService extends IService<TrueFalseDO> {
     /**
      * 遗传算法专用变异查询
      * @param trueFalseDO
+     * @param configDTO
      * @return
      */
-    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO, List<String> ids);
+    List<TrueFalseDO> getMutateList(TrueFalseDO trueFalseDO, GaConfigDTO configDTO);
 }

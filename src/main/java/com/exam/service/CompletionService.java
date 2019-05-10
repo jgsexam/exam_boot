@@ -42,7 +42,8 @@ public interface CompletionService extends IService<CompletionDO> {
     /**
      * 遗传算法专用 变异查询
      * @param completionDO
+     * @param configDTO
      * @return
      */
-    List<CompletionDO> getMutateList(CompletionDO completionDO, List<String> ids);
+    List<CompletionDO> getMutateList(CompletionDO completionDO, GaConfigDTO configDTO);
 }
