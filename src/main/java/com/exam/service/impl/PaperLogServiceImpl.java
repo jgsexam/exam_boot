@@ -34,9 +34,13 @@ public class PaperLogServiceImpl extends ServiceImpl<PaperLogMapper, PaperLogDO>
         page.filterParams();
         // 处理角色
         TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
-        if(!SelectEnum.SELECT_ALL.getCode().equals(loginTeacher.getTeacherOrg())) {
-            // 不是查询所有，就只查询自己学院的
+        if (SelectEnum.SELECT_COLLEGE.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询学院
             page.getParams().put("orgCollege", loginTeacher.getTeacherCollege());
+        }
+        if (SelectEnum.SELECT_SELF.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询自己
+            page.getParams().put("orgTeacher", loginTeacher.getTeacherId());
         }
         // 设置每页显示条数
         if (page.getCurrentCount() == null) {

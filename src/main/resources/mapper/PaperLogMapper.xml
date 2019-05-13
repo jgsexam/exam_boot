@@ -22,11 +22,43 @@
         pl_id, pl_teacher, pl_title, pl_college, pl_difficulty, pl_score, pl_time, pl_version, pl_delete
     </sql>
 
-    <select id="getListByPage" resultType="com.exam.pojo.PaperLogDO">
+    <select id="getListByPage" parameterType="com.exam.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         ,teacher_id, teacher_name
         ,dict_id, dict_name
+        from ex_paper_log
+        inner join ex_teacher as teacher on teacher_id = pl_teacher
+        inner join ex_dict as college on pl_college = dict_id
+        where pl_delete = 1
+        <if test="params.teacherName!=null and params.teacherName!=''">
+            and teacher_name like '%${params.teacherName}%'
+        </if>
+        <if test="params.paperTitle!=null and params.paperTitle!=''">
+            and pl_title like '%${params.paperTitle}%'
+        </if>
+        <if test="params.collegeId!=null and params.collegeId!=''">
+            and pl_college = #{params.collegeId}
+        </if>
+        <if test="params.orgCollege!=null and params.orgCollege!=''">
+            and pl_college = #{params.orgCollege}
+        </if>
+        <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+            and pl_teacher = #{params.orgTeacher}
+        </if>
+
+        <if test="sortName == null or sortName == ''">
+            order by pl_time desc
+        </if>
+        <if test="sortName != null and sortName != ''">
+            order by ${sortName} ${sortOrder}
+        </if>
+        limit #{index}, #{currentCount}
+    </select>
+
+    <select id="getCountByPage" parameterType="com.exam.pojo.Page" resultType="java.lang.Integer">
+        select
+        count(pl_id)
         from ex_paper_log
         inner join ex_teacher on teacher_id = pl_teacher
         inner join ex_dict on pl_college = dict_id
@@ -37,26 +69,14 @@
         <if test="params.paperTitle!=null and params.paperTitle!=''">
             and pl_title like '%${params.paperTitle}%'
         </if>
-        <if test="sortName == null or sortName == ''">
-            order by pl_time desc
+        <if test="params.collegeId!=null and params.collegeId!=''">
+            and pl_college = #{params.collegeId}
         </if>
-        <if test="sortName != null and sortName != ''">
-            order by ${sortName} ${sortOrder}
+        <if test="params.orgCollege!=null and params.orgCollege!=''">
+            and pl_college = #{params.orgCollege}
         </if>
-        limit #{index}, #{currentCount}
-    </select>
-
-    <select id="getCountByPage" resultType="java.lang.Integer">
-        select
-        count(pl_id)
-        inner join ex_teacher on teacher_id = pl_teacher
-        inner join ex_dict on pl_college = dict_id
-        where pl_delete = 1
-        <if test="params.teacherName!=null and params.teacherName!=''">
-            and teacher_name like '%${params.teacherName}%'
-        </if>
-        <if test="params.paperTitle!=null and params.paperTitle!=''">
-            and pl_title like '%${params.paperTitle}%'
+        <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+            and pl_teacher = #{params.orgTeacher}
         </if>
     </select>
 

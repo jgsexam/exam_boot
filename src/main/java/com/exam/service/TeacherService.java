@@ -20,4 +20,9 @@ public interface TeacherService extends IService<TeacherDO> {
      * @return
      */
     Page<TeacherDO> getByPage(Page<TeacherDO> page);
+
+    /**
+     * 全部重置密码
+     */
+    void resetPwdAll();
 }

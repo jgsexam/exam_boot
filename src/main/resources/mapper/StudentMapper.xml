@@ -32,6 +32,11 @@
         stu_id, stu_number, stu_password, stu_name, stu_sex, stu_age, stu_college, stu_major, stu_img, stu_card, stu_entrance_time, stu_version, stu_delete
     </sql>
 
+    <update id="resetPwdAll">
+        update ex_student set
+        stu_password = MD5(SUBSTRING(stu_number, LENGTH(stu_number)-5))
+    </update>
+
     <select id="getListByPage" parameterType="com.exam.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>

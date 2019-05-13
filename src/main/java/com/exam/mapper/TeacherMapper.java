@@ -29,4 +29,9 @@ public interface TeacherMapper extends BaseMapper<TeacherDO> {
      * @return
      */
     Integer getCountByPage(Page<TeacherDO> page);
+
+    /**
+     * 全部重置密码
+     */
+    void resetPwdAll();
 }

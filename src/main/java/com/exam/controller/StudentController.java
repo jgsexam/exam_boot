@@ -1,6 +1,5 @@
 package com.exam.controller;
 
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.constant.ResultEnum;
 import com.exam.pojo.Page;
@@ -18,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -68,7 +69,7 @@ public class StudentController {
             studentDO.setStuPassword(ciphertext);
             studentService.save(studentDO);
             // 生成密码表
-            pwdService.save(new PwdDO(stuId, plaintext, ciphertext));
+            pwdService.saveOrUpdate(new PwdDO(stuId, plaintext, ciphertext));
             return Result.ok("添加成功！");
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,12 +103,14 @@ public class StudentController {
             }
 
             String plaintext = studentDO.getStuPassword();
-            String ciphertext = Md5Utils.toMD5(plaintext);
-            studentDO.setStuPassword(ciphertext);
+            if (!plaintext.equals(student.getStuPassword())) {
+                String ciphertext = Md5Utils.toMD5(plaintext);
+                studentDO.setStuPassword(ciphertext);
+                // 修改密码表
+                pwdService.saveOrUpdate(new PwdDO(studentDOStuId, plaintext, ciphertext));
+            }
             studentService.updateById(studentDO);
 
-            // 修改密码表
-            pwdService.updateById(new PwdDO(studentDOStuId, plaintext, ciphertext));
             return Result.ok("修改成功！");
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,5 +162,41 @@ public class StudentController {
         }
     }
 
+    /**
+     * 重置密码
+     */
+    @RequestMapping(value = "/resetPwd", method = RequestMethod.PUT)
+    public Result resetPwd(@RequestBody List<String> ids) {
+        try {
+            List<StudentDO> list = (List<StudentDO>) studentService.listByIds(ids);
+            for (StudentDO student : list) {
+                String stuNumber = student.getStuNumber();
+                stuNumber = stuNumber.substring(stuNumber.length() - 6);
+
+                String ciphertext = Md5Utils.toMD5(stuNumber);
+                student.setStuPassword(ciphertext);
+                studentService.updateById(student);
+            }
+            studentService.updateBatchById(list);
+            return Result.ok("重置成功！新密码为学号后6位");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "重置失败！请检查学号是否正常！");
+        }
+    }
+
+    /**
+     * 全部重置密码
+     */
+    @RequestMapping(value = "/resetAll", method = RequestMethod.GET)
+    public Result resetPwd() {
+        try {
+            studentService.resetPwdAll();
+            return Result.ok("重置成功！新密码为学号后6位");
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "操作失败！");
+        }
+    }
 }
 

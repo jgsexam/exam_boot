@@ -42,6 +42,12 @@
         teacher_name, teacher_sex, teacher_age, teacher_job, teacher_title, teacher_mobile,
         teacher_email, teacher_img, teacher_entry_time, teacher_college, teacher_org, teacher_version, teacher_delete
     </sql>
+
+    <update id="resetPwdAll">
+        update ex_teacher set
+        teacher_password = MD5(SUBSTRING(teacher_card, LENGTH(teacher_card)-5))
+    </update>
+
     <select id="getListByPage" parameterType="com.exam.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>

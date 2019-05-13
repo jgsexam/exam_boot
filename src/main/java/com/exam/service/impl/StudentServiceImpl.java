@@ -58,4 +58,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, StudentDO> im
         page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
         return page;
     }
+
+    /**
+     * 重置所有人密码
+     */
+    @Override
+    public void resetPwdAll() {
+        studentMapper.resetPwdAll();
+    }
 }

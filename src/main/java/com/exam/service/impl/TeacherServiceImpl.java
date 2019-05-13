@@ -52,4 +52,12 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, TeacherDO> im
         page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
         return page;
     }
+
+    /**
+     * 全部重置密码
+     */
+    @Override
+    public void resetPwdAll() {
+        teacherMapper.resetPwdAll();
+    }
 }

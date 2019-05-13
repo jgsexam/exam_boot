@@ -14,7 +14,7 @@ public class StringTest {
     @Test
     public void testSubString() {
         String s = "abcde";
-        System.out.println(s.substring(0, 2));
+        System.out.println(s.substring(2));
     }
 
     @Test

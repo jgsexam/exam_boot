@@ -120,7 +120,7 @@ public class TeacherController {
             teacherService.save(teacherDO);
 
             // 在密码表里添加一套密码对应关系，防止忘记密码。
-            pwdService.save(new PwdDO(teacherId, plaintext, ciphertext));
+            pwdService.saveOrUpdate(new PwdDO(teacherId, plaintext, ciphertext));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,12 +159,14 @@ public class TeacherController {
             }
 
             String plaintext = teacherDO.getTeacherPassword();
-            String ciphertext = Md5Utils.toMD5(plaintext);
-            teacherDO.setTeacherPassword(ciphertext);
+            if (!plaintext.equals(teacher.getTeacherPassword())) {
+                // 密码不一样，就加密
+                String ciphertext = Md5Utils.toMD5(plaintext);
+                teacherDO.setTeacherPassword(ciphertext);
+                // 修改对应的密码表
+                pwdService.saveOrUpdate(new PwdDO(teacherDO.getTeacherId(), plaintext, ciphertext));
+            }
             teacherService.updateById(teacherDO);
-
-            // 修改对应的密码表
-            pwdService.updateById(new PwdDO(teacherDO.getTeacherId(), plaintext, ciphertext));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -180,10 +182,6 @@ public class TeacherController {
     public Result get(@PathVariable String teacherId) {
         try {
             TeacherDO teacherDO = teacherService.getById(teacherId);
-            QueryWrapper<PwdDO> wrapper = new QueryWrapper<>();
-            wrapper.eq("pwd_ciphertext", teacherDO.getTeacherPassword());
-            PwdDO pwdDO = pwdService.getOne(wrapper);
-            teacherDO.setTeacherPassword(pwdDO.getPwdPlaintext());
             return Result.ok(teacherDO);
         } catch (Exception e) {
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
@@ -215,6 +213,47 @@ public class TeacherController {
             return Result.ok(page);
         } catch (Exception e) {
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+    }
+
+    /**
+     * 重置密码
+     */
+    @RequestMapping(value = "/resetPwd", method = RequestMethod.PUT)
+    public Result resetPwd(@RequestBody List<String> teacherIds) {
+        try {
+            List<TeacherDO> teacherDOList = (List<TeacherDO>) teacherService.listByIds(teacherIds);
+            for (TeacherDO teacherDO : teacherDOList) {
+                // 获取身份证号码
+                String teacherCard = teacherDO.getTeacherCard();
+                teacherCard = teacherCard.substring(teacherCard.length() - 6);
+
+                String ciphertext = Md5Utils.toMD5(teacherCard);
+                teacherDO.setTeacherPassword(ciphertext);
+                teacherService.updateById(teacherDO);
+
+            }
+
+            teacherService.updateBatchById(teacherDOList);
+            return Result.ok("重置成功！新密码为身份证号后6位");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "重置失败！请检查身份证号是否合法！");
+        }
+    }
+
+
+    /**
+     * 全部重置密码
+     */
+    @RequestMapping(value = "/resetAll", method = RequestMethod.GET)
+    public Result resetPwd() {
+        try {
+            teacherService.resetPwdAll();
+            return Result.ok("重置成功！新密码为身份证号后6位");
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "操作失败！");
         }
     }
 

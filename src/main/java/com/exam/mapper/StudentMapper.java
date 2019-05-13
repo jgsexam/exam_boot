@@ -29,4 +29,9 @@ public interface StudentMapper extends BaseMapper<StudentDO> {
      * @return
      */
     Integer getCountByPage(Page<StudentDO> page);
+
+    /**
+     * 重置所有人密码
+     */
+    void resetPwdAll();
 }

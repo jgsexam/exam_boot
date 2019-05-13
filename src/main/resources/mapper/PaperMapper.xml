@@ -59,10 +59,10 @@
         ,bank_id, bank_name
         ,teacher_id, teacher_name
         from ex_paper
-        inner join ex_dict college on college.dict_id = paper_college
-        inner join ex_dict major on major.dict_id = paper_major
-        inner join ex_bank on bank_id = paper_bank
-        inner join ex_teacher on teacher_id = paper_create_by
+        inner join ex_dict as college on college.dict_id = paper_college
+        inner join ex_dict as major on major.dict_id = paper_major
+        inner join ex_bank as bank on bank_id = paper_bank
+        inner join ex_teacher as teacher on teacher_id = paper_create_by
         <where>
             paper_delete = 1
             <if test="params.paperTitle!=null and params.paperTitle!=''">
