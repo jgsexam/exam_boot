@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.ts.mapper.TestLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.exam.ts.pojo.TestLogDO">
+        <id column="log_id" property="logId" />
+        <result column="log_time" property="logTime" />
+        <result column="log_room" property="logRoom" />
+        <result column="log_student_num" property="logStudentNum" />
+        <result column="log_title" property="logTitle" />
+        <result column="log_pass" property="logPass" />
+        <result column="log_version" property="logVersion" />
+        <result column="log_delete" property="logDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        log_id, log_time, log_room, log_student_num, log_title, log_pass, log_version, log_delete
+    </sql>
+
+</mapper>

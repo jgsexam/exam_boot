@@ -1,7 +1,7 @@
 package com.exam.test;
 
 
-import com.exam.constant.PatternConstant;
+import com.exam.ex.constant.PatternConstant;
 import org.junit.Test;
 
 import java.util.regex.Matcher;

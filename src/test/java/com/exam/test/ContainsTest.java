@@ -1,6 +1,6 @@
 package com.exam.test;
 
-import com.exam.pojo.QuestionDO;
+import com.exam.ex.pojo.QuestionDO;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 

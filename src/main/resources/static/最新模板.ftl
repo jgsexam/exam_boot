@@ -545,7 +545,7 @@
                                                 <w:rPr>
                                                     <w:rFonts w:hint="eastAsia"/>
                                                 </w:rPr>
-                                                <w:t>${choice.choiceTitle }（${choice.choiceScore}分）</w:t>
+                                                <w:t>${choice.choiceTitle?html }（${choice.choiceScore}分）</w:t>
                                             </w:r>
                                         </w:p>
                                         <#list choice.choiceAnswer as answer>
@@ -1138,7 +1138,7 @@
                                                     <w:rPr>
                                                         <w:rFonts w:hint="fareast"/>
                                                     </w:rPr>
-                                                    <w:t>（${answer.answerResolve! }分）</w:t>
+                                                    <w:t>${answer.answerResolve! }</w:t>
                                                 </w:r>
                                             </w:p>
                                         </#list>
@@ -1206,7 +1206,7 @@
                                                     <w:rPr>
                                                         <w:rFonts w:hint="fareast"/>
                                                     </w:rPr>
-                                                    <w:t>（${answer.answerResolve! }分）</w:t>
+                                                    <w:t>${answer.answerResolve! }</w:t>
                                                 </w:r>
                                             </w:p>
                                         </#list>

@@ -51,11 +51,11 @@ public class GeneratorTest {
                 // 设置数据库表映射到实体时下划线转驼峰策略
                 .setNaming(NamingStrategy.underline_to_camel)
                 // 设置表名前缀
-                .setTablePrefix("ex_").setInclude("ex_paper_log");
+                .setTablePrefix("ts_").setExclude("ex_*");
         // 4.包名策略配置
         PackageConfig packageConfig = new PackageConfig();
         // 设置每一种代码生成的包名，傻子都能看懂，不写注释了
-        packageConfig.setParent("com.exam")
+        packageConfig.setParent("com.exam.ts")
                 .setMapper("mapper")
                 .setService("service")
                 .setController("controller")

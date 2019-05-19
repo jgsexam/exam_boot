@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
  * SpringBoot启动类
  * @author
  */
-@MapperScan("com.exam.mapper")
+@MapperScan("com.exam.*.mapper")
 @EnableCaching
 @EnableScheduling
 @EnableTransactionManagement
