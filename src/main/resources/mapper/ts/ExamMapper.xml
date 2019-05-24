@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.ts.mapper.ExamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.exam.ts.pojo.ExamDO">
+        <id column="exam_id" property="examId" />
+        <result column="exam_date" property="examDate" />
+        <result column="exam_room" property="examRoom" />
+        <result column="exam_time" property="examTime" />
+        <result column="exam_paper" property="examPaper" />
+        <result column="exam_create_by" property="examCreateBy" />
+        <result column="exam_type" property="examType" />
+        <result column="exam_state" property="examState" />
+        <result column="exam_comment" property="examComment" />
+        <result column="exam_version" property="examVersion" />
+        <result column="exam_delete" property="examDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        exam_id, exam_date, exam_room, exam_time, exam_paper, exam_create_by, exam_type, exam_state, exam_comment, exam_version, exam_delete
+    </sql>
+
+</mapper>

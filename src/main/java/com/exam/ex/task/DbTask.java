@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class DbTask {
 
     /**
-     * 每天晚上10点备份数据库到项目目录下
+     * 每天晚上10点和中午12点备份数据库到项目目录下
      */
     @Scheduled(cron = "0 0 12,22 * * ?")
     public void backupDb() {

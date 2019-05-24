@@ -26,6 +26,7 @@ public class DbUtils {
             Runtime rt = Runtime.getRuntime();
 
             // 调用 调用mysql的安装目录的命令
+            // 三个常量分别是用户名、密码、数据库名
             Process child = rt
                     .exec(" mysqldump -h localhost -u" + DbConstant.DATABASE_USER + " -p" + DbConstant.DATABASE_PASS + " " + DbConstant.DATABASE_NAME);
             // 设置导出编码为utf-8。这里必须是utf-8
@@ -37,6 +38,7 @@ public class DbUtils {
             // 设置输出流编码为utf-8。这里必须是utf-8，否则从流中读入的是乱码
 
             String inStr;
+            // 这里的常量是空字符串""
             StringBuffer sb = new StringBuffer(CharConstant.CHAR_NULL_STRING);
             String outStr;
             // 组合控制台输出信息字符串
@@ -47,6 +49,7 @@ public class DbUtils {
             outStr = sb.toString();
 
             // 要用来做导入用的sql目标文件：
+            // 这里就是导出的目录+文件名+后缀，文件名我用199701010101这样的格式
             String filename = DbConstant.BACK_UP_PATH + DateUtils.newDateByFormat(OtherConstant.FILE_DEFAULT_DATETIME_FORMATER) + ExtConstant.SQL_EXT;
             FileOutputStream fout = new FileOutputStream(filename);
             OutputStreamWriter writer = new OutputStreamWriter(fout, StandardCharsets.UTF_8);
@@ -65,6 +68,7 @@ public class DbUtils {
 
     /**
      * 还原
+     * 参数和备份其实是 一样的
      */
     public static void restore() {
         try {

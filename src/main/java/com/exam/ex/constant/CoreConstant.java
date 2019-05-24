@@ -30,7 +30,7 @@ public class CoreConstant {
     /**
      * freemarker模板名
      */
-    public static final String TEMPLATE_FILE_NAME = "最新模板.ftl";
+    public static final String TEMPLATE_FILE_NAME = "普通导出模板，格式正确但不支持富文本.ftl";
 
     /**
      * 服务器文件地址
