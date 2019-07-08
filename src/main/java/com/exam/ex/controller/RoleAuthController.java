@@ -1,10 +1,10 @@
 package com.exam.ex.controller;
 
-import com.exam.ex.constant.ResultEnum;
+import com.exam.core.constant.ResultEnum;
 import com.exam.ex.pojo.AuthDO;
 import com.exam.ex.pojo.RoleAuthDO;
 import com.exam.ex.service.RoleAuthService;
-import com.exam.ex.utils.Result;
+import com.exam.core.utils.Result;
 import com.google.common.collect.Lists;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package com.exam.test;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.ex.pojo.RoleDO;
 import com.exam.ex.service.RoleService;
-import com.exam.ex.utils.TreeUtils;
+import com.exam.core.utils.TreeUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,11 +1,11 @@
 package com.exam.ex.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.exam.ex.constant.ResultEnum;
+import com.exam.core.constant.ResultEnum;
 import com.exam.ex.pojo.AuthDO;
 import com.exam.ex.service.AuthService;
-import com.exam.ex.utils.Result;
-import com.exam.ex.utils.TreeUtils;
+import com.exam.core.utils.Result;
+import com.exam.core.utils.TreeUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

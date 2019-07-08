@@ -15,7 +15,7 @@
     <sql id="Base_Column_List">
         know_id, know_name, know_bank, know_version, know_delete
     </sql>
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         from ex_bank_knowledge
@@ -29,7 +29,7 @@
         limit #{index}, #{currentCount}
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
         count(know_id)
         from ex_bank_knowledge

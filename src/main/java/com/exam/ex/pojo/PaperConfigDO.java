@@ -6,11 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
-import com.exam.ex.constant.GaConstant;
-import com.exam.ex.constant.NumberConstant;
-import com.exam.ex.constant.TypeEnum;
+import com.exam.core.constant.GaConstant;
+import com.exam.core.constant.NumberConstant;
+import com.exam.core.constant.TypeEnum;
 import com.exam.ex.dto.GaConfigDTO;
-import com.exam.ex.utils.StringUtils;
+import com.exam.core.utils.StringUtils;
 import com.google.common.collect.Lists;
 import lombok.Data;
 

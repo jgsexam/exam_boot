@@ -1,9 +1,9 @@
 package com.exam.ex.ga;
 
-import com.exam.ex.constant.GaConstant;
+import com.exam.core.constant.GaConstant;
 import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.pojo.PaperConfigDO;
-import com.exam.ex.utils.GaUtils;
+import com.exam.core.utils.GaUtils;
 import lombok.Data;
 
 import java.util.List;

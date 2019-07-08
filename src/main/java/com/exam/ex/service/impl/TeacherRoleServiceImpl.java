@@ -6,7 +6,7 @@ import com.exam.ex.mapper.TeacherRoleMapper;
 import com.exam.ex.pojo.TeacherDO;
 import com.exam.ex.pojo.TeacherRoleDO;
 import com.exam.ex.service.TeacherRoleService;
-import com.exam.ex.utils.IdWorker;
+import com.exam.core.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

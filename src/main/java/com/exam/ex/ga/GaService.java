@@ -1,6 +1,6 @@
 package com.exam.ex.ga;
 
-import com.exam.ex.constant.TypeEnum;
+import com.exam.core.constant.TypeEnum;
 import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.pojo.ChoiceDO;
 import com.exam.ex.pojo.CodeDO;

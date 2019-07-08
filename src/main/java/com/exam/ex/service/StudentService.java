@@ -1,6 +1,6 @@
 package com.exam.ex.service;
 
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.StudentDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 

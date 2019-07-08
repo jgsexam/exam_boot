@@ -2,15 +2,15 @@ package com.exam.ex.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.exam.ex.constant.CoreConstant;
+import com.exam.core.constant.CoreConstant;
 import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.mapper.CodeMapper;
 import com.exam.ex.pojo.CodeAnswerDO;
 import com.exam.ex.pojo.CodeDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.service.CodeAnswerService;
 import com.exam.ex.service.CodeService;
-import com.exam.ex.utils.IdWorker;
+import com.exam.core.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

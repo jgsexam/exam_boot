@@ -51,7 +51,7 @@
         paper_comment, paper_college, paper_major, paper_bank, paper_flag, paper_style, paper_type, paper_download,
         paper_difficulty, paper_score, paper_create_time, paper_update_time, paper_create_by, paper_version, paper_delete
     </sql>
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         ,college.dict_id college_id, college.dict_name college_name
@@ -116,7 +116,7 @@
         limit #{index}, #{currentCount}
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
         count(paper_id)
         from ex_paper

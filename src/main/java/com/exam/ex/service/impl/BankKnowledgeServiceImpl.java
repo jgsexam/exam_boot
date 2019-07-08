@@ -1,10 +1,10 @@
 package com.exam.ex.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.exam.ex.constant.CoreConstant;
+import com.exam.core.constant.CoreConstant;
 import com.exam.ex.mapper.BankKnowledgeMapper;
 import com.exam.ex.pojo.BankKnowledgeDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.service.BankKnowledgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

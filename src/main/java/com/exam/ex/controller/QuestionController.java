@@ -2,13 +2,13 @@ package com.exam.ex.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.exam.ex.constant.ResultEnum;
-import com.exam.ex.pojo.Page;
+import com.exam.core.constant.ResultEnum;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.QuestionAnswerDO;
 import com.exam.ex.pojo.QuestionDO;
 import com.exam.ex.service.QuestionAnswerService;
 import com.exam.ex.service.QuestionService;
-import com.exam.ex.utils.Result;
+import com.exam.core.utils.Result;
 import com.exam.ex.vo.QuestionVO;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,11 @@
 package com.exam.ts.pojo;
 
-import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -19,7 +20,7 @@ public class StudentPaperConfigScoreDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "sc_id", type = IdType.AUTO)
+    @TableId(value = "sc_id", type = IdType.INPUT)
     private String scId;
 
     /**

@@ -25,7 +25,7 @@
         comp_id, comp_title, comp_score, comp_difficulty, comp_resolve, comp_bank, comp_version, comp_delete
     </sql>
 
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"></include>
         ,answer_number ,answer_content FROM (
@@ -60,7 +60,7 @@
         </if>
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         SELECT
         count(comp_id)
         FROM

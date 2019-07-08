@@ -18,7 +18,7 @@ public class ExamTeacherDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "ttId", type = IdType.AUTO)
+    @TableId(value = "ttId", type = IdType.INPUT)
     private String ttId;
 
     /**

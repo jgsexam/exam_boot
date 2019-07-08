@@ -25,7 +25,7 @@
     </resultMap>
 
     <!-- 通用查询结果列 -->
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"></include>
         ,answer_number ,answer_content ,answer_true FROM (
@@ -67,7 +67,7 @@
         choice_id, choice_title, choice_type, choice_score, choice_difficulty, choice_bank, choice_know, choice_resolve, choice_version, choice_delete
     </sql>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         SELECT
         count(choice_id)
         FROM

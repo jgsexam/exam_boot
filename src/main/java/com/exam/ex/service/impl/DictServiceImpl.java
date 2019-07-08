@@ -1,15 +1,15 @@
 package com.exam.ex.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.exam.ex.constant.CoreConstant;
-import com.exam.ex.constant.DictEnum;
-import com.exam.ex.constant.SelectEnum;
+import com.exam.core.constant.CoreConstant;
+import com.exam.core.constant.DictEnum;
+import com.exam.core.constant.SelectEnum;
 import com.exam.ex.mapper.DictMapper;
 import com.exam.ex.pojo.DictDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TeacherDO;
 import com.exam.ex.service.DictService;
-import com.exam.ex.utils.ShiroUtils;
+import com.exam.core.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

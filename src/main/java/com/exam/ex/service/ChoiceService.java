@@ -3,8 +3,8 @@ package com.exam.ex.service;
 import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.pojo.ChoiceDO;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.exam.ex.pojo.Page;
-import com.exam.ex.utils.Result;
+import com.exam.core.pojo.Page;
+import com.exam.core.utils.Result;
 
 import java.util.List;
 

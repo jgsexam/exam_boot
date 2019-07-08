@@ -1,10 +1,10 @@
 package com.exam.ex.service.impl;
 
-import com.exam.ex.constant.CoreConstant;
+import com.exam.core.constant.CoreConstant;
 import com.exam.ex.pojo.PaperDO;
 import com.exam.ex.service.PaperConfigService;
 import com.exam.ex.service.PaperService;
-import com.exam.ex.utils.ToWordUtil;
+import com.exam.core.utils.ToWordUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

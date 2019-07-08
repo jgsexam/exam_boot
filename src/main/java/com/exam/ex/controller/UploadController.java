@@ -1,9 +1,9 @@
 package com.exam.ex.controller;
 
-import com.exam.ex.constant.CoreConstant;
-import com.exam.ex.constant.ExtConstant;
-import com.exam.ex.utils.Result;
-import com.exam.ex.utils.StringUtils;
+import com.exam.core.constant.CoreConstant;
+import com.exam.core.constant.ExtConstant;
+import com.exam.core.utils.Result;
+import com.exam.core.utils.StringUtils;
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

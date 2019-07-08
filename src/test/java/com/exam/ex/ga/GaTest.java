@@ -1,9 +1,9 @@
 package com.exam.ex.ga;
 
 import com.alibaba.fastjson.JSONObject;
-import com.exam.ex.constant.GaConstant;
+import com.exam.core.constant.GaConstant;
 import com.exam.ex.dto.GaConfigDTO;
-import com.exam.ex.exception.ExamException;
+import com.exam.core.exception.ExamException;
 import com.exam.ex.pojo.PaperConfigDO;
 import com.google.common.collect.Lists;
 import org.junit.Test;

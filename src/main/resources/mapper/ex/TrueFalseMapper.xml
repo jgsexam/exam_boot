@@ -20,7 +20,7 @@
     <sql id="Base_Column_List">
         tf_id, tf_title, tf_score, tf_difficulty, tf_bank, tf_resolve, tf_true, tf_know, tf_version, tf_delete
     </sql>
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         from ex_true_false

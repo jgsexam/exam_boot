@@ -2,7 +2,7 @@ package com.exam.ex.service;
 
 import com.exam.ex.pojo.BankDO;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.vo.BankVO;
 
 import java.util.List;

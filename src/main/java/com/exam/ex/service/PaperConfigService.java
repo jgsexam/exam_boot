@@ -1,7 +1,7 @@
 package com.exam.ex.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.exam.ex.exception.ExamException;
+import com.exam.core.exception.ExamException;
 import com.exam.ex.pojo.PaperConfigDO;
 
 import java.util.List;

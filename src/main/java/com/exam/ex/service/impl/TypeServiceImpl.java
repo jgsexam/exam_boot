@@ -2,10 +2,10 @@ package com.exam.ex.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.exam.ex.constant.CoreConstant;
+import com.exam.core.constant.CoreConstant;
 import com.exam.ex.mapper.TypeMapper;
 import com.exam.ex.pojo.BankTypeDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TypeDO;
 import com.exam.ex.service.BankTypeService;
 import com.exam.ex.service.TypeService;

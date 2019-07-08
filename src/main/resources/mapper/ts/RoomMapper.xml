@@ -18,4 +18,45 @@
         room_id, room_name, room_building, room_state, room_comment, room_version, room_delete
     </sql>
 
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from te_room
+        <where>
+            room_delete = 1
+            <if test="params.roomName!=null and params.roomName!=''">
+                and room_name like '%${params.roomName}%'
+            </if>
+            <if test="params.roomState!=null and params.roomState!=''">
+                and room_state = #{params.roomState}
+            </if>
+            <if test="params.roomBuilding!=null and params.roomBuilding!=''">
+                and room_building = #{params.roomBuilding}
+            </if>
+        </where>
+        <if test="sortName!=null and sortName!=''">
+            order by ${sortName} ${sortOrder}
+        </if>
+        limit #{index}, #{currentCount}
+    </select>
+
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
+        select
+        count(room_id)
+        from te_room
+        <where>
+            room_delete = 1
+            <if test="params.roomName!=null and params.roomName!=''">
+                and room_name like '%${params.roomName}%'
+            </if>
+            <if test="params.roomState!=null and params.roomState!=''">
+                and room_state = #{params.roomState}
+            </if>
+            <if test="params.roomBuilding!=null and params.roomBuilding!=''">
+                and room_building = #{params.roomBuilding}
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

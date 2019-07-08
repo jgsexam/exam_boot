@@ -2,7 +2,7 @@ package com.exam.ex.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.ex.dto.GaConfigDTO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.QuestionDO;
 import com.exam.ex.vo.QuestionVO;
 

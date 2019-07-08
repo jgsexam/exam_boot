@@ -1,7 +1,7 @@
 package com.exam.ex.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TypeDO;
 
 import java.util.List;

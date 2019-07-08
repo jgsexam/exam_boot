@@ -22,7 +22,7 @@
         pl_id, pl_teacher, pl_title, pl_college, pl_difficulty, pl_score, pl_time, pl_version, pl_delete
     </sql>
 
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         ,teacher_id, teacher_name
@@ -56,7 +56,7 @@
         limit #{index}, #{currentCount}
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
         count(pl_id)
         from ex_paper_log

@@ -1,16 +1,16 @@
 package com.exam.ex.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.exam.ex.constant.ResultEnum;
-import com.exam.ex.constant.SelectEnum;
+import com.exam.core.constant.ResultEnum;
+import com.exam.core.constant.SelectEnum;
 import com.exam.ex.pojo.BankDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TeacherDO;
 import com.exam.ex.service.BankService;
 import com.exam.ex.service.DictService;
-import com.exam.ex.utils.IdWorker;
-import com.exam.ex.utils.Result;
-import com.exam.ex.utils.ShiroUtils;
+import com.exam.core.utils.IdWorker;
+import com.exam.core.utils.Result;
+import com.exam.core.utils.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

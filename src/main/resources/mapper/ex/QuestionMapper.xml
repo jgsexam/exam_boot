@@ -31,7 +31,7 @@
     <sql id="Base_Column_List">
         question_id, question_title, question_img, question_type, question_score, question_difficulty, question_resolve, question_bank, question_style, question_know, question_version, question_delete
     </sql>
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"></include>
         ,answer_number, answer_problem ,answer_content, answer_score FROM (
@@ -64,7 +64,7 @@
         where answer_delete = 1
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         SELECT
         count(question_id)
         FROM

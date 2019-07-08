@@ -42,7 +42,7 @@
         stu_age = stu_age + 1
     </update>
 
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         ,college.dict_id as college_id, college.dict_name as college_name
@@ -86,7 +86,7 @@
         </if>
         limit #{index}, #{currentCount}
     </select>
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
         count(stu_id)
         from ex_student stu

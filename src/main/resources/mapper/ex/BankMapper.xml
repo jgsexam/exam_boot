@@ -30,7 +30,7 @@
         bank_id, bank_name, bank_img, bank_college, bank_subject, bank_version, bank_delete
     </sql>
 
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
         ,college.dict_id college_id, college.dict_name college_name
@@ -63,7 +63,7 @@
         limit #{index}, #{currentCount}
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
         count(bank_id)
         from ex_bank bank

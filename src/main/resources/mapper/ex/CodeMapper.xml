@@ -37,7 +37,7 @@
         code_id, code_title, code_imgs, code_resolve, code_type, code_score, code_difficulty, code_bank, code_know, code_compile, code_version, code_delete
     </sql>
 
-    <select id="getListByPage" parameterType="com.exam.ex.pojo.Page" resultMap="BaseResultMap">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"></include>
         ,answer_number, answer_problem ,answer_content, answer_score
@@ -75,7 +75,7 @@
         where answer_delete = 1
     </select>
 
-    <select id="getCountByPage" parameterType="com.exam.ex.pojo.Page" resultType="java.lang.Integer">
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         SELECT
         count(code_id)
         FROM

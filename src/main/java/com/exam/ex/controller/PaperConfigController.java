@@ -1,11 +1,11 @@
 package com.exam.ex.controller;
 
 
-import com.exam.ex.constant.ResultEnum;
-import com.exam.ex.exception.ExamException;
+import com.exam.core.constant.ResultEnum;
+import com.exam.core.exception.ExamException;
 import com.exam.ex.pojo.PaperConfigDO;
 import com.exam.ex.service.PaperConfigService;
-import com.exam.ex.utils.Result;
+import com.exam.core.utils.Result;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

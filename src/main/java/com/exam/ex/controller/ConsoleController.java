@@ -1,7 +1,7 @@
 package com.exam.ex.controller;
 
 import com.exam.ex.service.BankService;
-import com.exam.ex.utils.Result;
+import com.exam.core.utils.Result;
 import com.exam.ex.vo.BankVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

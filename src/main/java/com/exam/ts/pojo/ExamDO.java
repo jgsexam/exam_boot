@@ -1,9 +1,18 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.Version;
+import com.exam.ex.pojo.PaperDO;
+import com.exam.ex.pojo.StudentDO;
+import com.exam.ex.pojo.TeacherDO;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -14,6 +23,7 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_exam")
+@Data
 public class ExamDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +31,7 @@ public class ExamDO implements Serializable {
     /**
      * id
      */
-    @TableId(value = "exam_id", type = IdType.AUTO)
+    @TableId(value = "exam_id", type = IdType.INPUT)
     private String examId;
 
     /**
@@ -44,10 +54,16 @@ public class ExamDO implements Serializable {
      */
     private String examPaper;
 
+    @TableField(exist = false)
+    private PaperDO paper;
+
     /**
      * 创建人id
      */
     private String examCreateBy;
+
+    @TableField(exist = false)
+    private TeacherDO teacher;
 
     /**
      * 考试类型，0平常测试，1普通考试，2补考
@@ -67,116 +83,45 @@ public class ExamDO implements Serializable {
     /**
      * 乐观锁
      */
+    @Version
     private Integer examVersion;
 
     /**
      * 1正常0删除
      */
+    @TableLogic
     private Integer examDelete;
 
+    /**
+     * 监考教师
+     */
+    @TableField(exist = false)
+    private List<TeacherDO> teacherList;
 
-    public String getExamId() {
-        return examId;
-    }
-
-    public void setExamId(String examId) {
-        this.examId = examId;
-    }
-
-    public String getExamDate() {
-        return examDate;
-    }
-
-    public void setExamDate(String examDate) {
-        this.examDate = examDate;
-    }
-
-    public String getExamRoom() {
-        return examRoom;
-    }
-
-    public void setExamRoom(String examRoom) {
-        this.examRoom = examRoom;
-    }
-
-    public Integer getExamTime() {
-        return examTime;
-    }
-
-    public void setExamTime(Integer examTime) {
-        this.examTime = examTime;
-    }
-
-    public String getExamPaper() {
-        return examPaper;
-    }
-
-    public void setExamPaper(String examPaper) {
-        this.examPaper = examPaper;
-    }
-
-    public String getExamCreateBy() {
-        return examCreateBy;
-    }
-
-    public void setExamCreateBy(String examCreateBy) {
-        this.examCreateBy = examCreateBy;
-    }
-
-    public Integer getExamType() {
-        return examType;
-    }
-
-    public void setExamType(Integer examType) {
-        this.examType = examType;
-    }
-
-    public Integer getExamState() {
-        return examState;
-    }
-
-    public void setExamState(Integer examState) {
-        this.examState = examState;
-    }
-
-    public String getExamComment() {
-        return examComment;
-    }
-
-    public void setExamComment(String examComment) {
-        this.examComment = examComment;
-    }
-
-    public Integer getExamVersion() {
-        return examVersion;
-    }
-
-    public void setExamVersion(Integer examVersion) {
-        this.examVersion = examVersion;
-    }
-
-    public Integer getExamDelete() {
-        return examDelete;
-    }
-
-    public void setExamDelete(Integer examDelete) {
-        this.examDelete = examDelete;
-    }
+    /**
+     * 考试学生
+     */
+    @TableField(exist = false)
+    private List<StudentDO> studentList;
 
     @Override
     public String toString() {
         return "ExamDO{" +
-        "examId=" + examId +
-        ", examDate=" + examDate +
-        ", examRoom=" + examRoom +
-        ", examTime=" + examTime +
-        ", examPaper=" + examPaper +
-        ", examCreateBy=" + examCreateBy +
-        ", examType=" + examType +
-        ", examState=" + examState +
-        ", examComment=" + examComment +
-        ", examVersion=" + examVersion +
-        ", examDelete=" + examDelete +
-        "}";
+                "examId='" + examId + '\'' +
+                ", examDate='" + examDate + '\'' +
+                ", examRoom='" + examRoom + '\'' +
+                ", examTime=" + examTime +
+                ", examPaper='" + examPaper + '\'' +
+                ", paper=" + paper +
+                ", examCreateBy='" + examCreateBy + '\'' +
+                ", teacher=" + teacher +
+                ", examType=" + examType +
+                ", examState=" + examState +
+                ", examComment='" + examComment + '\'' +
+                ", examVersion=" + examVersion +
+                ", examDelete=" + examDelete +
+                ", teacherList=" + teacherList +
+                ", studentList=" + studentList +
+                '}';
     }
 }

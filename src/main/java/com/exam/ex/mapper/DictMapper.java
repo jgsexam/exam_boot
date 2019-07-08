@@ -2,7 +2,7 @@ package com.exam.ex.mapper;
 
 import com.exam.ex.pojo.DictDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 
 import java.util.List;
 

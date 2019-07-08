@@ -1,5 +1,6 @@
 package com.exam.ts.service;
 
+import com.exam.core.pojo.Page;
 import com.exam.ts.pojo.RoomDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,16 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RoomService extends IService<RoomDO> {
 
+    /**
+     * 添加教室
+     * @param room
+     */
+    void addRoom(RoomDO room);
+
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    Page<RoomDO> getByPage(Page<RoomDO> page);
 }

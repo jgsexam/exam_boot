@@ -1,7 +1,7 @@
 package com.exam.ex.mapper;
 
 import com.exam.ex.dto.GaConfigDTO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TrueFalseDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

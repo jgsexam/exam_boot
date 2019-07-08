@@ -1,9 +1,9 @@
 package com.exam.ex.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.exam.ex.constant.ResultEnum;
+import com.exam.core.constant.ResultEnum;
 import com.exam.ex.pojo.AuthDO;
-import com.exam.ex.pojo.Page;
+import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.PwdDO;
 import com.exam.ex.pojo.RoleDO;
 import com.exam.ex.pojo.TeacherDO;
@@ -13,11 +13,11 @@ import com.exam.ex.service.RoleAuthService;
 import com.exam.ex.service.RoleService;
 import com.exam.ex.service.TeacherRoleService;
 import com.exam.ex.service.TeacherService;
-import com.exam.ex.utils.IdWorker;
-import com.exam.ex.utils.Md5Utils;
-import com.exam.ex.utils.Result;
-import com.exam.ex.utils.ShiroUtils;
-import com.exam.ex.utils.StringUtils;
+import com.exam.core.utils.IdWorker;
+import com.exam.core.utils.Md5Utils;
+import com.exam.core.utils.Result;
+import com.exam.core.utils.ShiroUtils;
+import com.exam.core.utils.StringUtils;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;

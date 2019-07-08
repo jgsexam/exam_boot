@@ -1,8 +1,12 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.Version;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +18,7 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_room")
+@Data
 public class RoomDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,7 +26,7 @@ public class RoomDO implements Serializable {
     /**
      * id
      */
-    @TableId(value = "room_id", type = IdType.AUTO)
+    @TableId(value = "room_id", type = IdType.INPUT)
     private String roomId;
 
     /**
@@ -37,7 +42,7 @@ public class RoomDO implements Serializable {
     /**
      * 状态，1空闲，2占用
      */
-    private String roomState;
+    private Integer roomState;
 
     /**
      * 备注
@@ -47,69 +52,14 @@ public class RoomDO implements Serializable {
     /**
      * 乐观锁
      */
+    @Version
     private Integer roomVersion;
 
     /**
      * 0删除1正常
      */
+    @TableLogic
     private Integer roomDelete;
-
-
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
-
-    public String getRoomBuilding() {
-        return roomBuilding;
-    }
-
-    public void setRoomBuilding(String roomBuilding) {
-        this.roomBuilding = roomBuilding;
-    }
-
-    public String getRoomState() {
-        return roomState;
-    }
-
-    public void setRoomState(String roomState) {
-        this.roomState = roomState;
-    }
-
-    public String getRoomComment() {
-        return roomComment;
-    }
-
-    public void setRoomComment(String roomComment) {
-        this.roomComment = roomComment;
-    }
-
-    public Integer getRoomVersion() {
-        return roomVersion;
-    }
-
-    public void setRoomVersion(Integer roomVersion) {
-        this.roomVersion = roomVersion;
-    }
-
-    public Integer getRoomDelete() {
-        return roomDelete;
-    }
-
-    public void setRoomDelete(Integer roomDelete) {
-        this.roomDelete = roomDelete;
-    }
 
     @Override
     public String toString() {
