@@ -44,6 +44,9 @@ public class ExamDO implements Serializable {
      */
     private String examRoom;
 
+    @TableField(exist = false)
+    private RoomDO room;
+
     /**
      * 考试时间
      */
@@ -64,6 +67,11 @@ public class ExamDO implements Serializable {
 
     @TableField(exist = false)
     private TeacherDO teacher;
+
+    /**
+     * 创建时间
+     */
+    private String examCreateTime;
 
     /**
      * 考试类型，0平常测试，1普通考试，2补考

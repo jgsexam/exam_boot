@@ -1,5 +1,6 @@
 package com.exam.ts.service;
 
+import com.exam.core.pojo.Page;
 import com.exam.ts.pojo.ExamDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,4 +13,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-05-24
  */
 public interface ExamService extends IService<ExamDO> {
+
+    /**
+     * 添加考试
+     * @param exam
+     */
+    void addExam(ExamDO exam);
+
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    Page<ExamDO> getByPage(Page<ExamDO> page);
 }
