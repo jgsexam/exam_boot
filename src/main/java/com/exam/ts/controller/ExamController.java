@@ -52,7 +52,7 @@ public class ExamController {
     @RequiresPermissions("ex:exam:delete")
     public Result delete(@PathVariable String id) {
         try {
-            examService.removeById(id);
+            examService.deleteExam(id);
             return Result.ok("删除成功！");
         }catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +81,7 @@ public class ExamController {
     @RequiresPermissions("ex:exam:update")
     public Result update(@RequestBody ExamDO exam) {
         try {
-            examService.updateById(exam);
+            examService.updateExam(exam);
             return Result.ok("修改成功！");
         }catch (Exception e) {
             e.printStackTrace();

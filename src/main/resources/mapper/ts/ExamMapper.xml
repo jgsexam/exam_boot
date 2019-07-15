@@ -26,14 +26,18 @@
         exam_id, exam_date, exam_room, exam_time, exam_paper, exam_create_by, exam_create_time, exam_type, exam_state, exam_comment, exam_version, exam_delete
     </sql>
 
-    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultType="com.exam.ts.pojo.ExamDO">
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
+        ,paper_id, paper_title
+        ,room_id, room_name
+        ,teacher_id, teacher_name
         from te_exam
         inner join ex_paper on exam_paper = paper_id
         inner join te_room on exam_room = room_id
         inner join ex_teacher on exam_create_by = teacher_id
         <where>
+            exam_delete = 1
             <if test="params.teacher!=null and params.teacher!=''">
                 and exam_create_by = #{params.teacher}
             </if>
@@ -70,6 +74,7 @@
         inner join te_room on exam_room = room_id
         inner join ex_teacher on exam_create_by = teacher_id
         <where>
+            exam_delete = 1
             <if test="params.teacher!=null and params.teacher!=''">
                 and exam_create_by = #{params.teacher}
             </if>

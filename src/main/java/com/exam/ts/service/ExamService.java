@@ -26,4 +26,16 @@ public interface ExamService extends IService<ExamDO> {
      * @return
      */
     Page<ExamDO> getByPage(Page<ExamDO> page);
+
+    /**
+     * 修改考试
+     * @param exam
+     */
+    void updateExam(ExamDO exam);
+
+    /**
+     * 删除考试
+     * @param id
+     */
+    void deleteExam(String id);
 }

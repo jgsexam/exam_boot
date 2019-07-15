@@ -3,8 +3,9 @@ package com.exam.ts.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.core.constant.ResultEnum;
 import com.exam.core.constant.RoomEnum;
-import com.exam.core.utils.Result;
 import com.exam.core.pojo.Page;
+import com.exam.core.utils.Result;
+import com.exam.core.utils.StringUtils;
 import com.exam.ts.pojo.RoomDO;
 import com.exam.ts.service.RoomService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -34,6 +35,7 @@ public class RoomController {
 
     /**
      * 添加教室
+     *
      * @param room
      * @return
      */
@@ -43,7 +45,7 @@ public class RoomController {
         try {
             roomService.addRoom(room);
             return Result.ok("添加成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "添加失败！");
         }
@@ -58,7 +60,7 @@ public class RoomController {
         try {
             roomService.updateById(room);
             return Result.ok("修改成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "修改失败！");
         }
@@ -73,7 +75,7 @@ public class RoomController {
         try {
             roomService.removeById(id);
             return Result.ok("删除成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "删除失败！");
         }
@@ -82,10 +84,26 @@ public class RoomController {
     /**
      * 查询所有未被占用的
      */
-    @RequestMapping(value = "/freeList", method = RequestMethod.GET)
-    public Result freeList() {
-        List<RoomDO> roomList = roomService.list(new QueryWrapper<RoomDO>().eq("room_state", RoomEnum.FREE.getCode()));
+    @RequestMapping(value = "/freeList/{id}", method = RequestMethod.GET)
+    public Result freeList(@PathVariable String id) {
+        List<RoomDO> roomList;
+        if (StringUtils.isBlank(id)) {
+            roomList = roomService.list(new QueryWrapper<RoomDO>().eq("room_state", RoomEnum.FREE.getCode()));
+        } else {
+            roomList = roomService.list(new QueryWrapper<RoomDO>()
+                    .eq("room_state", RoomEnum.FREE.getCode())
+                    .or().eq("room_id", id));
+        }
         return Result.ok(roomList);
+    }
+
+    /**
+     * 查询全部
+     */
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public Result all() {
+        List<RoomDO> roomDOList = roomService.list();
+        return Result.ok(roomDOList);
     }
 
     /**
@@ -97,7 +115,7 @@ public class RoomController {
         try {
             page = roomService.getByPage(page);
             return Result.ok(page);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
@@ -105,6 +123,7 @@ public class RoomController {
 
     /**
      * 根据id查询
+     *
      * @param id
      * @return
      */
@@ -113,7 +132,7 @@ public class RoomController {
         try {
             RoomDO room = roomService.getById(id);
             return Result.ok(room);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }

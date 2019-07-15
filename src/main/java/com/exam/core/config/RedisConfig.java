@@ -1,5 +1,6 @@
 package com.exam.core.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -22,7 +23,9 @@ import org.springframework.scripting.support.ResourceScriptSource;
  */
 @Configuration
 public class RedisConfig {
-    private String redisHost = "localhost";
+
+    @Value("${spring.redis.host}")
+    private String redisHost;
     private int redisPort = 6379;
 
     @Bean

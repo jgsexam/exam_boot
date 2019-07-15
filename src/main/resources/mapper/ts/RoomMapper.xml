@@ -37,6 +37,9 @@
         <if test="sortName!=null and sortName!=''">
             order by ${sortName} ${sortOrder}
         </if>
+        <if test="sortName == null or sortName == ''">
+            order by room_state asc
+        </if>
         limit #{index}, #{currentCount}
     </select>
 
