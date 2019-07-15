@@ -183,5 +183,19 @@ public class PaperController {
         }
     }
 
+    /**
+     * 查询所有试卷
+     */
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public Result getAll() {
+        try {
+            List<PaperDO> list = paperService.list();
+            return Result.ok(list);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+    }
+
 }
 

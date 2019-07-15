@@ -82,10 +82,10 @@ public class RoomController {
     /**
      * 查询所有未被占用的
      */
-    @RequestMapping(value = "/free", method = RequestMethod.GET)
+    @RequestMapping(value = "/freeList", method = RequestMethod.GET)
     public Result freeList() {
-        List<RoomDO> roomDOList = roomService.list(new QueryWrapper<RoomDO>().eq("room_state", RoomEnum.FREE.getCode()));
-        return Result.ok(roomDOList);
+        List<RoomDO> roomList = roomService.list(new QueryWrapper<RoomDO>().eq("room_state", RoomEnum.FREE.getCode()));
+        return Result.ok(roomList);
     }
 
     /**
