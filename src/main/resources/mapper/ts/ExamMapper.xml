@@ -38,23 +38,27 @@
         inner join ex_teacher on exam_create_by = teacher_id
         <where>
             exam_delete = 1
-            <if test="params.teacher!=null and params.teacher!=''">
-                and exam_create_by = #{params.teacher}
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and exam_create_by = #{params.orgTeacher}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
             </if>
             <if test="params.examCreateBy!=null and params.examCreateBy!=''">
-                and exam_create_by like '%${params.examCreateBy}%'
+                and teacher_name like '%${params.examCreateBy}%'
             </if>
-            <if test="params.examDate!=null and params.examDate!=''">
-                and exam_date = #{params.examDate}
+            <if test="params.startTime!='' and params.startTime!=null and params.endTime != '' and params.endTime != null">
+                and exam_date <![CDATA[ >= ]]> #{params.startTime}
+                and exam_date <![CDATA[ <= ]]> #{params.endTime}
             </if>
             <if test="params.examRoom!=null and params.examRoom!=''">
                 and room_name like '%${params.examRoom}%'
             </if>
             <if test="params.examType!=null and params.examType!=''">
-                and exam_type like #{params.examRoom}
+                and exam_type = #{params.examType}
             </if>
             <if test="params.examState!=null and params.examState!=''">
-                and exam_state like #{params.examState}
+                and exam_state = #{params.examState}
             </if>
         </where>
         <if test="sortName == null or sortName == ''">
@@ -75,23 +79,27 @@
         inner join ex_teacher on exam_create_by = teacher_id
         <where>
             exam_delete = 1
-            <if test="params.teacher!=null and params.teacher!=''">
-                and exam_create_by = #{params.teacher}
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and exam_create_by = #{params.orgTeacher}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
             </if>
             <if test="params.examCreateBy!=null and params.examCreateBy!=''">
-                and exam_create_by like '%${params.examCreateBy}%'
+                and teacher_name like '%${params.examCreateBy}%'
             </if>
-            <if test="params.examDate!=null and params.examDate!=''">
-                and exam_date = #{params.examDate}
+            <if test="params.startTime!='' and params.startTime!=null and params.endTime != '' and params.endTime != null">
+                and exam_date <![CDATA[ >= ]]> #{params.startTime}
+                and exam_date <![CDATA[ <= ]]> #{params.endTime}
             </if>
             <if test="params.examRoom!=null and params.examRoom!=''">
                 and room_name like '%${params.examRoom}%'
             </if>
             <if test="params.examType!=null and params.examType!=''">
-                and exam_type like #{params.examRoom}
+                and exam_type = #{params.examType}
             </if>
             <if test="params.examState!=null and params.examState!=''">
-                and exam_state like #{params.examState}
+                and exam_state = #{params.examState}
             </if>
         </where>
     </select>

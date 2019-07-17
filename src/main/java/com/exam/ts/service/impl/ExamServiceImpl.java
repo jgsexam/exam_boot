@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.core.constant.CoreConstant;
 import com.exam.core.constant.ExamEnum;
 import com.exam.core.constant.RoomEnum;
+import com.exam.core.constant.SelectEnum;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.DateUtils;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.ShiroUtils;
+import com.exam.ex.pojo.TeacherDO;
 import com.exam.ts.mapper.ExamMapper;
 import com.exam.ts.mapper.RoomMapper;
 import com.exam.ts.pojo.ExamDO;
@@ -70,6 +72,15 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
     public Page<ExamDO> getByPage(Page<ExamDO> page) {
         // 处理参数
         page.filterParams();
+        TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
+        if (SelectEnum.SELECT_COLLEGE.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询学院
+            page.getParams().put("orgCollege", loginTeacher.getTeacherCollege());
+        }
+        if (SelectEnum.SELECT_SELF.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询自己
+            page.getParams().put("orgTeacher", loginTeacher.getTeacherId());
+        }
         // 设置每页显示条数
         if (page.getCurrentCount() == null) {
             page.setCurrentCount(CoreConstant.CURRENT_COUNT);
