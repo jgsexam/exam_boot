@@ -1,18 +1,14 @@
 package com.exam.core.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
-import org.springframework.scripting.support.ResourceScriptSource;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
  * redis配置类
@@ -24,57 +20,21 @@ import org.springframework.scripting.support.ResourceScriptSource;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
-    private String redisHost;
-    private int redisPort = 6379;
-
-    @Bean
-    @Primary
-    public RedisConnectionFactory taskConnectionFactory() {
-        JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
-        connectionFactory.setPort(redisPort);
-        connectionFactory.setHostName(redisHost);
-        return connectionFactory;
-    }
-
-    @Bean
-    public RedisTemplate taskRedisTemplate() {
-        RedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(taskConnectionFactory());
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<String, Object> redisCacheTemplate(LettuceConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new
+                Jackson2JsonRedisSerializer<>(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        template.setConnectionFactory(redisConnectionFactory);
         return template;
-    }
-
-    @Bean
-    public RedisConnectionFactory rddConnectionFactory() {
-        // 推荐使用
-        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setPort(redisPort);
-        redisStandaloneConfiguration.setHostName(redisHost);
-        redisStandaloneConfiguration.setDatabase(3);
-        return new JedisConnectionFactory(redisStandaloneConfiguration);
-    }
-
-    @Bean("rddRedisTemplate")
-    public StringRedisTemplate rddRedisTemplate() {
-        StringRedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(rddConnectionFactory());
-        return template;
-    }
-
-    @Bean
-    public RedisScript<Boolean> lockScript() {
-        DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/redis-lock.lua")));
-        redisScript.setResultType(Boolean.class);
-        return redisScript;
-    }
-
-    @Bean
-    public RedisScript<Boolean> unlockScript() {
-        DefaultRedisScript<Boolean> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/redis-unlock.lua")));
-        redisScript.setResultType(Boolean.class);
-        return redisScript;
     }
 
 }
