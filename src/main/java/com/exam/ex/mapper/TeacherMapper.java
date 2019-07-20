@@ -39,4 +39,10 @@ public interface TeacherMapper extends BaseMapper<TeacherDO> {
      * 更新所有教师的年龄
      */
     void updateAllAge();
+
+    /**
+     * 查询所有空闲的教师
+     * @return
+     */
+    List<TeacherDO> freeList();
 }

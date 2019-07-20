@@ -4,6 +4,8 @@ import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.TeacherDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 教师表 服务类
@@ -30,4 +32,10 @@ public interface TeacherService extends IService<TeacherDO> {
      * 更新所有人的年龄（+1）
      */
     void updateAllAge();
+
+    /**
+     * 查询所有不在监考的空闲教师
+     * @return
+     */
+    List<TeacherDO> freeList();
 }

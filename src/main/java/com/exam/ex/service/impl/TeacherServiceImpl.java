@@ -68,4 +68,14 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, TeacherDO> im
     public void updateAllAge() {
         teacherMapper.updateAllAge();
     }
+
+    /**
+     * 查询所有不在监考的空闲教师
+     * @return
+     */
+    @Override
+    public List<TeacherDO> freeList() {
+        return teacherMapper.freeList();
+    }
+
 }

@@ -1,8 +1,12 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.exam.ex.pojo.TeacherDO;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -14,11 +18,12 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_exam_teacher")
+@Data
 public class ExamTeacherDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "ttId", type = IdType.INPUT)
+    @TableId(value = "tt_id", type = IdType.INPUT)
     private String ttId;
 
     /**
@@ -31,30 +36,11 @@ public class ExamTeacherDO implements Serializable {
      */
     private String ttTeacher;
 
-
-    public String getTtId() {
-        return ttId;
-    }
-
-    public void setTtId(String ttId) {
-        this.ttId = ttId;
-    }
-
-    public String getTtExam() {
-        return ttExam;
-    }
-
-    public void setTtExam(String ttExam) {
-        this.ttExam = ttExam;
-    }
-
-    public String getTtTeacher() {
-        return ttTeacher;
-    }
-
-    public void setTtTeacher(String ttTeacher) {
-        this.ttTeacher = ttTeacher;
-    }
+    /**
+     * 监考教师
+     */
+    @TableField(exist = false)
+    private TeacherDO teacher;
 
     @Override
     public String toString() {

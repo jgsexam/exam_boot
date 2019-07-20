@@ -314,4 +314,19 @@ public class TeacherController {
             return Result.build(ResultEnum.ERROR.getCode(), "您未登录，请登录");
         }
     }
+
+    /**
+     * 查询所有空闲的老师
+     */
+    @RequestMapping(value = "/freeList", method = RequestMethod.GET)
+    public Result freeList() {
+        try {
+            List<TeacherDO> teacherDoList = teacherService.freeList();
+            return Result.ok(teacherDoList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "操作失败！");
+        }
+    }
+
 }

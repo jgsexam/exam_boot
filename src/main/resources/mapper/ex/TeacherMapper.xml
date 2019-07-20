@@ -155,4 +155,14 @@
         </where>
     </select>
 
+    <select id="freeList" resultMap="BaseResultMap">
+        select * from ex_teacher
+        where teacher_id in
+        (
+            select tt_teacher from te_exam_teacher
+            inner join te_exam on tt_exam = exam_id
+            where exam_state = 2
+        )
+    </select>
+
 </mapper>
