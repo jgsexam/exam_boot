@@ -1,9 +1,14 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.exam.ex.pojo.StudentDO;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * <p>
@@ -14,6 +19,7 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_exam_student")
+@Data
 public class ExamStudentDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,37 +37,37 @@ public class ExamStudentDO implements Serializable {
      */
     private String stStu;
 
-
-    public String getStId() {
-        return stId;
-    }
-
-    public void setStId(String stId) {
-        this.stId = stId;
-    }
-
-    public String getStExam() {
-        return stExam;
-    }
-
-    public void setStExam(String stExam) {
-        this.stExam = stExam;
-    }
-
-    public String getStStu() {
-        return stStu;
-    }
-
-    public void setStStu(String stStu) {
-        this.stStu = stStu;
-    }
+    /**
+     * 学生
+     */
+    @TableField(exist = false)
+    private StudentDO student;
 
     @Override
     public String toString() {
         return "ExamStudentDO{" +
-        "stId=" + stId +
-        ", stExam=" + stExam +
-        ", stStu=" + stStu +
-        "}";
+                "stId=" + stId +
+                ", stExam=" + stExam +
+                ", stStu=" + stStu +
+                "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ExamStudentDO that = (ExamStudentDO) o;
+        return stId.equals(that.stId) ||
+                (stExam.equals(that.stExam) &&
+                        stStu.equals(that.stStu));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stId, stExam, stStu);
     }
 }
