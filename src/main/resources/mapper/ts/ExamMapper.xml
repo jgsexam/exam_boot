@@ -33,7 +33,7 @@
         ,room_id, room_name
         ,teacher_id, teacher_name
         from te_exam
-        inner join ex_paper on exam_paper = paper_id
+        inner join ex_paper paper on exam_paper = paper_id
         inner join te_room on exam_room = room_id
         inner join ex_teacher on exam_create_by = teacher_id
         <where>
@@ -74,7 +74,7 @@
         select
         count(exam_id)
         from te_exam
-        inner join ex_paper on exam_paper = paper_id
+        inner join ex_paper paper on exam_paper = paper_id
         inner join te_room on exam_room = room_id
         inner join ex_teacher on exam_create_by = teacher_id
         <where>

@@ -48,17 +48,19 @@
 
     <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"></include>
-        ,<include refid="com.exam.ex.mapper.StudentMapper.Base_Column_List"></include>
+        <include refid="com.exam.ex.mapper.StudentMapper.Base_Column_List"></include>
         ,college.dict_id as college_id, college.dict_name as college_name
         ,major.dict_id as major_id, major.dict_name as major_name
-        from te_exam_student
-        inner join te_exam on exam_id = #{params.examId}
-        inner join ex_student on stu_id = stu_id
+        from ex_student stu
         inner join ex_dict college on stu.stu_college = college.dict_id
         inner join ex_dict major on stu.stu_major = major.dict_id
         <where>
             stu_delete = 1
+            and stu_id not in
+            (
+            select st_stu from te_exam_student
+            where st_exam = #{params.examId}
+            )
             <if test="params.majorId!=null and params.majorId!=''">
                 and major.dict_id = #{params.majorId}
             </if>
@@ -96,14 +98,17 @@
 
     <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
         select
-        count(st_id)
-        from te_exam_student
-        inner join te_exam on exam_id = #{params.examId}
-        inner join ex_student on stu_id = stu_id
+        count(stu_id)
+        from ex_student stu
         inner join ex_dict college on stu.stu_college = college.dict_id
         inner join ex_dict major on stu.stu_major = major.dict_id
         <where>
             stu_delete = 1
+            and stu_id not in
+            (
+            select st_stu from te_exam_student
+            where st_exam = #{params.examId}
+            )
             <if test="params.majorId!=null and params.majorId!=''">
                 and major.dict_id = #{params.majorId}
             </if>

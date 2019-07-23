@@ -29,7 +29,8 @@
         <include refid="com.exam.ex.mapper.TeacherMapper.Base_Column_List"></include>
         from ex_teacher
         inner join te_exam_teacher on tt_teacher = teacher_id
-        inner join te_exam on exam_id = #{value}
+        inner join te_exam on exam_id = tt_exam
+        where exam_id = #{value}
     </select>
 
 </mapper>
