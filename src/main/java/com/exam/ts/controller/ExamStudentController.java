@@ -5,6 +5,7 @@ import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.exam.ts.service.ExamStudentService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,7 @@ public class ExamStudentController {
      * 查询本场考试的所有学生
      */
     @RequestMapping(value = "/getList/{examId}", method = RequestMethod.GET)
+    @RequiresPermissions("ex:exam:stu:list")
     public Result getList(@PathVariable String examId) {
         try {
             List<ExamStudentDO> list = examStudentService.getListByExam(examId);
@@ -62,6 +64,7 @@ public class ExamStudentController {
      * 添加单个学生进入考试中
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequiresPermissions("ex:exam:stu:add")
     public Result add(@RequestBody ExamStudentDO examStudentDO) {
         try {
             return examStudentService.checkAndSave(examStudentDO);
@@ -75,6 +78,7 @@ public class ExamStudentController {
      * 批量添加学生进入考试中
      */
     @RequestMapping(value = "/addList/{examId}", method = RequestMethod.POST)
+    @RequiresPermissions("ex:exam:stu:add")
     public Result addList(@PathVariable String examId, @RequestBody List<String> studentIds) {
         try {
             examStudentService.saveList(examId, studentIds);
@@ -89,6 +93,7 @@ public class ExamStudentController {
      * 将考生移出本场考试
      */
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+    @RequiresPermissions("ex:exam:stu:delete")
     public Result delete(@PathVariable String id) {
         try {
             examStudentService.removeById(id);

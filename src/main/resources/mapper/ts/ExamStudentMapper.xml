@@ -40,10 +40,15 @@
         select
         <include refid="Base_Column_List"></include>,
         <include refid="com.exam.ex.mapper.StudentMapper.Base_Column_List"></include>
+        ,college.dict_id as college_id, college.dict_name as college_name
+        ,major.dict_id as major_id, major.dict_name as major_name
         from te_exam_student
-        inner join ex_student on st_stu = stu_id
-        inner join te_exam on exam_id = #{value}
+        inner join ex_student stu on st_stu = stu_id
+        inner join te_exam on exam_id = st_exam
+        inner join ex_dict college on stu.stu_college = college.dict_id
+        inner join ex_dict major on stu.stu_major = major.dict_id
         where exam_delete = 1
+        and exam_id = #{value}
     </select>
 
     <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">

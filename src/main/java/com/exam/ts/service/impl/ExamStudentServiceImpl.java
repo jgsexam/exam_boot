@@ -44,7 +44,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
         ExamStudentDO exam = examStudentMapper.getByPojo(examStudentDO);
         // 如果有，就返回并且提示，没有就保存
         if (exam != null) {
-            return Result.build(ResultEnum.ERROR.getCode(), "");
+            return Result.build(ResultEnum.ERROR.getCode(), "该考生已在本场考试中！");
         }
         // 添加
         examStudentDO.setStId(idWorker.nextId() + "");
