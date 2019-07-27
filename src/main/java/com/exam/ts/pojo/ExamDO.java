@@ -1,13 +1,12 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.exam.ex.pojo.PaperDO;
-import com.exam.ex.pojo.StudentDO;
 import com.exam.ex.pojo.TeacherDO;
 import lombok.Data;
 
@@ -104,13 +103,13 @@ public class ExamDO implements Serializable {
      * 监考教师
      */
     @TableField(exist = false)
-    private List<TeacherDO> teacherList;
+    private List<ExamTeacherDO> teacherList;
 
     /**
      * 考试学生
      */
     @TableField(exist = false)
-    private List<StudentDO> studentList;
+    private List<ExamStudentDO> studentList;
 
     @Override
     public String toString() {

@@ -42,7 +42,6 @@ public class GaConfigDTO implements Serializable {
 
     /**
      * 题库
-     * @return
      */
     private String bankId;
 

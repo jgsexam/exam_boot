@@ -104,5 +104,35 @@ public class ExamController {
         }
     }
 
+    /**
+     * 查看考试信息
+     */
+    @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)
+    @RequiresPermissions("ex:exam:info")
+    public Result info(@PathVariable String id) {
+        try {
+            ExamDO examDO = examService.getInfo(id);
+            return Result.ok(examDO);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+    }
+
+    /**
+     * 生成试卷
+     */
+    @RequestMapping(value = "/createPaper/{examId}", method = RequestMethod.GET)
+    @RequiresPermissions("ex:exam:paper:create")
+    public Result createPaper(@PathVariable String examId) {
+        try {
+
+            return Result.ok("生成成功！请及时通知各班学生参加上机考试！");
+        }catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "部分学生生成失败，请手动生成！");
+        }
+    }
+
 }
 

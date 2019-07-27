@@ -29,6 +29,12 @@ public class GaUtils {
         return gaService.getGaList(configDTO);
     }
 
+    /**
+     * 获取变异列表
+     * @param question
+     * @param configDTO
+     * @return
+     */
     public static List getMutateList(Object question, GaConfigDTO configDTO) {
         return gaService.getMutateList(question, configDTO);
     }

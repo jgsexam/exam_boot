@@ -38,4 +38,11 @@ public interface ExamService extends IService<ExamDO> {
      * @param id
      */
     void deleteExam(String id);
+
+    /**
+     * 根据id查询考试信息
+     * @param id
+     * @return
+     */
+    ExamDO getInfo(String id);
 }

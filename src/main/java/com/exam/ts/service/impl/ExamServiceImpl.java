@@ -9,10 +9,16 @@ import com.exam.core.pojo.Page;
 import com.exam.core.utils.DateUtils;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.ShiroUtils;
+import com.exam.ex.mapper.PaperMapper;
+import com.exam.ex.pojo.PaperDO;
 import com.exam.ex.pojo.TeacherDO;
 import com.exam.ts.mapper.ExamMapper;
+import com.exam.ts.mapper.ExamStudentMapper;
+import com.exam.ts.mapper.ExamTeacherMapper;
 import com.exam.ts.mapper.RoomMapper;
 import com.exam.ts.pojo.ExamDO;
+import com.exam.ts.pojo.ExamStudentDO;
+import com.exam.ts.pojo.ExamTeacherDO;
 import com.exam.ts.pojo.RoomDO;
 import com.exam.ts.service.ExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +42,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
     private ExamMapper examMapper;
     @Autowired
     private RoomMapper roomMapper;
+    @Autowired
+    private PaperMapper paperMapper;
+    @Autowired
+    private ExamStudentMapper examStudentMapper;
+    @Autowired
+    private ExamTeacherMapper examTeacherMapper;
     @Autowired
     private IdWorker idWorker;
 
@@ -137,5 +149,30 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
         roomDO.setRoomState(RoomEnum.FREE.getCode());
         roomMapper.updateById(roomDO);
         examMapper.deleteById(id);
+    }
+
+    /**
+     * 根据id查询考试信息
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ExamDO getInfo(String id) {
+        // 先查基本信息
+        ExamDO examDo = examMapper.selectById(id);
+        // 查询考生
+        List<ExamStudentDO> studentList = examStudentMapper.getListByExam(id);
+        examDo.setStudentList(studentList);
+        // 查询试卷信息
+        PaperDO paperDO = paperMapper.selectById(examDo.getExamPaper());
+        examDo.setPaper(paperDO);
+        // 查询监考教师
+        List<ExamTeacherDO> teacherList = examTeacherMapper.getByExamId(id);
+        examDo.setTeacherList(teacherList);
+        // 查询考场
+        RoomDO roomDO = roomMapper.selectById(examDo.getExamRoom());
+        examDo.setRoom(roomDO);
+        return examDo;
     }
 }
