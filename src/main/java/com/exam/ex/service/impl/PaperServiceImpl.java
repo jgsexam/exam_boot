@@ -336,6 +336,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
             System.out.println("初次适应度：" + population.getFitness(0).getAdaptationDegree() + "，知识点覆盖率为：" + population.getFitness(0).getKpCoverage());
 
             Generation generation = new Generation();
+            // 如果进化次数小于最大进化次数，并且个体适应度小于适应度大小，就进化
             while (count < runCount && population.getFitness(0).getAdaptationDegree() < expand) {
                 count++;
                 population = generation.evolvePopulation(population, configDTO);

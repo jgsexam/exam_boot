@@ -3,6 +3,7 @@ package com.exam.ts.controller;
 import com.exam.core.constant.ResultEnum;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
+import com.exam.ex.dto.GaPaperDTO;
 import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.service.ExamService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -122,11 +123,11 @@ public class ExamController {
     /**
      * 生成试卷
      */
-    @RequestMapping(value = "/createPaper/{examId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/createPaper", method = RequestMethod.POST)
     @RequiresPermissions("ex:exam:paper:create")
-    public Result createPaper(@PathVariable String examId) {
+    public Result createPaper(@RequestBody GaPaperDTO paperDTO) {
         try {
-
+            examService.createPaper(paperDTO);
             return Result.ok("生成成功！请及时通知各班学生参加上机考试！");
         }catch (Exception e) {
             e.printStackTrace();

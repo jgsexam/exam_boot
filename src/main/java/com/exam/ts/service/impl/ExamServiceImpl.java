@@ -3,14 +3,22 @@ package com.exam.ts.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.core.constant.CoreConstant;
 import com.exam.core.constant.ExamEnum;
+import com.exam.core.constant.GaConstant;
 import com.exam.core.constant.RoomEnum;
 import com.exam.core.constant.SelectEnum;
+import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.DateUtils;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.ShiroUtils;
+import com.exam.ex.dto.GaConfigDTO;
+import com.exam.ex.dto.GaPaperDTO;
+import com.exam.ex.ga.Generation;
+import com.exam.ex.ga.Population;
 import com.exam.ex.mapper.PaperMapper;
+import com.exam.ex.pojo.PaperConfigDO;
 import com.exam.ex.pojo.PaperDO;
+import com.exam.ex.pojo.StudentDO;
 import com.exam.ex.pojo.TeacherDO;
 import com.exam.ts.mapper.ExamMapper;
 import com.exam.ts.mapper.ExamStudentMapper;
@@ -20,7 +28,9 @@ import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.exam.ts.pojo.ExamTeacherDO;
 import com.exam.ts.pojo.RoomDO;
+import com.exam.ts.pojo.StudentPaperDO;
 import com.exam.ts.service.ExamService;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -174,5 +184,57 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
         RoomDO roomDO = roomMapper.selectById(examDo.getExamRoom());
         examDo.setRoom(roomDO);
         return examDo;
+    }
+
+    /**
+     * 智能生成试卷
+     * @param paperDTO
+     */
+    @Override
+    public void createPaper(GaPaperDTO paperDTO) throws ExamException {
+        // 获取考试id
+        String examId = paperDTO.getExamId();
+        // 查询该考试的所有学生
+        List<ExamStudentDO> studentList = examStudentMapper.getListByExam(examId);
+        // 查询试卷
+        PaperDO sourcePaper = paperMapper.selectById(paperDTO.getPaperId());
+        for (ExamStudentDO examStudentDO : studentList) {
+            // 获取学生，为每一位学生生成试卷
+            StudentDO student = examStudentDO.getStudent();
+            StudentPaperDO studentPaperDO = new StudentPaperDO();
+
+
+        }
+        // 循环组卷
+        PaperDO paperDO = paperMapper.selectById(paperDTO.getPaperId());
+        paperDO.setConfigList(Lists.newArrayList());
+        for (GaConfigDTO configDTO : paperDTO.getConfigList()) {
+            System.out.println(configDTO.getTypeId() + "" + configDTO.getQuestionNum());
+            configDTO.setBankId(paperDO.getPaperBank());
+
+            int count = 0;
+            int runCount = GaConstant.MAX_EVOLVE;
+            double expand = GaConstant.DEFAULT_ADAPTATION_DEGREE;
+
+            // 初始化种群
+            Population population = new Population();
+            population.initPopulation(GaConstant.POPULATION_SIZE, configDTO);
+            System.out.println("初次适应度：" + population.getFitness(0).getAdaptationDegree() + "，知识点覆盖率为：" + population.getFitness(0).getKpCoverage());
+
+            Generation generation = new Generation();
+            while (count < runCount && population.getFitness(0).getAdaptationDegree() < expand) {
+                count++;
+                population = generation.evolvePopulation(population, configDTO);
+            }
+            PaperConfigDO config = population.getFitness(0);
+
+            paperDO.getConfigList().add(config);
+        }
+
+        // 处理一下试卷，添加进题库
+        saveGaPaper(paperDO);
+    }
+
+    private void saveGaPaper(PaperDO paperDO) {
     }
 }

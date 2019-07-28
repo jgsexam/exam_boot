@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 只能组卷的试卷DTO对象
+ * 智能组卷的试卷DTO对象
  * @Author: 杨德石
  * @Date: 2019/5/2 0002 下午 8:48
  * @Version 1.0
@@ -17,6 +17,11 @@ public class GaPaperDTO {
      * 试卷id
      */
     private String paperId;
+
+    /**
+     * 考试id（在线考试组卷时使用）
+     */
+    private String examId;
 
     /**
      * 用户选择多个配置

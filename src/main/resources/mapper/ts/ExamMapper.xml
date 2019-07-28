@@ -29,7 +29,7 @@
     <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"></include>
-        ,paper_id, paper_title
+        ,paper_id, paper_title, paper_bank
         ,room_id, room_name
         ,teacher_id, teacher_name
         from te_exam

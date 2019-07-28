@@ -1,6 +1,8 @@
 package com.exam.ts.service;
 
+import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
+import com.exam.ex.dto.GaPaperDTO;
 import com.exam.ts.pojo.ExamDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -45,4 +47,10 @@ public interface ExamService extends IService<ExamDO> {
      * @return
      */
     ExamDO getInfo(String id);
+
+    /**
+     * 生成试卷
+     * @param paperDTO
+     */
+    void createPaper(GaPaperDTO paperDTO) throws ExamException;
 }
