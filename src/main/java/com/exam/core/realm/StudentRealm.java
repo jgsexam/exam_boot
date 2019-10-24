@@ -30,7 +30,8 @@ public class StudentRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-       return null;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+       return info;
 
     }
 

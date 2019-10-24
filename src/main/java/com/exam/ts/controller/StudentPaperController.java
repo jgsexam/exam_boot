@@ -66,11 +66,15 @@ public class StudentPaperController {
         }
     }
 
+    /**
+     * 提交学生试卷
+     */
     @RequestMapping("/paper/submit/{id}")
+    @RequiresPermissions("paper:submit")
     public Result correctSubmit(@PathVariable("id") String paperId){
         try {
             studentPaperService.correctSubmit(paperId);
-            return Result.ok("该学生成绩完成提交");
+            return Result.ok("成绩完成提交");
         } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "成绩提交失败");

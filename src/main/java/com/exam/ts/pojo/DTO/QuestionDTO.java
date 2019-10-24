@@ -3,6 +3,7 @@ package com.exam.ts.pojo.DTO;
 import lombok.Data;
 
 /**
+ * 传递批改题目的信息
  * @author lth
  */
 

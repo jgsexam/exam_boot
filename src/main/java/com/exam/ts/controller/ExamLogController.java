@@ -1,6 +1,7 @@
 package com.exam.ts.controller;
 
 
+import com.exam.core.constant.ResultEnum;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
 import com.exam.ex.pojo.BankDO;
@@ -34,14 +35,25 @@ public class ExamLogController {
     @RequiresPermissions("paper:submit")
     public Result add(@PathVariable("examId") String examId){
         examLogService.addExamLog(examId);
-        return Result.ok("生成日志成功!");
+        return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
     }
 
 
+    /**
+     * 查看组卷
+     */
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @RequiresPermissions("paper:log:list")
     public Result list(@RequestBody Page<ExamLogDO> page){
-       page =  examLogService.getListByPage(page);
+        try {
+            page =  examLogService.getListByPage(page);
+            return Result.ok(page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+
+
     }
 }
 

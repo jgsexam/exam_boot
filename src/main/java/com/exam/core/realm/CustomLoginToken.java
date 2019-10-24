@@ -3,6 +3,7 @@ package com.exam.core.realm;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
+ * 自定义的token,用来判断当前登录人的角色
  * @author lth
  * @version 1.0.0
  * @date

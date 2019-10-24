@@ -174,6 +174,7 @@ public class ExamController {
      * 获得学生考试的列表
      */
     @PostMapping(value = "/getList")
+    @RequiresPermissions("paper:list")
     public Result getlist(@RequestBody StudentDTO studentDto) {
         // 通过考试的类型进行筛选
         // 同时还要根据用户的id进行筛选

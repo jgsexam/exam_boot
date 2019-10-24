@@ -65,8 +65,14 @@ public class ShiroConfig {
         Map<String, String> filterMap = Maps.newHashMap();
         filterMap.put("/teacher/login", "anon");
         filterMap.put("/index", "anon");
+//        学生的接口<---------
         filterMap.put("/student/login", "anon");
-        filterMap.put("/studentPaperDO", "anon");
+        filterMap.put("/exam/getList", "anon");
+        filterMap.put("/exam/start", "anon");
+        filterMap.put("/exam/currentTime", "anon");
+        filterMap.put("/studentAnswerDO/next", "anon");
+        filterMap.put("/studentAnswerDO/submit", "anon");
+//        ---------->
         filterMap.put("/logout", "logout");
         filterMap.put("/upload/**", "anon");
         filterMap.put("/upload", "anon");

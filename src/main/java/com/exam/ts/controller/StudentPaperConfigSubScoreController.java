@@ -28,6 +28,9 @@ public class StudentPaperConfigSubScoreController {
     @Autowired
     private StudentPaperConfigSubScoreService studentPaperConfigSubScoreService;
 
+    /**
+     * 老师批改学生题目，单个题目
+     */
     @RequestMapping(value = "/correct",method = RequestMethod.POST)
     public Result corrent(@RequestBody QuestionDTO questionDTO){
         try {
