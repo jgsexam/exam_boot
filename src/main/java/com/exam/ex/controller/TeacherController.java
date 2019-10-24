@@ -2,6 +2,8 @@ package com.exam.ex.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.core.constant.ResultEnum;
+import com.exam.core.constant.UserType;
+import com.exam.core.realm.CustomLoginToken;
 import com.exam.ex.pojo.AuthDO;
 import com.exam.core.pojo.Page;
 import com.exam.ex.pojo.PwdDO;
@@ -72,7 +74,7 @@ public class TeacherController {
         // 使用shiro框架进行认证
         // 获取当前用户对象，状态为“未认证”
         Subject subject = SecurityUtils.getSubject();
-        AuthenticationToken token = new UsernamePasswordToken(teacherDO.getTeacherUsername(), Md5Utils.toMD5(teacherDO.getTeacherPassword()));
+        AuthenticationToken token = new CustomLoginToken(teacherDO.getTeacherUsername(),Md5Utils.toMD5(teacherDO.getTeacherPassword()), UserType.TEACHER.getCode());
         try {
             subject.login(token);
         } catch (Exception e) {

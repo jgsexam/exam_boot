@@ -21,11 +21,65 @@
         <result column="paper_create_time" property="paperCreateTime" />
         <result column="paper_version" property="paperVersion" />
         <result column="paper_delete" property="paperDelete" />
+        <association property="bank" javaType="com.exam.ex.pojo.BankDO">
+            <id column="bank_id" property="bankId"/>
+            <result column="bank_name" property="bankName"/>
+        </association>
+        <collection property="configList" resultMap="com.exam.ts.mapper.StudentPaperConfigMapper.BaseResultMap">
+        </collection>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         paper_id, paper_title, paper_exam, paper_start_year, paper_end_year, paper_seme, paper_college, paper_bank, paper_flag, paper_difficulty, paper_score, paper_student_score, paper_student, paper_question_num, paper_create_time, paper_version, paper_delete
     </sql>
+
+
+    <select id="selectStuByexamId" resultType="string">
+        select paper_student from te_student_paper WHERE paper_exam = #{examId};
+    </select>
+
+    <select id="getQuestion" resultMap="BaseResultMap">
+        SELECT
+       <include refid="Base_Column_List"/>
+        ,bank_id,bank_name
+        ,config_id,config_paper,config_question_num,config_score,config_type
+        ,type_name
+        ,question_id
+        FROM te_student_paper p
+        INNER JOIN ex_bank  on paper_bank = bank_id
+        INNER JOIN te_student_paper_config  on config_paper = paper_id
+        inner join te_student_paper_config_question on question_config = config_id
+        INNER JOIN ex_type on type_id = config_type
+        WHERE p.paper_exam = #{examId} and p.paper_student = #{stuId};
+
+    </select>
+
+    <select id="getQuestionById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,bank_id,bank_name
+        ,config_id
+        ,config_paper
+        ,config_question_num
+        ,config_score
+        ,config_type
+        ,type_name
+        ,question_id
+        FROM te_student_paper
+        INNER JOIN ex_bank  on paper_bank = bank_id
+        INNER JOIN te_student_paper_config  on config_paper = paper_id
+        inner join te_student_paper_config_question on question_config = config_id
+        INNER JOIN ex_type on type_id = config_type
+        WHERE paper_id = #{value}
+
+    </select>
+
+    <select id="countOfPaper" resultType="com.exam.ts.pojo.PO.LogPO">
+        SELECT count(*) as 'stuNum'
+        ,sum(case when paper_student_score >= (paper_score * 0.6) then 1 else 0 end) / count(*) as 'pass'
+        FROM te_student_paper
+        WHERE paper_exam = #{value}
+    </select>
 
 </mapper>

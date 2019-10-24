@@ -1,5 +1,6 @@
 package com.exam.core.utils;
 
+import com.exam.ex.pojo.StudentDO;
 import com.exam.ex.pojo.TeacherDO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
@@ -32,6 +33,20 @@ public class ShiroUtils {
             return null;
         }
         return (TeacherDO) principalCollection.getPrimaryPrincipal();
+    }
+
+    /**
+     * 获取登录中的用户
+     *
+     * @return
+     */
+    public static StudentDO getLoginStudent() {
+        Session session = SecurityUtils.getSubject().getSession();
+        SimplePrincipalCollection principalCollection = (SimplePrincipalCollection) session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+        if (principalCollection == null) {
+            return null;
+        }
+        return (StudentDO) principalCollection.getPrimaryPrincipal();
     }
 
 }

@@ -4,6 +4,8 @@ import com.exam.ex.pojo.ChoiceAnswerDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.exam.ex.pojo.ChoiceDO;
 
+import java.util.List;
+
 /**
  * <p>
  * 选项表 Mapper 接口
@@ -19,4 +21,6 @@ public interface ChoiceAnswerMapper extends BaseMapper<ChoiceAnswerDO> {
      * @param choice
      */
     void deleteOldAnswer(ChoiceDO choice);
+
+    List<ChoiceAnswerDO> getListByIds(String[] ids);
 }

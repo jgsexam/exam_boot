@@ -36,4 +36,5 @@ public interface PaperMapper extends BaseMapper<PaperDO> {
      * @return
      */
     PaperDO getPaperQuestion(String paperId);
+
 }

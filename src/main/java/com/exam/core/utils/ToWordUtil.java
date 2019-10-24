@@ -1,6 +1,7 @@
 package com.exam.core.utils;
 
 import com.exam.ex.pojo.PaperDO;
+import com.exam.ts.pojo.StudentPaperDO;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.Data;

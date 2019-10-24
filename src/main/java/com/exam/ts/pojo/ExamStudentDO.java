@@ -8,6 +8,7 @@ import com.exam.ex.pojo.StudentDO;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -42,6 +43,11 @@ public class ExamStudentDO implements Serializable {
      */
     @TableField(exist = false)
     private StudentDO student;
+
+    /**
+     * 创建时间
+     */
+    private String stCreateTime;
 
     @Override
     public String toString() {

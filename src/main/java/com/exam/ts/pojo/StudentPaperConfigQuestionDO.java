@@ -1,8 +1,12 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.exam.ex.pojo.TypeDO;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -14,6 +18,7 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_student_paper_config_question")
+@Data
 public class StudentPaperConfigQuestionDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,43 +36,15 @@ public class StudentPaperConfigQuestionDO implements Serializable {
      */
     private String questionId;
 
+
     /**
      * 是否批改，0未批改，1已批改
      */
     private Integer questionState;
 
+    @TableField(exist = false)
+    private StudentAnswerDO answerContent;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getQuestionConfig() {
-        return questionConfig;
-    }
-
-    public void setQuestionConfig(String questionConfig) {
-        this.questionConfig = questionConfig;
-    }
-
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
-
-    public Integer getQuestionState() {
-        return questionState;
-    }
-
-    public void setQuestionState(Integer questionState) {
-        this.questionState = questionState;
-    }
 
     @Override
     public String toString() {

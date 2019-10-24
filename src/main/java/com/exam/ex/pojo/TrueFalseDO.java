@@ -1,10 +1,12 @@
 package com.exam.ex.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
+import com.exam.ts.pojo.StudentAnswerDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -77,6 +79,11 @@ public class TrueFalseDO implements Serializable {
      */
     @TableLogic
     private Integer tfDelete;
+    /**
+     * 学生作答
+     */
+    @TableField(exist = false)
+    private StudentAnswerDO answerContent;
 
     @Override
     public String toString() {

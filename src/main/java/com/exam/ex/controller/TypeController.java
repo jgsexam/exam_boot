@@ -147,4 +147,9 @@ public class TypeController {
         return Result.ok(typeDO);
     }
 
+    /**
+     * 根据试卷id查询试卷的所有题型
+     */
+
+
 }

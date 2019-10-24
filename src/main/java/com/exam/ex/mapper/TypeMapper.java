@@ -30,4 +30,9 @@ public interface TypeMapper extends BaseMapper<TypeDO> {
      */
     Integer getCountByPage(Page<TypeDO> page);
 
+    /**
+     * 根据试卷查询题型
+     */
+    List<TypeDO> getTypeByPaperId(String paperId);
+
 }

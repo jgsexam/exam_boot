@@ -2,23 +2,35 @@ package com.exam.ex.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.core.constant.ResultEnum;
+import com.exam.core.constant.UserType;
 import com.exam.core.pojo.Page;
+import com.exam.core.realm.CustomLoginToken;
 import com.exam.ex.pojo.PwdDO;
 import com.exam.ex.pojo.StudentDO;
+import com.exam.ex.pojo.TeacherDO;
 import com.exam.ex.service.PwdService;
 import com.exam.ex.service.StudentService;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.Md5Utils;
 import com.exam.core.utils.Result;
+import com.google.common.collect.Maps;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.security.auth.login.LoginException;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -38,6 +50,8 @@ public class StudentController {
     private PwdService pwdService;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 新增学生
@@ -197,6 +211,31 @@ public class StudentController {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "操作失败！");
         }
+    }
+
+    /**
+     * 学生登录
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Result login(@RequestBody StudentDO studentDO) {
+        // 使用shiro框架进行认证
+        // 获取当前用户对象，状态为“未认证”
+        Subject subject = SecurityUtils.getSubject();
+        AuthenticationToken token = new CustomLoginToken(studentDO.getStuNumber(), Md5Utils.toMD5(studentDO.getStuPassword()), UserType.STUDENT.getCode());
+        try {
+            subject.login(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "用户名或密码错误！");
+        }
+        // 查询登录成功的数据，放到redis中
+        StudentDO student = (StudentDO) subject.getPrincipal();
+        Serializable sessionId = subject.getSession().getId();
+        Map<String, Object> dataMap = Maps.newHashMap();
+        dataMap.put("token", sessionId);
+        dataMap.put("student", student);
+        redisTemplate.opsForValue().set(student.getStuNumber(), sessionId);
+        return Result.ok("登陆成功！", dataMap);
     }
 }
 

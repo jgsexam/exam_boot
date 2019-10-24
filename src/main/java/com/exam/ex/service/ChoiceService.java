@@ -5,6 +5,7 @@ import com.exam.ex.pojo.ChoiceDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
+import com.exam.ts.pojo.StudentAnswerDO;
 
 import java.util.List;
 
@@ -58,4 +59,12 @@ public interface ChoiceService extends IService<ChoiceDO> {
      * @return
      */
     List<ChoiceDO> getMutateList(ChoiceDO choiceDO, GaConfigDTO configDTO);
+
+    /**
+     * 统计选择题答案
+     *
+     * @param studentAnswerDOS
+     * @return
+     */
+    void statisticsAnswer(List<StudentAnswerDO> studentAnswerDOS);
 }

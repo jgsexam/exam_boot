@@ -1,9 +1,17 @@
 package com.exam.ts.controller;
 
 
+import com.exam.core.constant.ResultEnum;
+import com.exam.core.exception.ExamException;
+import com.exam.core.utils.Result;
+import com.exam.ts.pojo.DTO.QuestionDTO;
+import com.exam.ts.service.StudentPaperConfigSubScoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * <p>
@@ -16,6 +24,20 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/studentPaperConfigSubScoreDO")
 public class StudentPaperConfigSubScoreController {
+
+    @Autowired
+    private StudentPaperConfigSubScoreService studentPaperConfigSubScoreService;
+
+    @RequestMapping(value = "/correct",method = RequestMethod.POST)
+    public Result corrent(@RequestBody QuestionDTO questionDTO){
+        try {
+            studentPaperConfigSubScoreService.correctQuestion(questionDTO);
+            return Result.ok("提交完毕");
+        } catch (ExamException e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "提交失败"+e.getMessage());
+        }
+    }
 
 }
 

@@ -1,10 +1,17 @@
 package com.exam.ts.pojo;
 
 import java.math.BigDecimal;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.exam.ex.pojo.BankDO;
+import com.exam.ex.pojo.PaperConfigDO;
+import lombok.Data;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -15,6 +22,7 @@ import java.io.Serializable;
  * @since 2019-05-24
  */
 @TableName("te_student_paper")
+@Data
 public class StudentPaperDO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,6 +64,12 @@ public class StudentPaperDO implements Serializable {
      * 题库id
      */
     private String paperBank;
+
+    /**
+     * 题库
+     */
+    @TableField(exist = false)
+    private BankDO bank;
 
     /**
      * 0未启用，1已启用，用于在线考试
@@ -101,6 +115,12 @@ public class StudentPaperDO implements Serializable {
      * 0删除1正常
      */
     private Integer paperDelete;
+
+    /**
+     * 学生试卷配置表
+     */
+    @TableField(exist = false)
+    private List<StudentPaperConfigDO> configList;
 
 
     public String getPaperId() {
@@ -239,6 +259,15 @@ public class StudentPaperDO implements Serializable {
         this.paperDelete = paperDelete;
     }
 
+    public List<StudentPaperConfigDO> getConfigList() {
+        return configList;
+    }
+
+    public void setConfigList(List<StudentPaperConfigDO> configList) {
+        this.configList = configList;
+    }
+
+
     @Override
     public String toString() {
         return "StudentPaperDO{" +
@@ -261,4 +290,5 @@ public class StudentPaperDO implements Serializable {
         ", paperDelete=" + paperDelete +
         "}";
     }
+
 }

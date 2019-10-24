@@ -1,8 +1,11 @@
 package com.exam.ts.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +16,7 @@ import java.io.Serializable;
  * @author 杨德石
  * @since 2019-05-24
  */
+@Data
 @TableName("te_student_answer")
 public class StudentAnswerDO implements Serializable {
 
@@ -36,51 +40,29 @@ public class StudentAnswerDO implements Serializable {
      */
     private String answerConf;
 
+    @TableField(exist = false)
+    private Integer type;
+
+
+    @TableField(exist = false)
+    private StudentPaperConfigDO config;
+
     /**
      * 试卷id
      */
     private String answerPaper;
 
+    /**
+     * 问题id
+     */
+    private String answerQuestion;
 
-    public String getAnswerId() {
-        return answerId;
+    public Integer getConfigType(){
+        String configType = config.getConfigType();
+        if(configType == null) return 0;
+        else return Integer.valueOf(configType);
     }
 
-    public void setAnswerId(String answerId) {
-        this.answerId = answerId;
-    }
-
-    public String getAnswerContent() {
-        return answerContent;
-    }
-
-    public void setAnswerContent(String answerContent) {
-        this.answerContent = answerContent;
-    }
-
-    public String getAnswerStudent() {
-        return answerStudent;
-    }
-
-    public void setAnswerStudent(String answerStudent) {
-        this.answerStudent = answerStudent;
-    }
-
-    public String getAnswerConf() {
-        return answerConf;
-    }
-
-    public void setAnswerConf(String answerConf) {
-        this.answerConf = answerConf;
-    }
-
-    public String getAnswerPaper() {
-        return answerPaper;
-    }
-
-    public void setAnswerPaper(String answerPaper) {
-        this.answerPaper = answerPaper;
-    }
 
     @Override
     public String toString() {

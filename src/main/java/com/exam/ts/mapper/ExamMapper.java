@@ -3,6 +3,7 @@ package com.exam.ts.mapper;
 import com.exam.core.pojo.Page;
 import com.exam.ts.pojo.ExamDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.exam.ts.pojo.DTO.StudentDTO;
 
 import java.util.List;
 
@@ -29,4 +30,7 @@ public interface ExamMapper extends BaseMapper<ExamDO> {
      * @return
      */
     Integer getCountByPage(Page<ExamDO> page);
+
+
+    List<ExamDO> getListByTypeAndStu(StudentDTO studentDto);
 }

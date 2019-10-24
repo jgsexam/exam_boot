@@ -16,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        answer_id, answer_numer, answer_content, answer_choice, answer_true, answer_resolve, answer_version, answer_delete
+        answer_id, answer_number, answer_content, answer_choice, answer_true, answer_resolve, answer_version, answer_delete
     </sql>
 
     <delete parameterType="com.exam.ex.pojo.ChoiceDO" id="deleteOldAnswer">
@@ -26,5 +26,15 @@
             #{answer.answerId}
         </foreach>
     </delete>
+
+    <select id="getListByIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM ex_choice_answer
+        WHERE answer_delete = 1 AND  answer_true = 1 AND answer_choice in
+        <foreach collection="array" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 
 </mapper>

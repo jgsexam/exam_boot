@@ -352,6 +352,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
 
     /**
      * 查看每个题型的题目数
+     *
      * @param id
      * @return
      */
@@ -438,4 +439,6 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
         // 生成试卷
         submit(paperId);
     }
+
+
 }

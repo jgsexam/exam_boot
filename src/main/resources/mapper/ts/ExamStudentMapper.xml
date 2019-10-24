@@ -142,4 +142,11 @@
         </where>
     </select>
 
+    <select id="getById" resultMap="com.exam.ts.mapper.ExamMapper.BaseResultMap">
+        SELECT
+        <include refid="com.exam.ts.mapper.ExamMapper.Base_Column_List"/>
+        from te_exam_student
+        INNER JOIN te_exam ON exam_id = st_exam
+        WHERE st_exam = #{value}
+    </select>
 </mapper>

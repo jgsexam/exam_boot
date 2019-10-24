@@ -23,13 +23,13 @@ public class CompileTest {
      */
     @Test
     public void testCompileJava() throws Exception {
-        Runtime.getRuntime().exec("javac HelloWorld.java", null, new File("D:\\MyProject\\compile\\"));
-        Process process = Runtime.getRuntime().exec("java HelloWorld", null, new File("D:\\MyProject\\compile\\"));
-        InputStream inputStream = process.getInputStream();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        System.out.println(bufferedReader.readLine());
-        bufferedReader.close();
-        inputStream.close();
+//        Runtime.getRuntime().exec("javac HelloWorld.java", null, new File("D:\\MyProject\\compile\\"));
+//        Process process = Runtime.getRuntime().exec("java HelloWorld", null, new File("D:\\MyProject\\compile\\"));
+//        InputStream inputStream = process.getInputStream();
+//        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//        System.out.println(bufferedReader.readLine());
+//        bufferedReader.close();
+//        inputStream.close();
     }
 
 }

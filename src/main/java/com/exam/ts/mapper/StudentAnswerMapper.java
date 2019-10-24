@@ -3,6 +3,8 @@ package com.exam.ts.mapper;
 import com.exam.ts.pojo.StudentAnswerDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 学生做题答案表 Mapper 接口
@@ -12,5 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2019-05-24
  */
 public interface StudentAnswerMapper extends BaseMapper<StudentAnswerDO> {
+
+    List<StudentAnswerDO> selectList(StudentAnswerDO studentAnswerDO);
 
 }

@@ -1,5 +1,6 @@
 package com.exam.ex.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.core.constant.CoreConstant;
 import com.exam.core.constant.SelectEnum;
@@ -12,6 +13,7 @@ import com.exam.core.utils.ShiroUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.util.List;
 
 /**
@@ -74,4 +76,5 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, StudentDO> im
     public void updateAllAge() {
         studentMapper.updateAllAge();
     }
+
 }

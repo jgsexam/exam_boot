@@ -5,6 +5,7 @@ import com.exam.core.exception.ExamException;
 import com.exam.ex.pojo.PaperConfigDO;
 import com.exam.core.utils.GaUtils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.Random;
  * @Date: 2019/5/3 0003 下午 3:27
  * @Version 1.0
  */
+@Slf4j
 @Data
 public class Population {
 
@@ -51,11 +53,16 @@ public class Population {
             config = new PaperConfigDO();
             GaUtils.setConfigId(config);
             config.initPaperConfig(configDTO);
-            while (config.calculationScoreGa() != configDTO.getTotalScore().doubleValue()) {
+            //TODO 抽题达到一定次数 结束抽题
+            int generation = 0;
+            while (config.calculationScoreGa() != configDTO.getTotalScore().doubleValue() && generation < 10000) {
+                log.info("在抽题中.. value: [{}]",configDTO.getTotalScore().doubleValue());
                 // 分值不对，重新组卷
                 config.getQuestionDetailList().clear();
                 // 抽题
                 generateQuestion(configDTO, config);
+
+                generation++;
             }
             // 计算配置知识点覆盖率
             config.setKpCoverageGa(configDTO);
@@ -80,6 +87,8 @@ public class Population {
         // 题目列表
         List list = GaUtils.getGaList(configDTO);
 
+        log.info("当前configDTO中的题库数:[{}]",list.size());
+        log.info("当前configDTO中的所需的数量:[{}]",configDTO.getQuestionNum());
         if (list.size() < configDTO.getQuestionNum()) {
             // 题库中总题目小于所需题目
             throw new ExamException("题库中题目数不够，组卷失败！");

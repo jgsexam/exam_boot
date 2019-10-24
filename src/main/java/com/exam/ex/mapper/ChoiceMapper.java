@@ -59,4 +59,20 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
      * @return
      */
     List<ChoiceDO> getMutateList(@Param("choice") ChoiceDO choiceDO, @Param("config") GaConfigDTO configDTO);
+
+    /**
+     * 根据questionId查
+     *
+     * @param questionId
+     * @return
+     */
+    ChoiceDO selectChoiceById(String questionId);
+
+    /**
+     * 根据questionIds查
+     *
+     * @param ids
+     * @return
+     */
+    List<ChoiceDO> getListByIds(String[] ids);
 }

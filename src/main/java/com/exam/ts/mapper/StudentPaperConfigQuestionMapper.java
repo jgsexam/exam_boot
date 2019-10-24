@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface StudentPaperConfigQuestionMapper extends BaseMapper<StudentPaperConfigQuestionDO> {
 
+    StudentPaperConfigQuestionDO getByPaperId(String paperId);
 }

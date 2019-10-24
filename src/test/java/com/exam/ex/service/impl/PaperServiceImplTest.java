@@ -30,14 +30,14 @@ public class PaperServiceImplTest {
      */
     @Test
     public void getQuestion() throws Exception {
-        String paperId = "1129257735157456896";
-        PaperDO paper = paperService.getQuestion(paperId);
-
-        ToWordUtil toWordUtil = new ToWordUtil(CoreConstant.TEMPLATE_FOLD);
-        toWordUtil.setTemplateName(CoreConstant.TEMPLATE_FILE_NAME);
-        String filename = paper.getPaperTitle()+".doc";
-        toWordUtil.setFileName(filename);
-        toWordUtil.setFilePath(CoreConstant.PAPER_URL);
-        toWordUtil.createWord(paper);
+//        String paperId = "1129257735157456896";
+//        PaperDO paper = paperService.getQuestion(paperId);
+//
+//        ToWordUtil toWordUtil = new ToWordUtil(CoreConstant.TEMPLATE_FOLD);
+//        toWordUtil.setTemplateName(CoreConstant.TEMPLATE_FILE_NAME);
+//        String filename = paper.getPaperTitle()+".doc";
+//        toWordUtil.setFileName(filename);
+//        toWordUtil.setFilePath(CoreConstant.PAPER_URL);
+//        toWordUtil.createWord(paper);
     }
 }

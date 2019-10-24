@@ -1,6 +1,7 @@
 package com.exam.ts.mapper;
 
 import com.exam.core.pojo.Page;
+import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -52,4 +53,6 @@ public interface ExamStudentMapper extends BaseMapper<ExamStudentDO> {
      * @return
      */
     Integer getCountByPage(Page<ExamStudentDO> page);
+
+    List<ExamDO> getById(String id);
 }

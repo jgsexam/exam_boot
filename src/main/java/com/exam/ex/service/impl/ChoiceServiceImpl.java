@@ -1,8 +1,10 @@
 package com.exam.ex.service.impl;
 
+import com.alibaba.druid.sql.visitor.functions.Right;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.exam.core.constant.CoreConstant;
+import com.exam.core.constant.QuestionEnum;
 import com.exam.core.constant.ResultEnum;
 import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.mapper.ChoiceMapper;
@@ -14,10 +16,20 @@ import com.exam.ex.service.ChoiceService;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.Result;
 import com.exam.core.utils.StringUtils;
+import com.exam.ts.pojo.StudentAnswerDO;
+import com.exam.ts.pojo.StudentPaperConfigObjScoreDO;
+import com.exam.ts.pojo.StudentPaperConfigQuestionDO;
+import com.exam.ts.pojo.StudentPaperConfigScoreDO;
+import com.exam.ts.service.StudentPaperConfigObjScoreService;
+import com.exam.ts.service.StudentPaperConfigQuestionService;
+import com.exam.ts.service.StudentPaperConfigScoreService;
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +51,13 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
     private ChoiceAnswerService choiceAnswerService;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private StudentPaperConfigQuestionService studentPaperConfigQuestionService;
+    @Autowired
+    private StudentPaperConfigObjScoreService studentPaperConfigObjScoreService;
+
+    @Autowired
+    private StudentPaperConfigScoreService studentPaperConfigScoreService;
 
     /**
      * 分页查询
@@ -145,6 +164,76 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
     @Override
     public List<ChoiceDO> getMutateList(ChoiceDO choiceDO, GaConfigDTO configDTO) {
         return choiceMapper.getMutateList(choiceDO, configDTO);
+    }
+    /**
+     * 统计选择题成绩
+     *
+     * @return
+     */
+    @Override
+    public void statisticsAnswer(List<StudentAnswerDO> studentAnswerDOS) {
+        String paper = studentAnswerDOS.get(0).getAnswerPaper();
+        String config = studentAnswerDOS.get(0).getAnswerConf();
+        String stuId = studentAnswerDOS.get(0).getAnswerStudent();
+        // 根据题目的id 找到答案 然后比对答案
+        List<ChoiceDO>  list =
+                choiceMapper.getListByIds((String[]) studentAnswerDOS.stream().map(StudentAnswerDO::getAnswerQuestion).distinct().toArray());
+        // 可以利用流去统计分数
+        List<BigDecimal> grade = Lists.newArrayList();
+        studentAnswerDOS.forEach(tmpTopic ->{
+            // 根据答案判断正误
+            list.stream()
+                .filter( tmpAnswer -> tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
+                .findFirst().ifPresent(right ->{
+                  grade.add(right.getChoiceScore());
+                // 保存到学生-试卷-每个题型-客观题得分表
+                StudentPaperConfigObjScoreDO studentPaperConfigObjScoreDO = new StudentPaperConfigObjScoreDO();
+                studentPaperConfigObjScoreDO.setQsQuestion(right.getChoiceId());
+                studentPaperConfigObjScoreDO.setQsConfig(tmpTopic.getAnswerConf());
+                studentPaperConfigObjScoreDO.setQsScore(right.getChoiceScore());
+                studentPaperConfigObjScoreDO.setQsStudent(tmpTopic.getAnswerStudent());
+                studentPaperConfigObjScoreService.save(studentPaperConfigObjScoreDO);
+                // 更改学生试卷配置-题目表状态
+                StudentPaperConfigQuestionDO configQuestionDO = new StudentPaperConfigQuestionDO();
+                configQuestionDO.setQuestionId(right.getChoiceId());
+                configQuestionDO.setQuestionConfig(tmpTopic.getAnswerConf());
+                configQuestionDO.setQuestionState(QuestionEnum.CORRECTED.getCode());
+                studentPaperConfigQuestionService.saveOrUpdate(configQuestionDO);
+            });
+        });
+
+
+        studentAnswerDOS.forEach(tmpTopic ->{
+            // 根据答案判断正误
+            list.stream()
+                    .filter( tmpAnswer -> tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && !tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
+                    .findFirst().ifPresent(right ->{
+                // 保存到学生-试卷-每个题型-客观题得分表
+                StudentPaperConfigObjScoreDO studentPaperConfigObjScoreDO = new StudentPaperConfigObjScoreDO();
+                studentPaperConfigObjScoreDO.setQsQuestion(right.getChoiceId());
+                studentPaperConfigObjScoreDO.setQsConfig(tmpTopic.getAnswerConf());
+                studentPaperConfigObjScoreDO.setQsScore(new BigDecimal(0));
+                studentPaperConfigObjScoreDO.setQsStudent(tmpTopic.getAnswerStudent());
+                studentPaperConfigObjScoreService.save(studentPaperConfigObjScoreDO);
+                // 更改学生试卷配置-题目表状态
+                StudentPaperConfigQuestionDO configQuestionDO = new StudentPaperConfigQuestionDO();
+                configQuestionDO.setQuestionId(right.getChoiceId());
+                configQuestionDO.setQuestionConfig(tmpTopic.getAnswerConf());
+                configQuestionDO.setQuestionState(QuestionEnum.CORRECTED.getCode());
+                studentPaperConfigQuestionService.saveOrUpdate(configQuestionDO);
+            });
+        });
+        // 记录该题型总的分数
+        StudentPaperConfigScoreDO scoreDO = new StudentPaperConfigScoreDO();
+        scoreDO.setScPaper(paper);
+        scoreDO.setScConfig(config);
+        scoreDO.setScScore(grade.stream().reduce(BigDecimal.ZERO,BigDecimal::add));
+        scoreDO.setScStudent(stuId);
+
+        studentPaperConfigScoreService.save(scoreDO);
+
+
+
     }
 
     @Transactional(rollbackFor = Exception.class)

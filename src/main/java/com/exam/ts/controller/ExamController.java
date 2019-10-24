@@ -1,18 +1,27 @@
 package com.exam.ts.controller;
 
 import com.exam.core.constant.ResultEnum;
+import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
+import com.exam.core.utils.DateUtils;
 import com.exam.core.utils.Result;
 import com.exam.ex.dto.GaPaperDTO;
 import com.exam.ts.pojo.ExamDO;
+import com.exam.ts.pojo.ExamStudentDO;
+import com.exam.ts.pojo.DTO.StudentDTO;
 import com.exam.ts.service.ExamService;
+import com.exam.ts.service.ExamStudentService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,10 +37,14 @@ public class ExamController {
 
     @Autowired
     private ExamService examService;
+    @Autowired
+    private ExamStudentService examStudentService;
+
 
     /**
      * 创建考试
      * 只创建基本信息，包括所用试卷
+     *
      * @return
      */
     @RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -40,7 +53,7 @@ public class ExamController {
         try {
             examService.addExam(exam);
             return Result.ok("操作成功！请通知学生及时考试！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "操作失败！");
         }
@@ -55,7 +68,7 @@ public class ExamController {
         try {
             examService.deleteExam(id);
             return Result.ok("删除成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "删除失败！");
         }
@@ -69,7 +82,7 @@ public class ExamController {
         try {
             ExamDO examDO = examService.getById(id);
             return Result.ok(examDO);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
@@ -84,7 +97,7 @@ public class ExamController {
         try {
             examService.updateExam(exam);
             return Result.ok("修改成功！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "修改失败！");
         }
@@ -99,7 +112,7 @@ public class ExamController {
         try {
             page = examService.getByPage(page);
             return Result.ok(page);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
@@ -114,7 +127,7 @@ public class ExamController {
         try {
             ExamDO examDO = examService.getInfo(id);
             return Result.ok(examDO);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
@@ -129,11 +142,47 @@ public class ExamController {
         try {
             examService.createPaper(paperDTO);
             return Result.ok("生成成功！请及时通知各班学生参加上机考试！");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Result.build(ResultEnum.ERROR.getCode(), "部分学生生成失败，请手动生成！");
         }
     }
+
+    /**
+     * 生成当前时间
+     */
+    @GetMapping(value = "/currentTime")
+    public Result getCurrentTime() {
+        return new Result(DateUtils.newDateTime());
+    }
+
+    /**
+     * 开始进行考试
+     */
+    @PostMapping(value = "/start")
+    public Result start(@RequestBody ExamStudentDO examStudentDO) {
+        try {
+            return new Result(examService.start(examStudentDO));
+        } catch (ExamException e) {
+            e.printStackTrace();
+        }
+        return Result.build(ResultEnum.ERROR.getCode(), "开始考试失败");
+    }
+
+
+    /**
+     * 获得学生考试的列表
+     */
+    @PostMapping(value = "/getList")
+    public Result getlist(@RequestBody StudentDTO studentDto) {
+        // 通过考试的类型进行筛选
+        // 同时还要根据用户的id进行筛选
+        List<ExamDO> list = examStudentService.getList(studentDto);
+        return new Result(list);
+    }
+
+
+
 
 }
 

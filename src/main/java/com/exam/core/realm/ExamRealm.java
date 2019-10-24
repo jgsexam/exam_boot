@@ -20,6 +20,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ public class ExamRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         // 根据用户名查询数据库中的密码
-        UsernamePasswordToken passwordToken = (UsernamePasswordToken) token;
+        CustomLoginToken passwordToken = (CustomLoginToken) token;
         String username = passwordToken.getUsername();
 
         QueryWrapper<TeacherDO> wrapper = new QueryWrapper<>();
@@ -85,6 +86,7 @@ public class ExamRealm extends AuthorizingRealm {
             // 用户名不存在
             return null;
         }
+
         // 框架负责比对数据库中的密码和页面输入的密码是否一致
         AuthenticationInfo info = new SimpleAuthenticationInfo(teacherDO, teacherDO.getTeacherPassword(), this.getName());
         return info;

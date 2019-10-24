@@ -1,9 +1,12 @@
 package com.exam.ts.service.impl;
 
+import com.exam.ex.mapper.PaperMapper;
+import com.exam.ex.pojo.PaperDO;
 import com.exam.ts.pojo.StudentPaperConfigQuestionDO;
 import com.exam.ts.mapper.StudentPaperConfigQuestionMapper;
 import com.exam.ts.service.StudentPaperConfigQuestionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +19,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentPaperConfigQuestionServiceImpl extends ServiceImpl<StudentPaperConfigQuestionMapper, StudentPaperConfigQuestionDO> implements StudentPaperConfigQuestionService {
+
+    @Autowired
+    private PaperMapper paperMapper;
 
 }

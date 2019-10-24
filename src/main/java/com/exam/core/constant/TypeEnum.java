@@ -1,6 +1,8 @@
 package com.exam.core.constant;
 
 import lombok.Getter;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.xmlbeans.SchemaType;
 
 /**
  * @version 1.0
@@ -18,13 +20,27 @@ public enum TypeEnum {
     JUDGEMENT(3, "判断题"),
     COMPLETION(4, "填空题"),
     PROGRAMMING(5, "编程题"),
-    OTHER(6, "其他题")
+    OTHER(6, "其他题"),
+
     ;
+
+    /**
+     * 用户类型
+     */
+
     private Integer code;
     private String msg;
 
     TypeEnum(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+    public static TypeEnum match(Integer type) {
+        for (TypeEnum item : TypeEnum.values()) {
+            if (item.code.equals(type)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

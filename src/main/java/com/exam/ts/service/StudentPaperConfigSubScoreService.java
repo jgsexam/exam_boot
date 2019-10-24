@@ -1,7 +1,9 @@
 package com.exam.ts.service;
 
+import com.exam.core.exception.ExamException;
 import com.exam.ts.pojo.StudentPaperConfigSubScoreDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.exam.ts.pojo.DTO.QuestionDTO;
 
 /**
  * <p>
@@ -12,5 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-05-24
  */
 public interface StudentPaperConfigSubScoreService extends IService<StudentPaperConfigSubScoreDO> {
-
+    /**
+     * 老师进行批改
+     */
+    void correctQuestion(QuestionDTO questionDTO) throws ExamException;
 }

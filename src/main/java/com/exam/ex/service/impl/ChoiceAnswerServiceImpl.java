@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * <p>
  * 选项表 服务实现类
@@ -27,5 +29,10 @@ public class ChoiceAnswerServiceImpl extends ServiceImpl<ChoiceAnswerMapper, Cho
     @Transactional(rollbackFor = Exception.class)
     public void deleteOldAnswer(ChoiceDO choice) {
         choiceAnswerMapper.deleteOldAnswer(choice);
+    }
+
+    @Override
+    public List<ChoiceAnswerDO> getListByIds(String[] ids) {
+        return choiceAnswerMapper.getListByIds(ids);
     }
 }

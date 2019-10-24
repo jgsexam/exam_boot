@@ -1,5 +1,6 @@
 package com.exam.ts.service;
 
+import com.exam.ex.pojo.PaperDO;
 import com.exam.ts.pojo.StudentPaperConfigQuestionDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 

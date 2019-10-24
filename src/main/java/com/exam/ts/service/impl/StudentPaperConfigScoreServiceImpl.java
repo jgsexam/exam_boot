@@ -4,7 +4,11 @@ import com.exam.ts.pojo.StudentPaperConfigScoreDO;
 import com.exam.ts.mapper.StudentPaperConfigScoreMapper;
 import com.exam.ts.service.StudentPaperConfigScoreService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -17,4 +21,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentPaperConfigScoreServiceImpl extends ServiceImpl<StudentPaperConfigScoreMapper, StudentPaperConfigScoreDO> implements StudentPaperConfigScoreService {
 
+    @Autowired
+    private StudentPaperConfigScoreMapper studentPaperConfigScoreMapper;
+
+    @Override
+    public BigDecimal getGradesByPaperAndStu(String answerPaper, String answerStudent) {
+        return studentPaperConfigScoreMapper.getGradesByPaperAndStu(answerPaper,answerStudent);
+    }
 }

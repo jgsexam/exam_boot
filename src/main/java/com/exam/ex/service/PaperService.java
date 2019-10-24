@@ -63,4 +63,5 @@ public interface PaperService extends IService<PaperDO> {
      * @return
      */
     List<PaperConfigDO> getTypeNum(String id);
+
 }

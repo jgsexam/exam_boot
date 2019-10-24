@@ -1,9 +1,20 @@
 package com.exam.ts.controller;
 
 
+import com.exam.core.pojo.Page;
+import com.exam.core.utils.Result;
+import com.exam.ex.pojo.BankDO;
+import com.exam.ts.pojo.ExamLogDO;
+import com.exam.ts.service.ExamLogService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 
 /**
  * <p>
@@ -16,6 +27,21 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequestMapping("/examLogDO")
 public class ExamLogController {
+    @Autowired
+    private ExamLogService examLogService;
 
+    @RequestMapping("/add/{examId}")
+    @RequiresPermissions("paper:submit")
+    public Result add(@PathVariable("examId") String examId){
+        examLogService.addExamLog(examId);
+        return Result.ok("生成日志成功!");
+    }
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @RequiresPermissions("paper:log:list")
+    public Result list(@RequestBody Page<ExamLogDO> page){
+       page =  examLogService.getListByPage(page);
+    }
 }
 

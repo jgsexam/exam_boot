@@ -6,6 +6,7 @@ import com.exam.core.constant.ExamEnum;
 import com.exam.core.constant.GaConstant;
 import com.exam.core.constant.RoomEnum;
 import com.exam.core.constant.SelectEnum;
+import com.exam.core.constant.TypeEnum;
 import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.DateUtils;
@@ -15,27 +16,47 @@ import com.exam.ex.dto.GaConfigDTO;
 import com.exam.ex.dto.GaPaperDTO;
 import com.exam.ex.ga.Generation;
 import com.exam.ex.ga.Population;
+import com.exam.ex.mapper.ChoiceMapper;
+import com.exam.ex.mapper.CodeMapper;
+import com.exam.ex.mapper.CompletionMapper;
 import com.exam.ex.mapper.PaperMapper;
+import com.exam.ex.mapper.QuestionMapper;
+import com.exam.ex.mapper.TrueFalseMapper;
+import com.exam.ex.pojo.ChoiceDO;
+import com.exam.ex.pojo.CodeDO;
+import com.exam.ex.pojo.CompletionDO;
 import com.exam.ex.pojo.PaperConfigDO;
 import com.exam.ex.pojo.PaperDO;
+import com.exam.ex.pojo.QuestionDO;
 import com.exam.ex.pojo.StudentDO;
 import com.exam.ex.pojo.TeacherDO;
+import com.exam.ex.pojo.TrueFalseDO;
 import com.exam.ts.mapper.ExamMapper;
 import com.exam.ts.mapper.ExamStudentMapper;
 import com.exam.ts.mapper.ExamTeacherMapper;
 import com.exam.ts.mapper.RoomMapper;
+import com.exam.ts.mapper.StudentPaperConfigQuestionMapper;
+import com.exam.ts.mapper.StudentPaperMapper;
 import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.exam.ts.pojo.ExamTeacherDO;
 import com.exam.ts.pojo.RoomDO;
+import com.exam.ts.pojo.StudentPaperConfigDO;
+import com.exam.ts.pojo.StudentPaperConfigQuestionDO;
 import com.exam.ts.pojo.StudentPaperDO;
+import com.exam.ts.pojo.DTO.ExamDTO;
+import com.exam.ts.pojo.DTO.TopicDTO;
 import com.exam.ts.service.ExamService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -45,6 +66,7 @@ import java.util.List;
  * @author 杨德石
  * @since 2019-05-24
  */
+@Slf4j
 @Service
 public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements ExamService {
 
@@ -55,9 +77,23 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
     @Autowired
     private PaperMapper paperMapper;
     @Autowired
+    private ChoiceMapper choiceMapper;
+    @Autowired
+    private TrueFalseMapper trueFalseMapper;
+    @Autowired
+    private CompletionMapper completionMapper;
+    @Autowired
+    private CodeMapper codeMapper;
+    @Autowired
+    private QuestionMapper questionMapper;
+    @Autowired
     private ExamStudentMapper examStudentMapper;
     @Autowired
     private ExamTeacherMapper examTeacherMapper;
+    @Autowired
+    private StudentPaperMapper studentPaperMapper;
+    @Autowired
+    private StudentPaperConfigQuestionMapper studentPaperConfigQuestionMapper;
     @Autowired
     private IdWorker idWorker;
 
@@ -188,6 +224,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
 
     /**
      * 智能生成试卷
+     *
      * @param paperDTO
      */
     @Override
@@ -235,6 +272,90 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
         saveGaPaper(paperDO);
     }
 
+    @Override
+    public ExamDTO start(ExamStudentDO examStudentDO) throws ExamException {
+        ExamDTO examDTO = new ExamDTO();
+        if (StringUtils.isEmpty(examStudentDO.getStStu())) {
+            throw new ExamException("学生id不能为空");
+        }
+
+        if (StringUtils.isEmpty(examStudentDO.getStExam())) {
+            throw new ExamException("考试id不能为空");
+        }
+
+        // 根据考试的id 及学生的id 查询学生的试卷信息
+        StudentPaperDO studentPaperDO = studentPaperMapper.getQuestion(examStudentDO.getStExam(), examStudentDO.getStStu());
+        examDTO.setStudentPaperDO(studentPaperDO);
+
+        // 保存题目及对应答案
+        List<StudentPaperConfigDO> configList = studentPaperDO.getConfigList();
+        if(configList == null){
+            throw new ExamException("试卷配置存在问题,请通知老师重新组卷");
+        }
+        StudentPaperConfigDO studentPaperConfigDO = configList.get(0);
+        //TODP
+        log.info("current studentPaperConfigDO: [{}]",studentPaperConfigDO);
+        if (StringUtils.isEmpty(studentPaperConfigDO))
+            throw new ExamException("题目不存在.");
+        // 根据题目配置找到题目
+        List<StudentPaperConfigQuestionDO> questionList = studentPaperConfigDO.getQuestionList();
+        StudentPaperConfigQuestionDO studentPaperConfigQuestionDO = questionList.get(0);
+        String key = studentPaperConfigDO.getConfigType();
+        String questionId = studentPaperConfigQuestionDO.getQuestionId();
+
+        TopicDTO topicDTO = new TopicDTO();
+        Map<String, Object> map = Maps.newHashMap();
+        // 为选择题 选1题
+        if (key.equals(TypeEnum.ONE_CHOICE.getCode().toString()) || key.equals(TypeEnum.MANY_CHOICE.getCode().toString())) {
+            map.put("choice_id",questionId);
+            Page<ChoiceDO> page = new Page<>();
+            page.setIndex(1);
+            page.setCurrentCount(1);
+            page.setParams(map);
+            ChoiceDO choiceDO = choiceMapper.getListByPage(page).get(0);
+            topicDTO.setChoiceDO(choiceDO);
+        } else if (key.equals(TypeEnum.JUDGEMENT.getCode().toString())) {
+            // 判断题
+            map.put("tf_id",questionId);
+            Page<TrueFalseDO> page = new Page<>();
+            page.setIndex(1);
+            page.setCurrentCount(1);
+            page.setParams(map);
+            TrueFalseDO trueFalseDO = trueFalseMapper.getListByPage(page).get(0);
+            topicDTO.setTrueFalseDO(trueFalseDO);
+        } else if (key.equals(TypeEnum.COMPLETION.getCode().toString())) {
+            // 填空题
+            map.put("comp_id",questionId);
+            Page<CompletionDO> page = new Page<>();
+            page.setIndex(1);
+            page.setCurrentCount(1);
+            page.setParams(map);
+            CompletionDO completionDO = completionMapper.getListByPage(page).get(0);
+            topicDTO.setCompletionDO(completionDO);
+        }  else if (key.equals(TypeEnum.PROGRAMMING.getCode().toString())) {
+            // 编程题
+            map.put("code_id",questionId);
+            Page<CodeDO> page = new Page<>();
+            page.setIndex(1);
+            page.setCurrentCount(1);
+            page.setParams(map);
+            CodeDO codeDO = codeMapper.getListByPage(page).get(0);
+            topicDTO.setCodeDO(codeDO);
+        }else{
+            // 其他提
+            map.put("question_id",questionId);
+            Page<QuestionDO> page = new Page<>();
+            page.setIndex(1);
+            page.setCurrentCount(1);
+            page.setParams(map);
+            QuestionDO questionDO = questionMapper.getListByPage(page).get(0);
+            topicDTO.setQuestionDO(questionDO);
+        }
+        examDTO.setTopicDto(topicDTO);
+        return examDTO;
+    }
+
     private void saveGaPaper(PaperDO paperDO) {
+        paperMapper.insert(paperDO);
     }
 }

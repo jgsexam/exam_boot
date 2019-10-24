@@ -1,7 +1,13 @@
 package com.exam.ts.mapper;
 
-import com.exam.ts.pojo.StudentPaperConfigDO;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.exam.ex.pojo.PaperConfigDO;
+import com.exam.ts.pojo.StudentPaperConfigDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +18,19 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2019-05-24
  */
 public interface StudentPaperConfigMapper extends BaseMapper<StudentPaperConfigDO> {
+
+    /**
+     * 批量插入
+     * @param configList
+     */
+    void saveBatch(List<StudentPaperConfigDO> configList);
+
+    List<StudentPaperConfigDO> getQuestionNum(String paperId);
+
+
+    StudentPaperConfigDO getByPaperAndQuestion(@Param("paperId") String paperId, @Param("questionId") String questionId);
+
+
+
 
 }

@@ -5,8 +5,11 @@ import com.exam.core.constant.ResultEnum;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.Result;
+import com.exam.ts.mapper.ExamMapper;
 import com.exam.ts.mapper.ExamStudentMapper;
+import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
+import com.exam.ts.pojo.DTO.StudentDTO;
 import com.exam.ts.service.ExamStudentService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,8 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     @Autowired
     private ExamStudentMapper examStudentMapper;
+    @Autowired
+    private ExamMapper examMapper;
     @Autowired
     private IdWorker idWorker;
 
@@ -109,4 +114,16 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
         page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
         return page;
     }
+
+    /**
+     * 查询选择的
+     * @param studentDTO
+     * @return
+     */
+    @Override
+    public List<ExamDO> getList(StudentDTO studentDTO) {
+        return examMapper.getListByTypeAndStu(studentDTO);
+    }
+
+
 }

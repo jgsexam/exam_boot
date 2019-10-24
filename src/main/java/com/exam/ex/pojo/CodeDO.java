@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
+import com.exam.ts.pojo.StudentAnswerDO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -92,6 +93,15 @@ public class CodeDO implements Serializable {
 
     @TableField(exist = false)
     private CompileDO compileDO;
+
+    /**
+     * 选择的答案
+     *
+     * @return
+     */
+    @TableField(exist = false)
+    private StudentAnswerDO AnswerContent;
+
 
     @Override
     public String toString() {

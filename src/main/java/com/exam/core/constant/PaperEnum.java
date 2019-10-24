@@ -15,7 +15,10 @@ public enum PaperEnum {
      * 试卷是否被启用状态值
      */
     USE(1, "已启用"),
-    NOT_USE(0, "未启用");
+    NOT_USE(0, "未启用"),
+    LOADING(3,"统计中"),
+    FINISH(4,"统计完成"),
+    ;
     private Integer code;
     private String msg;
 

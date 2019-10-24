@@ -2,8 +2,10 @@ package com.exam.ts.service;
 
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
+import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.exam.ts.pojo.DTO.StudentDTO;
 
 import java.util.List;
 
@@ -44,4 +46,13 @@ public interface ExamStudentService extends IService<ExamStudentDO> {
      * @return
      */
     Page<ExamStudentDO> getByPage(Page<ExamStudentDO> page);
+
+
+    /**
+     * 获得学生考试的列表
+     * @param studentDTO
+     * @return
+     */
+    List<ExamDO> getList(StudentDTO studentDTO);
+
 }

@@ -104,4 +104,13 @@
         </where>
     </select>
 
+    <select id="getListByTypeAndStu" parameterType="com.exam.ts.pojo.DTO.StudentDTO" resultMap="BaseResultMap">
+        SELECT
+		  <include refid="Base_Column_List"/>
+        from te_exam_student
+        INNER JOIN te_exam on exam_id = st_exam
+        WHERE st_stu = #{stuId}  and exam_type = #{type}
+        and exam_delete = 1;
+    </select>
+
 </mapper>

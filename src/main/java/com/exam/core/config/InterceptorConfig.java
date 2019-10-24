@@ -22,6 +22,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         return new LoginInterceptor();
     }
 
+
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CorsInterceptor()).addPathPatterns("/**").excludePathPatterns("/static/**", "/file/**");
@@ -34,5 +35,6 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/file/**")
                 .addResourceLocations("file:" + CoreConstant.IMG_URL, "file:" + CoreConstant.PAPER_URL);
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        super.addResourceHandlers(registry);
     }
 }

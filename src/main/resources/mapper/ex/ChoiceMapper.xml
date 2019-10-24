@@ -134,4 +134,21 @@
         </foreach>
     </select>
 
+    <select id="selectChoiceById" resultMap="BaseResultMap"></select>
+
+
+    <select id="getListByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        ,answer_number ,answer_content ,answer_true
+        from ex_choice
+        inner join ex_choice_answer
+        on choice_id = answer_choice
+        where
+        choice_delete = 1
+        and answer_delete = 1
+        <foreach collection="array" open="and choice_id in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

@@ -21,4 +21,43 @@
         log_id, log_date, log_time, log_room, log_student_num, log_paper_title, log_pass, log_create_by, log_version, log_delete
     </sql>
 
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
+      SELECT
+      <include refid="Base_Column_List"/>
+      FROM te_exam_log
+        <where>
+            log_delete = 1
+            <if test="params.logTime != null and params.logTime != ''"  >
+                and log_time = #{params.logTime}
+            </if>
+            <if test="params.logRoom != null and params.logRoom != ''"  >
+                and log_room  like '%${params.logRoom}%'
+            </if>
+            <if test="params.logPaperTitle != null and params.logPaperTitle != ''"  >
+                and log_title  like '%${params.logPaperTitle}%'
+            </if>
+        </where>
+        <if test="sortName!=null and sortName!=''">
+            order by ${sortName} ${sortOrder}
+        </if>
+        limit #{index}, #{currentCount}
+    </select>
+
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        from te_exam_log
+        <where>
+            log_delete = 1
+            <if test="params.logTime != null and params.logTime != ''"  >
+                and log_time = #{params.logTime}
+            </if>
+            <if test="params.logRoom != null and params.logRoom != ''"  >
+                and log_room  like '%${params.logRoom}%'
+            </if>
+            <if test="params.logPaperTitle != null and params.logPaperTitle != ''"  >
+                and log_title  like '%${params.logPaperTitle}%'
+            </if>
+        </where>
+    </select>
 </mapper>

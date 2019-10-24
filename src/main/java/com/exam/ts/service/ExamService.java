@@ -5,6 +5,8 @@ import com.exam.core.pojo.Page;
 import com.exam.ex.dto.GaPaperDTO;
 import com.exam.ts.pojo.ExamDO;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.exam.ts.pojo.ExamStudentDO;
+import com.exam.ts.pojo.DTO.ExamDTO;
 
 /**
  * <p>
@@ -53,4 +55,10 @@ public interface ExamService extends IService<ExamDO> {
      * @param paperDTO
      */
     void createPaper(GaPaperDTO paperDTO) throws ExamException;
+
+    /**
+     * 开始考试
+     * @param examDO
+     */
+    ExamDTO start(ExamStudentDO examDO) throws ExamException;
 }

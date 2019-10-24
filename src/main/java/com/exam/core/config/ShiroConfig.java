@@ -3,8 +3,13 @@ package com.exam.core.config;
 import com.exam.core.constant.CoreConstant;
 import com.exam.core.filter.OptionsAuthenticationFilter;
 import com.exam.core.manager.MySessionManager;
+import com.exam.core.realm.CustomModularRealmAuthenticator;
 import com.exam.core.realm.ExamRealm;
+import com.exam.core.realm.StudentRealm;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -16,9 +21,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import sun.security.krb5.Realm;
 
 import javax.servlet.Filter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * shiro配置类
@@ -55,6 +64,9 @@ public class ShiroConfig {
          */
         Map<String, String> filterMap = Maps.newHashMap();
         filterMap.put("/teacher/login", "anon");
+        filterMap.put("/index", "anon");
+        filterMap.put("/student/login", "anon");
+        filterMap.put("/studentPaperDO", "anon");
         filterMap.put("/logout", "logout");
         filterMap.put("/upload/**", "anon");
         filterMap.put("/upload", "anon");
@@ -70,15 +82,36 @@ public class ShiroConfig {
      * 创建DefaultSecurityManager
      */
     @Bean("securityManager")
-    public SecurityManager securityManager(@Qualifier("examReam") ExamRealm examRealm) {
+    public SecurityManager securityManager(@Qualifier("examReam") ExamRealm examRealm,@Qualifier("studentReam") StudentRealm studentRealm
+    ,@Qualifier("modularRealmAuthenticator") CustomModularRealmAuthenticator modularRealmAuthenticator) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 自定义session管理 使用redis
         securityManager.setSessionManager(sessionManager());
+        // 加入认证器
+        securityManager.setAuthenticator(modularRealmAuthenticator);
+        List<org.apache.shiro.realm.Realm> list = Lists.newArrayList();
+        list.add(examRealm);
+        list.add(studentRealm);
         // 关联realm
-        securityManager.setRealm(examRealm);
+        securityManager.setRealms(list);
+
         return securityManager;
     }
-
+    /**
+     * 自定义modularRealmAuthenticator
+     */
+    @Bean("modularRealmAuthenticator")
+    public CustomModularRealmAuthenticator modularRealmAuthenticator(@Qualifier("examReam") ExamRealm examRealm,@Qualifier("studentReam") StudentRealm studentRealm){
+        CustomModularRealmAuthenticator authenticator = new CustomModularRealmAuthenticator();
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("exam",examRealm);
+        hashMap.put("student",studentRealm);
+        authenticator.setDefinedRealms(hashMap);
+        // 只要有一个Realam认证成功即可 并且返回认证信息
+        FirstSuccessfulStrategy strategy = new FirstSuccessfulStrategy();
+        authenticator.setAuthenticationStrategy(strategy);
+        return authenticator;
+    }
     /**
      * 自定义sessionManager
      */
@@ -89,6 +122,7 @@ public class ShiroConfig {
         return mySessionManager;
     }
 
+
     /**
      * 创建Realm
      */
@@ -97,7 +131,10 @@ public class ShiroConfig {
         return new ExamRealm();
     }
 
-
+    @Bean("studentReam")
+    public StudentRealm studentRealm(){
+        return new StudentRealm();
+    }
     @Bean
     public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();

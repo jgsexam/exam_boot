@@ -35,7 +35,7 @@ public class CoreConstant {
     /**
      * 服务器文件地址
      */
-    public final static String SERVER_FILE_URL = "http://tn20898453.51mypc.cn/file/";
+    public final static String SERVER_FILE_URL = "http://260z5v3152.wicp.vip/file/";
 
     /**
      * redis过期时间

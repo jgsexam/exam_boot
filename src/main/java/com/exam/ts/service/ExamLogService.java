@@ -1,5 +1,6 @@
 package com.exam.ts.service;
 
+import com.exam.core.pojo.Page;
 import com.exam.ts.pojo.ExamLogDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ExamLogService extends IService<ExamLogDO> {
 
+    /**
+     * 生成考试日志
+     */
+    void addExamLog(String examId);
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    Page<ExamLogDO> getListByPage(Page<ExamLogDO> page);
 }
