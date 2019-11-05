@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2019/5/9 0009 下午 8:43
  * @Version 1.0
  */
-@Component
+
 public class ShiroUtils {
 
     private ShiroUtils() {

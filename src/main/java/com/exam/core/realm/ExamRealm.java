@@ -2,6 +2,7 @@ package com.exam.core.realm;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exam.core.utils.ShiroUtils;
 import com.exam.ex.pojo.AuthDO;
 import com.exam.ex.pojo.RoleDO;
 import com.exam.ex.pojo.TeacherDO;
@@ -47,13 +48,13 @@ public class ExamRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-
+        // TODO 这里转化异常 更改的方案是存string
         // 获取登录中的用户
-        TeacherDO teacher = (TeacherDO) principalCollection.getPrimaryPrincipal();
+        TeacherDO teacherDO = (TeacherDO) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
         // 查询角色， 封装成集合
-        List<TeacherRoleDO> roleList = teacherRoleService.getByTeacher(teacher);
+        List<TeacherRoleDO> roleList = teacherRoleService.getByTeacher(teacherDO);
         // Lambda表达式取出集合中指定元素封装成另一个集合
         List<String> roleIds = roleList.stream().map(TeacherRoleDO::getTrRole).collect(Collectors.toList());
         // 使用roleIds查询所有的角色，将角色名封装成集合

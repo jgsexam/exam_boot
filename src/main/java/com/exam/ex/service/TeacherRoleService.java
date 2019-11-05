@@ -23,6 +23,8 @@ public interface TeacherRoleService extends IService<TeacherRoleDO> {
      */
     List<TeacherRoleDO> getByTeacher(TeacherDO teacherDO);
 
+    List<TeacherRoleDO> getByTeacherById(String teacherId);
+
     /**
      * 为教师添加角色
      * @param list

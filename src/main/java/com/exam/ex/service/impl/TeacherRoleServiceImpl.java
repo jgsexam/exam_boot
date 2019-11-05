@@ -43,6 +43,13 @@ public class TeacherRoleServiceImpl extends ServiceImpl<TeacherRoleMapper, Teach
         return teacherRoleMapper.selectList(wrapper);
     }
 
+    @Override
+    public List<TeacherRoleDO> getByTeacherById(String teacherId) {
+        QueryWrapper<TeacherRoleDO> wrapper = new QueryWrapper<TeacherRoleDO>()
+                .eq("tr_teacher", teacherId);
+        return teacherRoleMapper.selectList(wrapper);
+    }
+
     /**
      * 为教师添加角色
      *

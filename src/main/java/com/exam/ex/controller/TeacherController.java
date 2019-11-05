@@ -85,7 +85,7 @@ public class TeacherController {
         TeacherDO teacher = (TeacherDO) subject.getPrincipal();
         Serializable sessionId = subject.getSession().getId();
         Map<String, Object> dataMap = Maps.newHashMap();
-        dataMap.put("token", sessionId);
+        dataMap.put("token", "tea" + sessionId);
         dataMap.put("teacher", teacher);
         redisTemplate.opsForValue().set(teacher.getTeacherUsername(), sessionId);
         return Result.ok("登陆成功！", dataMap);

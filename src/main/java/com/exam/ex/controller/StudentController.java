@@ -232,7 +232,7 @@ public class StudentController {
         StudentDO student = (StudentDO) subject.getPrincipal();
         Serializable sessionId = subject.getSession().getId();
         Map<String, Object> dataMap = Maps.newHashMap();
-        dataMap.put("token", sessionId);
+        dataMap.put("token", "stu" + sessionId);
         dataMap.put("student", student);
         redisTemplate.opsForValue().set(student.getStuNumber(), sessionId);
         return Result.ok("登陆成功！", dataMap);

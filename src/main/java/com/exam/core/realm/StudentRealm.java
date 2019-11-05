@@ -31,6 +31,7 @@ public class StudentRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        info.addStringPermission("paper:list");
        return info;
 
     }

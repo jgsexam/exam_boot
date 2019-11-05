@@ -14,7 +14,7 @@ public enum UserType {
      * 学生
      */
     STUDENT("student","学生"),
-    TEACHER("exam","老师");
+    TEACHER("teacher","老师");
 
     private String code;
     private String msg;
