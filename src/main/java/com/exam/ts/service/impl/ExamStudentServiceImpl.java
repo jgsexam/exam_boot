@@ -5,6 +5,8 @@ import com.exam.core.constant.ResultEnum;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.IdWorker;
 import com.exam.core.utils.Result;
+import com.exam.core.utils.ShiroUtils;
+import com.exam.ex.pojo.StudentDO;
 import com.exam.ts.mapper.ExamMapper;
 import com.exam.ts.mapper.ExamStudentMapper;
 import com.exam.ts.pojo.ExamDO;
@@ -122,6 +124,8 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
      */
     @Override
     public List<ExamDO> getList(StudentDTO studentDTO) {
+        StudentDO loginStudent = ShiroUtils.getLoginStudent();
+        studentDTO.setStuId(loginStudent.getStuId());
         return examMapper.getListByTypeAndStu(studentDTO);
     }
 
