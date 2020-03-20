@@ -102,7 +102,7 @@ public class QuestionDO implements Serializable {
      * @return
      */
     @TableField(exist = false)
-    private StudentAnswerDO AnswerContent;
+    private StudentAnswerDO answerContent;
 
     @Override
     public String toString() {

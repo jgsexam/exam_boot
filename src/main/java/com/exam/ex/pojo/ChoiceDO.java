@@ -103,7 +103,7 @@ public class ChoiceDO implements Serializable {
      * @return
      */
     @TableField(exist = false)
-    private StudentAnswerDO AnswerContent;
+    private StudentAnswerDO answerContent;
 
 
     @Override

@@ -17,9 +17,9 @@ import java.util.List;
 public interface StudentPaperConfigService extends IService<StudentPaperConfigDO> {
     /**
      * 查询试卷中每个题型的数量
-     * @param id
+     * @param examId 考试id stuId 学生id
      * @return
      */
-    List<StudentPaperConfigDO> getQuestionNum(String id);
+    List<StudentPaperConfigDO> getQuestionNum(String examId,String stuId);
 
 }

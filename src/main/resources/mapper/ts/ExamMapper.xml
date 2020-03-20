@@ -104,13 +104,48 @@
         </where>
     </select>
 
-    <select id="getListByTypeAndStu" parameterType="com.exam.ts.pojo.DTO.StudentDTO" resultMap="BaseResultMap">
+    <select id="getListByStu" parameterType="com.exam.core.pojo.Page" resultMap="BaseResultMap">
         SELECT
 		  <include refid="Base_Column_List"/>
-        from te_exam_student
-        INNER JOIN te_exam on exam_id = st_exam
-        WHERE st_stu = #{stuId}  and exam_type = #{type}
-        and exam_delete = 1;
+        ,paper_id, paper_title
+        from te_exam
+        INNER JOIN te_exam_student es on exam_id = st_exam
+        INNER JOIN ex_paper on  exam_paper = paper_id
+        <where>
+            exam_delete = 1
+            <if test="params.stuId!=null and params.stuId!=''">
+                and es.st_stu = #{params.stuId}
+            </if>
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and exam_create_by = #{params.orgTeacher}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
+            </if>
+            <if test="params.examCreateBy!=null and params.examCreateBy!=''">
+                and teacher_name like '%${params.examCreateBy}%'
+            </if>
+            <if test="params.startTime!='' and params.startTime!=null and params.endTime != '' and params.endTime != null">
+                and exam_date <![CDATA[ >= ]]> #{params.startTime}
+                and exam_date <![CDATA[ <= ]]> #{params.endTime}
+            </if>
+            <if test="params.examRoom!=null and params.examRoom!=''">
+                and room_name like '%${params.examRoom}%'
+            </if>
+            <if test="params.examType!=null and params.examType!=''">
+                and exam_type = #{params.examType}
+            </if>
+            <if test="params.examState!=null and params.examState!=''">
+                and exam_state = #{params.examState}
+            </if>
+        </where>
+        <if test="sortName == null or sortName == ''">
+            order by exam_create_time desc
+        </if>
+        <if test="sortName != null and sortName != ''">
+            order by ${sortName} ${sortOrder}
+        </if>
+        limit #{index}, #{currentCount}
     </select>
 
 </mapper>

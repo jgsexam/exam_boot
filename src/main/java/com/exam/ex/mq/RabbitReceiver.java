@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * rabbit消费者
+ *
  * @author lth
  * @version 1.0.0
  * @date
@@ -30,21 +31,15 @@ public class RabbitReceiver {
 
 
     @RabbitListener(queues = MqConstant.SUBMIT_EXAM_QUEUE)
-    public void handlerExam(StudentAnswerDO studentAnswerDO) throws ExamException {
-            // 处理考试逻辑
-        log.debug("处理学生答题 学生ID:{}",studentAnswerDO.getAnswerStudent());
+    public void handlerExam(StudentAnswerDO studentAnswerDO) {
+        // 处理考试逻辑
+        log.debug("处理学生答题 学生ID:{}", studentAnswerDO.getAnswerStudent());
         StudentPaperDO studentPaperDO = studentPaperService.getById(studentAnswerDO.getAnswerPaper());
-        if(SubmitEnum.NOT_SUBMIT.getCode().equals(studentPaperDO.getPaperFlag())){
-            throw new ExamException("试卷未提交");
-        }
-        if(PaperEnum.LOADING.getCode().equals(studentPaperDO.getPaperFlag())){
-            throw new ExamException("试卷处理中");
-        }
         // 更改状态
         studentPaperDO.setPaperFlag(PaperEnum.LOADING.getCode());
         boolean isSuccess = studentPaperService.updateById(studentPaperDO);
         // 更改成功则开始
-        if(isSuccess){
+        if (isSuccess) {
             studentAnswerService.asyncHandler(studentAnswerDO);
         }
 

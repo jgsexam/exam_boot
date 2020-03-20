@@ -1,6 +1,7 @@
 package com.exam;
 
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @MapperScan("com.exam.*.mapper")
 @EnableCaching
 @EnableScheduling
+@EnableRabbit
 @EnableTransactionManagement
 @CrossOrigin
 @ServletComponentScan
 @SpringBootApplication
 @PropertySource({"classpath:resource.properties"})
-public class ExamBootApplication  extends SpringBootServletInitializer   {
+public class ExamBootApplication  extends SpringBootServletInitializer {
 
 
     @Override

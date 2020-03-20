@@ -14,11 +14,13 @@ import com.exam.ts.pojo.ExamStudentDO;
 import com.exam.ts.pojo.DTO.StudentDTO;
 import com.exam.ts.service.ExamStudentService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -118,15 +120,17 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
     }
 
     /**
-     * 查询选择的
-     * @param studentDTO
+     * 查询学生的考试
+     * @param examDO
      * @return
      */
     @Override
-    public List<ExamDO> getList(StudentDTO studentDTO) {
+    public List<ExamDO> getList(Page<ExamDO> examDO) {
         StudentDO loginStudent = ShiroUtils.getLoginStudent();
-        studentDTO.setStuId(loginStudent.getStuId());
-        return examMapper.getListByTypeAndStu(studentDTO);
+        Map<String,Object> map = Maps.newHashMap();
+        map.put("stuId",loginStudent.getStuId());
+        examDO.setParams(map);
+        return examMapper.getListByStu(examDO);
     }
 
 

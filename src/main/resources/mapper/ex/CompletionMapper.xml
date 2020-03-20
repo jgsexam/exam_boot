@@ -13,11 +13,15 @@
         <result column="comp_resolve" property="compResolve"/>
         <result column="comp_version" property="compVersion"/>
         <result column="comp_delete" property="compDelete"/>
+        <association property="answerContent" javaType="com.exam.ts.pojo.StudentAnswerDO">
+            <result property="answerContent" column="answer_content"/>
+        </association>
         <collection property="answerList" ofType="com.exam.ex.pojo.CompletionAnswerDO">
             <id column="answer_id" property="answerId"/>
             <result column="answer_number" property="answerNumber"/>
             <result column="answer_content" property="answerContent"/>
         </collection>
+
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -118,4 +122,33 @@
         </foreach>
     </select>
 
+
+    <select id="getListByMapStuAnswer" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        ,answer_content
+        from ex_completion
+        left join te_student_answer
+        on comp_id = answer_question
+        where
+        comp_delete = 1
+        and answer_student = #{stuId}
+        and answer_paper = #{paperId}
+        <foreach collection="completionIds" open="and comp_id in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getListByMapAnswer" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        ,answer_number ,answer_content
+        from ex_completion
+        LEFT JOIN ex_completion_answer ON comp_id = answer_comp
+        where answer_delete = 1
+        and comp_delete = 1
+        <foreach collection="completionIds" open="and comp_id in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

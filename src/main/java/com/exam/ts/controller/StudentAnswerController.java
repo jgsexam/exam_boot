@@ -1,6 +1,7 @@
 package com.exam.ts.controller;
 
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.exam.core.exception.ExamException;
 import com.exam.core.utils.Result;
 import com.exam.ts.pojo.StudentAnswerDO;
@@ -8,6 +9,7 @@ import com.exam.ts.pojo.DTO.AnswerDTO;
 import com.exam.ts.pojo.DTO.TopicDTO;
 import com.exam.ts.service.StudentAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -30,26 +32,13 @@ public class StudentAnswerController {
     private StudentAnswerService studentAnswerService;
 
     /**
-     *  点击进入下一题
+     * 进行单个题目的答案提交
      */
-    @RequestMapping(value = "/next", method = RequestMethod.POST)
-    public Result next(@RequestBody AnswerDTO answerDTO) {
-        TopicDTO topicDTO = null;
-        try {
-            topicDTO = studentAnswerService.saveThenNext(answerDTO);
-            return new Result(topicDTO);
-        } catch (ExamException e) {
-            e.printStackTrace();
-            return new Result("未知错误");
-        }
+    @PostMapping("/issue")
+    public Result issue(@RequestBody  StudentAnswerDO answerDO){
+        studentAnswerService.saveIssue(answerDO);
+        return Result.ok("该题回答完成!");
     }
 
-    /**
-     * 提交试卷
-     */
-    @RequestMapping(value = "/submit",method = RequestMethod.POST)
-    public Result submit(@RequestBody StudentAnswerDO studentAnswerDO){
-        return new Result(studentAnswerService.submit(studentAnswerDO));
-    }
 }
 

@@ -7,6 +7,7 @@ import com.exam.ex.pojo.QuestionDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -57,4 +58,9 @@ public interface QuestionMapper extends BaseMapper<QuestionDO> {
      * @return
      */
     List<QuestionDO> getMutateList(@Param("question") QuestionDO questionDO, @Param("config") GaConfigDTO configDTO);
+
+    /**
+     * 返回题目(含学生做题答案)
+     */
+    List<QuestionDO> getListByMapWithAnswer(Map<String, Object> paramsMap);
 }

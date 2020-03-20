@@ -31,6 +31,8 @@ public interface ExamMapper extends BaseMapper<ExamDO> {
      */
     Integer getCountByPage(Page<ExamDO> page);
 
-
-    List<ExamDO> getListByTypeAndStu(StudentDTO studentDto);
+    /**
+     * 分页查询学生考试1
+     */
+    List<ExamDO> getListByStu(Page<ExamDO> examDO);
 }

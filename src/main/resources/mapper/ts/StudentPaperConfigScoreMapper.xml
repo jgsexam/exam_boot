@@ -16,7 +16,7 @@
         sc_id, sc_paper, sc_config, sc_score, sc_student
     </sql>
 
-    <select id="getGradesByPaperAndStu">
+    <select id="getGradesByPaperAndStu" resultType="decimal">
         SELECT
         sum(sc_score)
         from te_student_paper_config_score

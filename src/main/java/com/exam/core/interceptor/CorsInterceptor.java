@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author 杨德石
  * @date
  */
+
 public class CorsInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

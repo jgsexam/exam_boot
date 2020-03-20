@@ -7,6 +7,7 @@ import com.exam.core.pojo.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -57,4 +58,20 @@ public interface CompletionMapper extends BaseMapper<CompletionDO> {
      * @return
      */
     List<CompletionDO> getMutateList(@Param("comp") CompletionDO completionDO, @Param("config") GaConfigDTO configDTO);
+
+    /**
+     * 根据map中的参数查询全部 携带学生自己做的答案
+     *
+     * @param
+     * @return
+     */
+    List<CompletionDO> getListByMapStuAnswer(Map<String, Object> paramsMap);
+
+    /**
+     * 根据map中的参数查询全部(含答案)
+     *
+     * @param
+     * @return
+     */
+    List<CompletionDO> getListByMapAnswer(Map<String, Object> paramsMap);
 }

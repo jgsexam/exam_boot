@@ -43,13 +43,14 @@
         and question_id = #{questionId}
     </select>
 
-    <select id="getQuestionNum" parameterType="string">
+    <select id="getQuestionNum" parameterType="string" resultMap="BaseResultMap">
            SELECT
+            te_student_paper_config.config_id,
             config_paper,
-            config_type,
-            type_name,
             count( question_id ) AS config_question_num,
-            score AS config_score
+            score AS config_score,
+            config_type,
+            type_name
         FROM
             te_student_paper_config
             INNER JOIN te_student_paper_config_question ON config_id = question_config

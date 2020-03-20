@@ -57,21 +57,23 @@ public class StudentAnswerDO implements Serializable {
      */
     private String answerQuestion;
 
-    public Integer getConfigType(){
-        String configType = config.getConfigType();
-        if(configType == null) return 0;
-        else return Integer.valueOf(configType);
+    public Integer getConfigType() {
+        if (config == null) return 0;
+        else {
+            String configType = config.getConfigType();
+            return Integer.valueOf(configType);
+        }
     }
 
 
     @Override
     public String toString() {
         return "StudentAnswerDO{" +
-        "answerId=" + answerId +
-        ", answerContent=" + answerContent +
-        ", answerStudent=" + answerStudent +
-        ", answerConf=" + answerConf +
-        ", answerPaper=" + answerPaper +
-        "}";
+                "answerId=" + answerId +
+                ", answerContent=" + answerContent +
+                ", answerStudent=" + answerStudent +
+                ", answerConf=" + answerConf +
+                ", answerPaper=" + answerPaper +
+                "}";
     }
 }

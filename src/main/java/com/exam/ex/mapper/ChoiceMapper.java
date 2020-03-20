@@ -44,6 +44,28 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
     List<ChoiceDO> getListByMap(Map<String, Object> paramsMap);
 
     /**
+     * 根据map中的参数查询全部 携带学生自己做的答案
+     *
+     * @param paramsMap
+     * @return
+     */
+    List<ChoiceDO> getListByMapWithStuAnswer(Map<String, Object> paramsMap);
+    /**
+     * 根据map中的参数查询全部(无答案)
+     *
+     * @param paramsMap
+     * @return
+     */
+    List<ChoiceDO> getListByMapNoAnswer(Map<String, Object> paramsMap);
+
+    /**
+     * 根据map中的参数查询全部(有答案)
+     *
+     * @param paramsMap
+     * @return
+     */
+    List<ChoiceDO> getListByMapAnswer(Map<String, Object> paramsMap);
+    /**
      * 随机查询列表（遗传算法专用）
      *
      * @param configDTO

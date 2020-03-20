@@ -15,7 +15,7 @@ import java.util.Map;
  * @author 杨德石
  */
 @Data
-public class Page<T> implements Serializable {
+public class  Page<T> implements Serializable {
 
     /**
      * 起始索引

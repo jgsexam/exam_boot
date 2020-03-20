@@ -7,6 +7,7 @@ import com.exam.core.pojo.Page;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -53,4 +54,7 @@ public interface CodeMapper extends BaseMapper<CodeDO> {
      * @return
      */
     List<CodeDO> getMutateList(@Param("code") CodeDO codeDO, @Param("config") GaConfigDTO configDTO);
+
+
+    List<CodeDO> getListByMapWithAnswer(Map<String, Object> paramsMap);
 }

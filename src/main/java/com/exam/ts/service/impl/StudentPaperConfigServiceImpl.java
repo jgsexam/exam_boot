@@ -1,10 +1,12 @@
 package com.exam.ts.service.impl;
 
-import com.exam.ex.pojo.PaperDO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.ts.mapper.ExamMapper;
+import com.exam.ts.mapper.StudentPaperMapper;
 import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.StudentPaperConfigDO;
 import com.exam.ts.mapper.StudentPaperConfigMapper;
+import com.exam.ts.pojo.StudentPaperDO;
 import com.exam.ts.service.StudentPaperConfigService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +27,26 @@ import java.util.List;
 public class StudentPaperConfigServiceImpl extends ServiceImpl<StudentPaperConfigMapper, StudentPaperConfigDO> implements StudentPaperConfigService {
 
     @Autowired
-    private ExamMapper examMapper;
-
+    private StudentPaperMapper studentPaperMapper;
     @Autowired
     private StudentPaperConfigMapper studentPaperConfigMapper;
 
 
     /**
      * 查询试卷中每个题型的数量
-     * @param id
+     *
+     * @param stuId
      * @return
      */
     @Override
-    public List<StudentPaperConfigDO> getQuestionNum(String id) {
-        ExamDO examDO = examMapper.selectById(id);
-        if(examDO != null){
-            List<StudentPaperConfigDO> list = studentPaperConfigMapper.getQuestionNum(examDO.getPaper().getPaperId());
+    public List<StudentPaperConfigDO> getQuestionNum(String examId, String stuId) {
+        QueryWrapper<StudentPaperDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("paper_exam", examId)
+                .eq("paper_student", stuId);
+        StudentPaperDO examDO = studentPaperMapper.selectOne(queryWrapper);
+        if (examDO != null) {
+            List<StudentPaperConfigDO> list = studentPaperConfigMapper.getQuestionNum(examDO.getPaperId());
+            return list;
         }
         return null;
     }

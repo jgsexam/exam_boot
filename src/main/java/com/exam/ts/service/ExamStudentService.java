@@ -50,9 +50,9 @@ public interface ExamStudentService extends IService<ExamStudentDO> {
 
     /**
      * 获得学生考试的列表
-     * @param studentDTO
+     * @param examDO
      * @return
      */
-    List<ExamDO> getList(StudentDTO studentDTO);
+    List<ExamDO> getList(Page<ExamDO> examDO);
 
 }

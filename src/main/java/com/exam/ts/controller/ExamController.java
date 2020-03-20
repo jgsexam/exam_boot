@@ -5,12 +5,17 @@ import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.DateUtils;
 import com.exam.core.utils.Result;
+import com.exam.core.utils.ShiroUtils;
 import com.exam.ex.dto.GaPaperDTO;
+import com.exam.ex.pojo.StudentDO;
+import com.exam.ts.pojo.DTO.CommitDTO;
 import com.exam.ts.pojo.ExamDO;
 import com.exam.ts.pojo.ExamStudentDO;
 import com.exam.ts.pojo.DTO.StudentDTO;
+import com.exam.ts.pojo.StudentPaperDO;
 import com.exam.ts.service.ExamService;
 import com.exam.ts.service.ExamStudentService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -159,14 +165,14 @@ public class ExamController {
     /**
      * 开始进行考试
      */
-    @PostMapping(value = "/start")
-    public Result start(@RequestBody ExamStudentDO examStudentDO) {
+    @GetMapping(value = "/start/{examId}")
+    public Result start(@PathVariable @NotNull String examId) {
         try {
-            return new Result(examService.start(examStudentDO));
+            return new Result(examService.startExam(examId));
         } catch (ExamException e) {
             e.printStackTrace();
         }
-        return Result.build(ResultEnum.ERROR.getCode(), "开始考试失败");
+        return new Result(ResultEnum.NO_QUESTION);
     }
 
 
@@ -175,15 +181,44 @@ public class ExamController {
      */
     @PostMapping(value = "/getList")
     @RequiresPermissions("paper:list")
-    public Result getlist(@RequestBody StudentDTO studentDto) {
-        // 通过考试的类型进行筛选
-        // 同时还要根据用户的id进行筛选
-        List<ExamDO> list = examStudentService.getList(studentDto);
+    public Result getlist(@RequestBody  Page<ExamDO> page) {
+        // 根据用户的id进行筛选
+        List<ExamDO> list = examStudentService.getList(page);
         return new Result(list);
     }
 
 
+    /**
+     * 提交试卷
+     */
+    @PostMapping(value = "/submit2")
+    public Result submit(@RequestBody CommitDTO commitDTO) {
+        StudentDO loginStudent = ShiroUtils.getLoginStudent();
+        commitDTO.setStuId(loginStudent.getStuId());
+        try {
+            examService.submit(commitDTO);
+            return Result.ok("提交成功！");
+        } catch (ExamException e) {
+            e.printStackTrace();
+            return Result.build(e.getCode(),e.getMessage());
+        }
+    }
 
 
+    /**
+     * 提交试卷（只含客观题）
+     */
+    @PostMapping(value = "/submit")
+    public Result submit_tmp(@RequestBody CommitDTO commitDTO) {
+        StudentDO loginStudent = ShiroUtils.getLoginStudent();
+        commitDTO.setStuId(loginStudent.getStuId());
+        try {
+            examService.submit_tmp(commitDTO);
+            return Result.ok("提交成功！");
+        } catch (ExamException e) {
+            e.printStackTrace();
+            return Result.build(e.getCode(),e.getMessage());
+        }
+    }
 }
 

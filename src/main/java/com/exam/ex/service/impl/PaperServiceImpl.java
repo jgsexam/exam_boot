@@ -159,7 +159,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, PaperDO> implemen
                 Map<String, Object> paramsMap = Maps.newHashMap();
                 paramsMap.put("choiceType", key);
                 paramsMap.put("choiceIds", questionIds);
-                List<ChoiceDO> choiceList = choiceMapper.getListByMap(paramsMap);
+                List<ChoiceDO> choiceList = choiceMapper.getListByMapNoAnswer(paramsMap);
                 // 过滤正确答案选项
                 choiceList.forEach(e -> {
                     List<String> numberList = e.getChoiceAnswer().stream().filter(ChoiceAnswerDO::getAnswerTrue)

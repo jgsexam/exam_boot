@@ -16,6 +16,7 @@ public enum PaperEnum {
      */
     USE(1, "已启用"),
     NOT_USE(0, "未启用"),
+    COMMIT(2,"已提交"),
     LOADING(3,"统计中"),
     FINISH(4,"统计完成"),
     ;

@@ -15,7 +15,12 @@ public enum ResultEnum {
      */
     SUCCESS(200, "操作成功"),
     ERROR(400, "操作失败"),
-    LOGOUT(50008, "被挤下线");
+    LOGOUT(50008, "被挤下线"),
+    NO_QUESTION(10004, "没有题目"),
+    LOADED(10005, "试卷处理中，请勿重新提交"),
+    COMMITED(10006, "试卷已提交，请勿重复提交"),
+    FINISHED(10007, "试卷已经统计完成,请勿重复提交"),
+    NO_USE(10008,"试卷未启用");
 
     private Integer code;
     private String msg;

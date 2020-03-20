@@ -10,7 +10,6 @@ import com.exam.core.realm.ExamRealm;
 import com.exam.core.realm.StudentRealm;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.Realm;
@@ -75,6 +74,8 @@ public class ShiroConfig {
         filterMap.put("/teacher/login", "anon");
 //        学生的接口<---------
         filterMap.put("/student/login", "anon");
+        filterMap.put("/exam/getList","anon");
+
 //        ---------->
         filterMap.put("/logout", "logout");
         filterMap.put("/upload/**", "anon");
@@ -115,7 +116,7 @@ public class ShiroConfig {
     @Bean("modularRealmAuthenticator")
     public CustomModularRealmAuthenticator modularRealmAuthenticator(@Qualifier("examReam") ExamRealm examRealm, @Qualifier("studentReam") StudentRealm studentRealm) {
         CustomModularRealmAuthenticator authenticator = new CustomModularRealmAuthenticator();
-        HashMap<String, Object> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>(16);
         hashMap.put(UserType.TEACHER.getCode(), examRealm);
         hashMap.put(UserType.STUDENT.getCode(), studentRealm);
         authenticator.setDefinedRealms(hashMap);

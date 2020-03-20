@@ -16,12 +16,6 @@ import com.exam.ts.pojo.DTO.TopicDTO;
  */
 public interface StudentAnswerService extends IService<StudentAnswerDO> {
 
-    /**
-     *功能描述 保存并处理下一题
-     * @author lth
-     * @param answerDTO
-     */
-    TopicDTO saveThenNext(AnswerDTO answerDTO) throws ExamException;
 
     /**
      *功能描述  考试提交
@@ -38,4 +32,9 @@ public interface StudentAnswerService extends IService<StudentAnswerDO> {
      */
 
     void asyncHandler(StudentAnswerDO studentAnswerDO);
+
+    /**
+     * 保存做题
+     */
+    void saveIssue(StudentAnswerDO answerDO);
 }

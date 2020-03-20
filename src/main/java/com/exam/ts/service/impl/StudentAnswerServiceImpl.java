@@ -8,6 +8,7 @@ import com.exam.core.constant.PaperEnum;
 import com.exam.core.constant.TypeEnum;
 import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
+import com.exam.core.utils.ShiroUtils;
 import com.exam.ex.mapper.ChoiceMapper;
 import com.exam.ex.mapper.CodeMapper;
 import com.exam.ex.mapper.CompletionMapper;
@@ -17,6 +18,7 @@ import com.exam.ex.pojo.ChoiceDO;
 import com.exam.ex.pojo.CodeDO;
 import com.exam.ex.pojo.CompletionDO;
 import com.exam.ex.pojo.QuestionDO;
+import com.exam.ex.pojo.StudentDO;
 import com.exam.ex.pojo.TrueFalseDO;
 import com.exam.ex.service.ChoiceService;
 import com.exam.ts.mapper.StudentPaperConfigMapper;
@@ -79,34 +81,6 @@ public class StudentAnswerServiceImpl extends ServiceImpl<StudentAnswerMapper, S
     @Autowired
     private IdWorker idWorker;
 
-
-    @Override
-    public TopicDTO saveThenNext(AnswerDTO answerDTO) throws ExamException {
-        String answerContent = answerDTO.getAnswerContent();
-        // 更新学生答案表
-
-        // 根据学生id 试卷id 题目Id查找答题内容 没找到则新增一条
-        StudentAnswerDO studentAnswerDO = new StudentAnswerDO();
-        BeanUtils.copyProperties(answerDTO, studentAnswerDO);
-        studentAnswerDO.setAnswerQuestion(answerDTO.getQuestionId());
-
-
-        QueryWrapper<StudentAnswerDO> query = new QueryWrapper<>();
-        query.eq("answer_student", studentAnswerDO.getAnswerStudent());
-        query.eq("answer_question", studentAnswerDO.getAnswerQuestion());
-        query.eq("answer_paper", studentAnswerDO.getAnswerPaper());
-        StudentAnswerDO answerDO = studentAnswerMapper.selectOne(query);
-        if (answerDO != null) {
-            answerDO.setAnswerContent(answerContent);
-            studentAnswerMapper.updateById(answerDO);
-        } else {
-            studentAnswerDO.setAnswerId(idWorker.nextId() + "");
-            studentAnswerMapper.insert(studentAnswerDO);
-        }
-
-        // 根据序号 找到该类型的下一个题目
-        return this.topicNext(answerDTO.getNumber(), answerDTO.getAnswerConf());
-    }
 
     /**
      * 通过mq异步处理
@@ -200,6 +174,26 @@ public class StudentAnswerServiceImpl extends ServiceImpl<StudentAnswerMapper, S
         studentPaperMapper.updateById(studentPaperDO);
 
         log.debug("提交答卷，学生ID：{}，耗时：{}ms", stuAnswerDO.getAnswerStudent(), System.currentTimeMillis() - start);
+    }
+
+    @Override
+    public void saveIssue(StudentAnswerDO answerDO) {
+        StudentDO loginStudent = ShiroUtils.getLoginStudent();
+        // 查询数据库中是否存在过数据
+        QueryWrapper<StudentAnswerDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("answer_student", loginStudent.getStuId())
+                .eq("answer_paper", answerDO.getAnswerPaper())
+                .eq("answer_conf", answerDO.getAnswerConf())
+                .eq("answer_question", answerDO.getAnswerQuestion());
+        StudentAnswerDO one = studentAnswerMapper.selectOne(queryWrapper);
+        // 不存在 进行保存
+        if (one == null) {
+            answerDO.setAnswerId(idWorker.nextId() + "");
+            answerDO.setAnswerStudent(loginStudent.getStuId());
+            studentAnswerMapper.insert(answerDO);
+        } else {
+            one.setAnswerContent(answerDO.getAnswerContent());
+        }
     }
 
 

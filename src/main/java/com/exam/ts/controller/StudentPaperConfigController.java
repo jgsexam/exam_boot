@@ -34,11 +34,10 @@ public class StudentPaperConfigController {
     /**
      * 根据考试id得到题型对应的题目数
      */
-    @RequestMapping(value = "/typeNum/{examId}", method = RequestMethod.GET)
-    public Result getTypeNum(@PathVariable String examId){
-
-        List<StudentPaperConfigDO> data = studentPaperConfigService.getQuestionNum(examId);
-        return new Result();
+    @RequestMapping(value = "/typeNum/{examId}/{stuId}", method = RequestMethod.GET)
+    public Result getTypeNum(@PathVariable("examId") String examId,@PathVariable("stuId") String stuId) {
+        List<StudentPaperConfigDO> data = studentPaperConfigService.getQuestionNum(examId,stuId);
+        return new Result(data);
     }
 
 }

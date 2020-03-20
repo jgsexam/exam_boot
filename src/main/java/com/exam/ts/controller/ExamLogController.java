@@ -9,7 +9,9 @@ import com.exam.ts.pojo.ExamLogDO;
 import com.exam.ts.service.ExamLogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -31,22 +33,27 @@ public class ExamLogController {
     @Autowired
     private ExamLogService examLogService;
 
-    @RequestMapping("/add/{examId}")
+    @PostMapping("/add/{examId}")
     @RequiresPermissions("paper:submit")
-    public Result add(@PathVariable("examId") String examId){
-        examLogService.addExamLog(examId);
-        return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+    public Result add(@PathVariable("examId") String examId) {
+        try {
+            examLogService.addExamLog(examId);
+            return Result.ok("生成日志成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "添加失败！");
+        }
     }
 
 
     /**
      * 查看组卷
      */
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     @RequiresPermissions("paper:log:list")
-    public Result list(@RequestBody Page<ExamLogDO> page){
+    public Result list(@RequestBody Page<ExamLogDO> page) {
         try {
-            page =  examLogService.getListByPage(page);
+            page = examLogService.getListByPage(page);
             return Result.ok(page);
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,6 +16,9 @@
         <result column="question_resolve" property="questionResolve"/>
         <result column="question_version" property="questionVersion"/>
         <result column="question_delete" property="questionDelete"/>
+        <association property="answerContent" javaType="com.exam.ts.pojo.StudentAnswerDO">
+            <result property="answerContent" column="answer_content"/>
+        </association>
         <collection property="answerList" ofType="com.exam.ex.pojo.QuestionAnswerDO">
             <id column="answer_id" property="answerId"/>
             <result column="answer_number" property="answerNumber"/>
@@ -126,4 +129,19 @@
         </foreach>
     </select>
 
+    <select id="getListByMapWithAnswer" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        ,answer_content
+        from ex_question
+        left join te_student_answer
+        on question_id = answer_question
+        where
+        question_delete = 1
+        and answer_student = #{stuId}
+        and answer_paper = #{paperId}
+        <foreach collection="Ids" open="and question_id in (" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
 </mapper>
