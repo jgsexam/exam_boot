@@ -1,5 +1,7 @@
 package com.exam.ts.mapper;
 
+import com.exam.core.pojo.Page;
+import com.exam.ex.pojo.PaperDO;
 import com.exam.ts.pojo.PO.LogPO;
 import com.exam.ts.pojo.StudentPaperDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -40,4 +42,19 @@ public interface StudentPaperMapper extends BaseMapper<StudentPaperDO> {
      * 得到考试学生数量及及格率
      */
     LogPO countOfPaper(String examId);
+
+
+    /**
+     * 分页查询
+     * @param page
+     * @return
+     */
+    List<PaperDO> getListByPage(Page<PaperDO> page);
+
+    /**
+     * 查询总数
+     * @param page
+     * @return
+     */
+    Integer getCountByPage(Page<PaperDO> page);
 }

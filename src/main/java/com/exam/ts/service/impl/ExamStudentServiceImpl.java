@@ -43,6 +43,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     /**
      * 校验后添加
+     *
      * @param examStudentDO
      * @return
      */
@@ -63,6 +64,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     /**
      * 批量添加
+     *
      * @param examId
      * @param studentIds
      */
@@ -78,7 +80,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
         List<ExamStudentDO> list = Lists.newArrayList();
         for (String studentId : studentIds) {
             ExamStudentDO examStudentDO = new ExamStudentDO();
-            examStudentDO.setStId(idWorker.nextId()+"");
+            examStudentDO.setStId(idWorker.nextId() + "");
             examStudentDO.setStExam(examId);
             examStudentDO.setStStu(studentId);
             list.add(examStudentDO);
@@ -90,6 +92,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     /**
      * 查询本场考试的所有学生
+     *
      * @param examId
      * @return
      */
@@ -100,6 +103,7 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     /**
      * 分页查询
+     *
      * @param page
      * @return
      */
@@ -121,16 +125,27 @@ public class ExamStudentServiceImpl extends ServiceImpl<ExamStudentMapper, ExamS
 
     /**
      * 查询学生的考试
-     * @param examDO
+     *
+     * @param page
      * @return
      */
     @Override
-    public List<ExamDO> getList(Page<ExamDO> examDO) {
+    public Page<ExamDO> getList(Page<ExamDO> page) {
+        page.filterParams();
+        // 计算索引
+        Integer index = (page.getCurrentPage() - 1) * page.getCurrentCount();
+        page.setIndex(index);
+        Map<String, Object> params = page.getParams();
         StudentDO loginStudent = ShiroUtils.getLoginStudent();
-        Map<String,Object> map = Maps.newHashMap();
-        map.put("stuId",loginStudent.getStuId());
-        examDO.setParams(map);
-        return examMapper.getListByStu(examDO);
+        params.put("stuId", loginStudent.getStuId());
+        // 查询每页数据
+        List<ExamDO> list = examMapper.getListByStu(page);
+        page.setList(list);
+        Integer totalCount = examMapper.getCountByPage(page);
+        page.setTotalCount(totalCount);
+        // 计算总页数
+        page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
+        return page;
     }
 
 

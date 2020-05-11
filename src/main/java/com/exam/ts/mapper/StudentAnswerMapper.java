@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface StudentAnswerMapper extends BaseMapper<StudentAnswerDO> {
 
-    List<StudentAnswerDO> selectList(StudentAnswerDO studentAnswerDO);
+    List<StudentAnswerDO> selectcofigList(StudentAnswerDO studentAnswerDO);
 
 }

@@ -24,6 +24,7 @@ import com.exam.ts.service.StudentPaperConfigObjScoreService;
 import com.exam.ts.service.StudentPaperConfigQuestionService;
 import com.exam.ts.service.StudentPaperConfigScoreService;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ import java.util.stream.Collectors;
  * @author 杨德石
  * @since 2019-03-28
  */
+@Slf4j
 @Service
 public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> implements ChoiceService {
 
@@ -165,6 +167,7 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
     public List<ChoiceDO> getMutateList(ChoiceDO choiceDO, GaConfigDTO configDTO) {
         return choiceMapper.getMutateList(choiceDO, configDTO);
     }
+
     /**
      * 统计选择题成绩
      *
@@ -175,65 +178,76 @@ public class ChoiceServiceImpl extends ServiceImpl<ChoiceMapper, ChoiceDO> imple
         String paper = studentAnswerDOS.get(0).getAnswerPaper();
         String config = studentAnswerDOS.get(0).getAnswerConf();
         String stuId = studentAnswerDOS.get(0).getAnswerStudent();
+        Object[] objects = studentAnswerDOS.stream().map(StudentAnswerDO::getAnswerQuestion).distinct().toArray();
+        log.info("问题Id的集合:{}", objects);
         // 根据题目的id 找到答案 然后比对答案
-        List<ChoiceDO>  list =
-                choiceMapper.getListByIds((String[]) studentAnswerDOS.stream().map(StudentAnswerDO::getAnswerQuestion).distinct().toArray());
+        List<ChoiceDO> list =
+                choiceMapper.getListByIds(objects);
+        log.info("当前的题目集合:{}", list);
         // 可以利用流去统计分数
         List<BigDecimal> grade = Lists.newArrayList();
-        studentAnswerDOS.forEach(tmpTopic ->{
+        studentAnswerDOS.forEach(tmpTopic -> {
+            log.info("tmpTopic:{}", tmpTopic);
             // 根据答案判断正误
             list.stream()
-                .filter( tmpAnswer -> tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
-                .findFirst().ifPresent(right ->{
-                  grade.add(right.getChoiceScore());
+                    .filter(tmpAnswer ->
+                            tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
+                    .findFirst().ifPresent(right -> {
+                grade.add(right.getChoiceScore());
                 // 保存到学生-试卷-每个题型-客观题得分表
                 StudentPaperConfigObjScoreDO studentPaperConfigObjScoreDO = new StudentPaperConfigObjScoreDO();
+                studentPaperConfigObjScoreDO.setQsId(idWorker.nextId() + "");
                 studentPaperConfigObjScoreDO.setQsQuestion(right.getChoiceId());
                 studentPaperConfigObjScoreDO.setQsConfig(tmpTopic.getAnswerConf());
                 studentPaperConfigObjScoreDO.setQsScore(right.getChoiceScore());
                 studentPaperConfigObjScoreDO.setQsStudent(tmpTopic.getAnswerStudent());
                 studentPaperConfigObjScoreService.save(studentPaperConfigObjScoreDO);
+
                 // 更改学生试卷配置-题目表状态
-                StudentPaperConfigQuestionDO configQuestionDO = new StudentPaperConfigQuestionDO();
-                configQuestionDO.setQuestionId(right.getChoiceId());
-                configQuestionDO.setQuestionConfig(tmpTopic.getAnswerConf());
+                QueryWrapper<StudentPaperConfigQuestionDO> configQuestion = new QueryWrapper<>();
+                configQuestion.eq("question_config", tmpTopic.getAnswerConf());
+                configQuestion.eq("question_id", right.getChoiceId());
+                StudentPaperConfigQuestionDO configQuestionDO = studentPaperConfigQuestionService.getOne(configQuestion);
                 configQuestionDO.setQuestionState(QuestionEnum.CORRECTED.getCode());
-                studentPaperConfigQuestionService.saveOrUpdate(configQuestionDO);
+                studentPaperConfigQuestionService.updateById(configQuestionDO);
             });
         });
 
 
-        studentAnswerDOS.forEach(tmpTopic ->{
+        studentAnswerDOS.forEach(tmpTopic -> {
             // 根据答案判断正误
             list.stream()
-                    .filter( tmpAnswer -> tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && !tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
-                    .findFirst().ifPresent(right ->{
+                    .filter(tmpAnswer -> tmpAnswer.getChoiceId().equals(tmpTopic.getAnswerQuestion()) && !tmpAnswer.getChoiceTrue().equalsIgnoreCase(tmpTopic.getAnswerContent()))
+                    .findFirst().ifPresent(right -> {
                 // 保存到学生-试卷-每个题型-客观题得分表
                 StudentPaperConfigObjScoreDO studentPaperConfigObjScoreDO = new StudentPaperConfigObjScoreDO();
+                studentPaperConfigObjScoreDO.setQsId(idWorker.nextId() + "");
                 studentPaperConfigObjScoreDO.setQsQuestion(right.getChoiceId());
                 studentPaperConfigObjScoreDO.setQsConfig(tmpTopic.getAnswerConf());
                 studentPaperConfigObjScoreDO.setQsScore(new BigDecimal(0));
                 studentPaperConfigObjScoreDO.setQsStudent(tmpTopic.getAnswerStudent());
                 studentPaperConfigObjScoreService.save(studentPaperConfigObjScoreDO);
                 // 更改学生试卷配置-题目表状态
-                StudentPaperConfigQuestionDO configQuestionDO = new StudentPaperConfigQuestionDO();
-                configQuestionDO.setQuestionId(right.getChoiceId());
-                configQuestionDO.setQuestionConfig(tmpTopic.getAnswerConf());
+                QueryWrapper<StudentPaperConfigQuestionDO> configQuestion = new QueryWrapper<>();
+                configQuestion.eq("question_config", tmpTopic.getAnswerConf());
+                configQuestion.eq("question_id", right.getChoiceId());
+                StudentPaperConfigQuestionDO configQuestionDO = studentPaperConfigQuestionService.getOne(configQuestion);
                 configQuestionDO.setQuestionState(QuestionEnum.CORRECTED.getCode());
-                studentPaperConfigQuestionService.saveOrUpdate(configQuestionDO);
+                studentPaperConfigQuestionService.updateById(configQuestionDO);
             });
         });
         // 记录该题型总的分数
         StudentPaperConfigScoreDO scoreDO = new StudentPaperConfigScoreDO();
+        scoreDO.setScId(idWorker.nextId() + "");
         scoreDO.setScPaper(paper);
         scoreDO.setScConfig(config);
-        scoreDO.setScScore(grade.stream().reduce(BigDecimal.ZERO,BigDecimal::add));
+        scoreDO.setScScore(grade.stream().reduce(BigDecimal.ZERO, BigDecimal::add));
         scoreDO.setScStudent(stuId);
 
+        log.info("记录该config总的分数:{}",scoreDO);
         studentPaperConfigScoreService.save(scoreDO);
 
-
-
+        log.info("记录完成");
     }
 
     @Transactional(rollbackFor = Exception.class)

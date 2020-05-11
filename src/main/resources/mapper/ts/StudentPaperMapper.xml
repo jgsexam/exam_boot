@@ -29,6 +29,16 @@
         </collection>
     </resultMap>
 
+    <resultMap id="queryMap" type="com.exam.ts.pojo.DTO.StudentPaperDTO">
+        <id column="paper_id" property="paperId" />
+        <result column="paper_title" property="paperTitle" />
+        <result column="paper_score" property="paperScore" />
+        <result column="stu_name" property="stuName"/>
+        <result column="paper_student" property="paperStudent" />
+        <result column="paper_flag" property="paperFlag" />
+        <result column="paper_difficulty" property="paperDifficulty" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         paper_id, paper_title, paper_exam, paper_start_year, paper_end_year, paper_seme, paper_college, paper_bank, paper_flag, paper_difficulty, paper_score, paper_student_score, paper_student, paper_question_num, paper_create_time, paper_version, paper_delete
@@ -80,6 +90,76 @@
         ,sum(case when paper_student_score >= (paper_score * 0.6) then 1 else 0 end) / count(*) as 'pass'
         FROM te_student_paper
         WHERE paper_exam = #{value}
+    </select>
+
+
+    <select id="getListByPage" parameterType="com.exam.core.pojo.Page" resultMap="queryMap">
+        select
+         paper_id
+        ,paper_title
+        ,paper_flag
+        ,paper_score
+        ,paper_student
+        ,stu_name
+        ,paper_flag
+        ,paper_difficulty
+        from te_student_paper
+        inner join ex_dict college on college.dict_id = paper_college
+        inner join ex_student on stu_id = paper_student
+        <where>
+            paper_delete = 1
+            <if test="params.paperTitle!=null and params.paperTitle!=''">
+                and paper_title like '%${params.paperTitle}%'
+            </if>
+            <if test="params.paperExam!=null and params.paperExam!=''">
+                and paper_exam = #{params.paperExam}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
+            </if>
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and paper_create_by = #{params.orgTeacher}
+            </if>
+            <if test="params.paperFlag!=null and params.paperFlag!=''">
+                and paper_flag = #{params.paperFlag}
+            </if>
+            <if test="params.paperDifficulty!=null and params.paperDifficulty!=''">
+                and paper_difficulty = #{params.paperDifficulty}
+            </if>
+        </where>
+        <if test="sortName != null and sortName != ''">
+            order by ${sortName} ${sortOrder}
+        </if>
+        limit #{index}, #{currentCount}
+    </select>
+
+    <select id="getCountByPage" parameterType="com.exam.core.pojo.Page" resultType="java.lang.Integer">
+        select
+        count(paper_id)
+        from te_student_paper
+        inner join ex_dict college on college.dict_id = paper_college
+        inner join ex_bank on bank_id = paper_bank
+        <where>
+            paper_delete = 1
+            <if test="params.paperTitle!=null and params.paperTitle!=''">
+                and paper_title like '%${params.paperTitle}%'
+            </if>
+            <if test="params.paperExam!=null and params.paperExam!=''">
+                and paper_exam = #{params.paperExam}
+            </if>
+            <if test="params.orgCollege!=null and params.orgCollege!=''">
+                and paper_college = #{params.orgCollege}
+            </if>
+            <if test="params.orgTeacher!=null and params.orgTeacher!=''">
+                and paper_create_by = #{params.orgTeacher}
+            </if>
+            <if test="params.paperFlag!=null and params.paperFlag!=''">
+                and paper_flag = #{params.paperFlag}
+            </if>
+            <if test="params.paperDifficulty!=null and params.paperDifficulty!=''">
+                and paper_difficulty = #{params.paperDifficulty}
+            </if>
+        </where>
     </select>
 
 </mapper>

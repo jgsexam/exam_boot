@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.core.constant.QuestionEnum;
 import com.exam.core.exception.ExamException;
+import com.exam.core.utils.IdWorker;
 import com.exam.ts.mapper.StudentPaperConfigQuestionMapper;
 import com.exam.ts.mapper.StudentPaperConfigScoreMapper;
 import com.exam.ts.pojo.StudentPaperConfigQuestionDO;
@@ -32,7 +33,9 @@ public class StudentPaperConfigSubScoreServiceImpl extends ServiceImpl<StudentPa
     @Autowired
     private StudentPaperConfigQuestionMapper studentPaperConfigQuestionMapper;
     @Autowired
-    private StudentPaperConfigScoreMapper studentPaperConfigScoreMapper;
+    private StudentPaperConfigSubScoreMapper studentPaperConfigSubScoreMapper;
+    @Autowired
+    private IdWorker idWorker;
     @Override
     public void correctQuestion(QuestionDTO questionDTO) throws ExamException {
         // 根据配置和题目Id，进行更新状态
@@ -46,23 +49,27 @@ public class StudentPaperConfigSubScoreServiceImpl extends ServiceImpl<StudentPa
         }
         questionDO.setQuestionState(QuestionEnum.CORRECTED.getCode());
         studentPaperConfigQuestionMapper.updateById(questionDO);
+
         // 插入学生-试卷-主观题得分表
-        QueryWrapper<StudentPaperConfigScoreDO> scoreWrapper =
+        log.info("插入学生-试卷-主观题得分表信息:{}",questionDTO);
+        QueryWrapper<StudentPaperConfigSubScoreDO> scoreWrapper =
                 new QueryWrapper<>();
-        wrapper.eq("qs_question",questionDTO.getConfigId())
-                .eq("qs_config",questionDTO.getQuestionId())
+        scoreWrapper.eq("qs_question",questionDTO.getQuestionId())
+                .eq("qs_config",questionDTO.getConfigId())
                 .eq("qs_student",questionDTO.getStuId());
-        StudentPaperConfigScoreDO score = studentPaperConfigScoreMapper.selectOne(scoreWrapper);
+        StudentPaperConfigSubScoreDO score = studentPaperConfigSubScoreMapper.selectOne(scoreWrapper);
+
         if(score == null){
-            StudentPaperConfigScoreDO newScore = new StudentPaperConfigScoreDO();
-            newScore.setScPaper(questionDTO.getPaperId());
-            newScore.setScConfig(questionDTO.getConfigId());
-            newScore.setScScore(new BigDecimal(questionDTO.getGrade()));
-            newScore.setScStudent(questionDTO.getStuId());
-            studentPaperConfigScoreMapper.insert(newScore);
+            StudentPaperConfigSubScoreDO newScore = new StudentPaperConfigSubScoreDO();
+            newScore.setQsId(idWorker.nextId() + "");
+            newScore.setQsConfig(questionDTO.getConfigId());
+            newScore.setQsQuestion(questionDTO.getQuestionId());
+            newScore.setQsScore(new BigDecimal(questionDTO.getGrade()));
+            newScore.setQsStudent(questionDTO.getStuId());
+            studentPaperConfigSubScoreMapper.insert(newScore);
         }else{
-            score.setScScore(new BigDecimal(questionDTO.getGrade()));
-            studentPaperConfigScoreMapper.updateById(score);
+            score.setQsScore(new BigDecimal(questionDTO.getGrade()));
+            studentPaperConfigSubScoreMapper.updateById(score);
         }
         log.info("更新题目分数完毕");
     }

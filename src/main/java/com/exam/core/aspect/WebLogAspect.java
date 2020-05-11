@@ -30,7 +30,7 @@ public class WebLogAspect {
     /**
      * 两个..代表所有子目录，最后括号里的两个..代表所有参数
      */
-    @Pointcut("execution( * com.exam.ex.controller.*.*(..))")
+    @Pointcut("execution( * com.exam.ts.controller.*.*(..))")
     public void logPointCut() {
     }
 

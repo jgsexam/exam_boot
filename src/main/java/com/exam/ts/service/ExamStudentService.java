@@ -53,6 +53,6 @@ public interface ExamStudentService extends IService<ExamStudentDO> {
      * @param examDO
      * @return
      */
-    List<ExamDO> getList(Page<ExamDO> examDO);
+    Page<ExamDO> getList(Page<ExamDO> examDO);
 
 }

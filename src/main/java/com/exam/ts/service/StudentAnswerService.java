@@ -1,6 +1,7 @@
 package com.exam.ts.service;
 
 import com.exam.core.exception.ExamException;
+import com.exam.ts.pojo.DTO.CommitDTO;
 import com.exam.ts.pojo.StudentAnswerDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.ts.pojo.DTO.AnswerDTO;
@@ -27,11 +28,11 @@ public interface StudentAnswerService extends IService<StudentAnswerDO> {
     /**
      *功能描述 异步消息处理
      * @author lth
-     * @param studentAnswerDO
+     * @param stuAnswerDO
      * @return void
      */
 
-    void asyncHandler(StudentAnswerDO studentAnswerDO);
+    void asyncHandler(StudentAnswerDO stuAnswerDO);
 
     /**
      * 保存做题

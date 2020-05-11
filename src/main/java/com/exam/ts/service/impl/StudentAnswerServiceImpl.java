@@ -114,14 +114,14 @@ public class StudentAnswerServiceImpl extends ServiceImpl<StudentAnswerMapper, S
     public void asyncHandler(StudentAnswerDO stuAnswerDO) {
         long start = System.currentTimeMillis();
         // 查找该学生的做过的题
-        List<StudentAnswerDO> studentAnswerDOS = studentAnswerMapper.selectList(stuAnswerDO);
+        List<StudentAnswerDO> studentAnswerDOS = studentAnswerMapper.selectcofigList(stuAnswerDO);
         //TODO async
         log.info("studentDo : [{}]", studentAnswerDOS);
         // 将题目进行分类 计算
         Map<Integer, List<StudentAnswerDO>> classify = Maps.newHashMap();
         studentAnswerDOS
                 .stream()
-                .collect(Collectors.groupingBy(StudentAnswerDO::getConfigType, Collectors.toList()))
+                .collect(Collectors.groupingBy(StudentAnswerDO::getType, Collectors.toList()))
                 .forEach((type, temp) -> {
                     // 匹配类型
                     TypeEnum subjectType = TypeEnum.match(type);
@@ -161,7 +161,7 @@ public class StudentAnswerServiceImpl extends ServiceImpl<StudentAnswerMapper, S
         if (classify.containsKey(TypeEnum.JUDGEMENT.getCode())) {
             choiceService.statisticsAnswer(classify.get(TypeEnum.JUDGEMENT.getCode()));
         }
-        // 暂且改完客观题
+        // 暂且改完客观题,主观题老师改
 
         // 统计分数
         BigDecimal grades = studentPaperConfigScoreService.getGradesByPaperAndStu(stuAnswerDO.getAnswerPaper(), stuAnswerDO.getAnswerStudent());
@@ -170,7 +170,7 @@ public class StudentAnswerServiceImpl extends ServiceImpl<StudentAnswerMapper, S
         studentPaperDO.setPaperId(stuAnswerDO.getAnswerPaper());
         studentPaperDO.setPaperStudent(stuAnswerDO.getAnswerStudent());
         studentPaperDO.setPaperScore(grades);
-        studentPaperDO.setPaperFlag(PaperEnum.FINISH.getCode());
+        studentPaperDO.setPaperFlag(PaperEnum.LOADING.getCode());
         studentPaperMapper.updateById(studentPaperDO);
 
         log.debug("提交答卷，学生ID：{}，耗时：{}ms", stuAnswerDO.getAnswerStudent(), System.currentTimeMillis() - start);

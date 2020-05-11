@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @ServletComponentScan
 @SpringBootApplication
 @PropertySource({"classpath:resource.properties"})
-public class ExamBootApplication  extends SpringBootServletInitializer {
+public class ExamBootApplication   extends SpringBootServletInitializer{
 
 
     @Override

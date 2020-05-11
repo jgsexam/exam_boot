@@ -1,9 +1,16 @@
 package com.exam.ts.service;
 
+import com.exam.core.constant.CoreConstant;
+import com.exam.core.constant.SelectEnum;
 import com.exam.core.pojo.Page;
+import com.exam.core.utils.ShiroUtils;
+import com.exam.ex.pojo.PaperDO;
+import com.exam.ex.pojo.TeacherDO;
 import com.exam.ts.pojo.StudentPaperDO;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.exam.ts.pojo.DTO.ExPaperDTO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -36,4 +43,12 @@ public interface StudentPaperService extends IService<StudentPaperDO> {
      * 对该学生成绩进行提交，根据各个配置计算出总的成绩
      */
     void correctSubmit(String paperId);
+
+    /**
+     * 分页查询
+     *
+     * @param page
+     * @return
+     */
+    Page<PaperDO> getByPage(Page<PaperDO> page);
 }

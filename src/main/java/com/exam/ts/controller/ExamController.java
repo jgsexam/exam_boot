@@ -171,8 +171,8 @@ public class ExamController {
             return new Result(examService.startExam(examId));
         } catch (ExamException e) {
             e.printStackTrace();
+            return Result.build(e.getCode(),e.getMessage());
         }
-        return new Result(ResultEnum.NO_QUESTION);
     }
 
 
@@ -181,17 +181,17 @@ public class ExamController {
      */
     @PostMapping(value = "/getList")
     @RequiresPermissions("paper:list")
-    public Result getlist(@RequestBody  Page<ExamDO> page) {
+    public Result getlist(@RequestBody Page<ExamDO> page) {
         // 根据用户的id进行筛选
-        List<ExamDO> list = examStudentService.getList(page);
-        return new Result(list);
+        page = examStudentService.getList(page);
+        return new Result(page);
     }
 
 
     /**
      * 提交试卷
      */
-    @PostMapping(value = "/submit2")
+    @PostMapping(value = "/submit")
     public Result submit(@RequestBody CommitDTO commitDTO) {
         StudentDO loginStudent = ShiroUtils.getLoginStudent();
         commitDTO.setStuId(loginStudent.getStuId());
@@ -200,7 +200,7 @@ public class ExamController {
             return Result.ok("提交成功！");
         } catch (ExamException e) {
             e.printStackTrace();
-            return Result.build(e.getCode(),e.getMessage());
+            return Result.build(e.getCode(), e.getMessage());
         }
     }
 
@@ -208,7 +208,7 @@ public class ExamController {
     /**
      * 提交试卷（只含客观题）
      */
-    @PostMapping(value = "/submit")
+    @PostMapping(value = "/submit2")
     public Result submit_tmp(@RequestBody CommitDTO commitDTO) {
         StudentDO loginStudent = ShiroUtils.getLoginStudent();
         commitDTO.setStuId(loginStudent.getStuId());
@@ -217,7 +217,7 @@ public class ExamController {
             return Result.ok("提交成功！");
         } catch (ExamException e) {
             e.printStackTrace();
-            return Result.build(e.getCode(),e.getMessage());
+            return Result.build(e.getCode(), e.getMessage());
         }
     }
 }

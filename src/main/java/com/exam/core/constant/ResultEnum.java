@@ -20,6 +20,8 @@ public enum ResultEnum {
     LOADED(10005, "试卷处理中，请勿重新提交"),
     COMMITED(10006, "试卷已提交，请勿重复提交"),
     FINISHED(10007, "试卷已经统计完成,请勿重复提交"),
+    NO_FINISH(10009, "存在试卷未批阅完成，请重新批阅"),
+    ENDING(10010,"考试已结束"),
     NO_USE(10008,"试卷未启用");
 
     private Integer code;

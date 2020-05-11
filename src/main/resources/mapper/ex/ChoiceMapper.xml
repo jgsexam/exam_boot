@@ -14,16 +14,14 @@
         <result column="choice_resolve" property="choiceResolve"/>
         <result column="choice_version" property="choiceVersion"/>
         <result column="choice_delete" property="choiceDelete"/>
-        <association property="answerContent" javaType="com.exam.ts.pojo.StudentAnswerDO">
-            <result property="answerContent" column="answer_content"/>
-        </association>
+        <result property="choiceTrue" column="choice_true" javaType="String"/>
         <collection property="choiceAnswer" ofType="com.exam.ex.pojo.ChoiceAnswerDO">
-            <id column="answer_id" property="answerId"/>
-            <result column="answer_number" property="answerNumber"/>
-            <result column="answer_content" property="answerContent"/>
-            <result column="answer_choice" property="answerChoice"/>
-            <result column="answer_true" property="answerTrue"/>
-            <result column="answer_resolve" property="answerResolve"/>
+            <id column="answer_id" property="answerId" javaType="String"/>
+            <result column="answer_number" property="answerNumber" javaType="String"/>
+            <result column="answer_content" property="answerContent" javaType="String"/>
+            <result column="answer_choice" property="answerChoice" javaType="String"/>
+            <result column="answer_true" property="answerTrue" javaType="boolean"/>
+            <result column="answer_resolve" property="answerResolve" javaType="String"/>
         </collection>
 
     </resultMap>
@@ -186,14 +184,15 @@
 
     <select id="getListByIds" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"></include>
-        ,answer_number ,answer_content ,answer_true
+        <include refid="Base_Column_List"/>
+        ,answer_content as choice_true
         from ex_choice
         inner join ex_choice_answer
         on choice_id = answer_choice
         where
         choice_delete = 1
         and answer_delete = 1
+        and answer_true = 1
         <foreach collection="array" open="and choice_id in (" close=")" separator="," item="id">
             #{id}
         </foreach>

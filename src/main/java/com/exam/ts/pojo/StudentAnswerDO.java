@@ -66,14 +66,4 @@ public class StudentAnswerDO implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "StudentAnswerDO{" +
-                "answerId=" + answerId +
-                ", answerContent=" + answerContent +
-                ", answerStudent=" + answerStudent +
-                ", answerConf=" + answerConf +
-                ", answerPaper=" + answerPaper +
-                "}";
-    }
 }

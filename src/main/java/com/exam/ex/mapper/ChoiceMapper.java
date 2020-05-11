@@ -96,5 +96,5 @@ public interface ChoiceMapper extends BaseMapper<ChoiceDO> {
      * @param ids
      * @return
      */
-    List<ChoiceDO> getListByIds(String[] ids);
+    List<ChoiceDO> getListByIds(Object[] ids);
 }

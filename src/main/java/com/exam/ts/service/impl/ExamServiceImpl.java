@@ -7,6 +7,7 @@ import com.exam.core.constant.ExamEnum;
 import com.exam.core.constant.GaConstant;
 import com.exam.core.constant.MqConstant;
 import com.exam.core.constant.PaperEnum;
+import com.exam.core.constant.RedisConstant;
 import com.exam.core.constant.ResultEnum;
 import com.exam.core.constant.RoomEnum;
 import com.exam.core.constant.SelectEnum;
@@ -61,10 +62,12 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.naming.ldap.Rdn;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -113,7 +116,8 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
     private IdWorker idWorker;
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 添加考试
      *
@@ -292,6 +296,15 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
 
     @Override
     public StudentPaperDO startExam(String examId) throws ExamException {
+        // 如果redis没key考试说明考试结束
+        Boolean hasExam = redisTemplate.hasKey(RedisConstant.EXAM_INFO + examId);
+        if(!hasExam){
+            ExamDO examDO = examMapper.selectById(examId);
+            examDO.setExamState(ExamEnum.ENDED.getCode());
+            examMapper.updateById(examDO);
+            throw new ExamException(ResultEnum.ENDING);
+        }
+
         StudentDO loginStudent = ShiroUtils.getLoginStudent();
         // 根据考试id和学生得到试卷id
         StudentPaperDO paper = studentPaperMapper.getQuestion(examId, loginStudent.getStuId());
@@ -362,9 +375,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
 
     @Override
     public boolean submit(CommitDTO commitDTO) throws ExamException {
-        StudentAnswerDO answerDO = new StudentAnswerDO();
-        answerDO.setAnswerStudent(commitDTO.getStuId());
-        answerDO.setAnswerPaper(commitDTO.getPaperId());
+        // 找到学生对应的卷子
         QueryWrapper<StudentPaperDO> wrapper = new QueryWrapper<>();
         wrapper.eq("paper_id", commitDTO.getPaperId());
         StudentPaperDO paper = studentPaperMapper.selectOne(wrapper);
@@ -373,6 +384,10 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
         }
         // 查看当前试卷的状态，是否已经批改完毕或者正在批改
         Integer flag = paper.getPaperFlag();
+        if (PaperEnum.NOT_USE.getCode().equals(flag)) {
+            throw new ExamException(ResultEnum.NO_USE);
+        }
+
         if (PaperEnum.COMMIT.getCode().equals(flag)) {
             throw new ExamException(ResultEnum.COMMITED);
         }
@@ -385,12 +400,12 @@ public class ExamServiceImpl extends ServiceImpl<ExamMapper, ExamDO> implements 
             throw new ExamException(ResultEnum.FINISHED);
         }
         //1. 发送消息
-        rabbitTemplate.convertAndSend(MqConstant.SUBMIT_EXAM_QUEUE, answerDO);
+        rabbitTemplate.convertAndSend(MqConstant.SUBMIT_EXAM_QUEUE, commitDTO);
         // 更改学生试卷状态
         StudentPaperDO studentPaperDO = new StudentPaperDO();
-        studentPaperDO.setPaperId(answerDO.getAnswerPaper());
-        studentPaperDO.setPaperFlag(PaperEnum.COMMIT.getCode());
-        studentPaperDO.setPaperStudent(answerDO.getAnswerStudent());
+        studentPaperDO.setPaperId(commitDTO.getPaperId());
+        studentPaperDO.setPaperFlag(PaperEnum.LOADING.getCode());
+        studentPaperDO.setPaperStudent(commitDTO.getStuId());
         return studentPaperMapper.updateById(studentPaperDO) > 0;
     }
 

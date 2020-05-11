@@ -1,7 +1,10 @@
 package com.exam.ts.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.exam.core.constant.CoreConstant;
 import com.exam.core.constant.DeleteEnum;
+import com.exam.core.constant.SelectEnum;
 import com.exam.core.pojo.Page;
+import com.exam.core.utils.ShiroUtils;
 import com.exam.ex.mapper.ChoiceMapper;
 import com.exam.ex.mapper.CodeMapper;
 import com.exam.ex.mapper.CompletionMapper;
@@ -27,6 +30,7 @@ import com.exam.ex.pojo.CompletionDO;
 import com.exam.ex.pojo.PaperConfigDO;
 import com.exam.ex.pojo.PaperDO;
 import com.exam.ex.pojo.QuestionDO;
+import com.exam.ex.pojo.TeacherDO;
 import com.exam.ex.pojo.TrueFalseDO;
 import com.exam.ts.mapper.StudentAnswerMapper;
 import com.exam.ts.mapper.StudentPaperConfigMapper;
@@ -304,6 +308,7 @@ public class StudentPaperServiceImpl extends ServiceImpl<StudentPaperMapper, Stu
         StudentPaperDO paper = new StudentPaperDO();
         paper.setPaperId(paperId);
         paper.setPaperScore(decimal);
+        paper.setPaperFlag(PaperEnum.FINISH.getCode());
         int result = studentPaperMapper.updateById(paper);
         log.info("统计分数完成:{}",result > 0);
     }
@@ -386,4 +391,37 @@ public class StudentPaperServiceImpl extends ServiceImpl<StudentPaperMapper, Stu
 
     }
 
+    /**
+     * 分页查询
+     */
+    @Override
+    public Page<PaperDO> getByPage(Page<PaperDO> page) {
+        // 处理参数
+        page.filterParams();
+        TeacherDO loginTeacher = ShiroUtils.getLoginTeacher();
+        if (SelectEnum.SELECT_COLLEGE.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询学院
+            page.getParams().put("orgCollege", loginTeacher.getTeacherCollege());
+        }
+        if (SelectEnum.SELECT_SELF.getCode().equals(loginTeacher.getTeacherOrg())) {
+            // 查询自己
+            page.getParams().put("orgTeacher", loginTeacher.getTeacherId());
+        }
+        // 设置每页显示条数
+        if (page.getCurrentCount() == null) {
+            page.setCurrentCount(CoreConstant.CURRENT_COUNT);
+        }
+        // 计算索引
+        Integer index = (page.getCurrentPage() - 1) * page.getCurrentCount();
+        page.setIndex(index);
+        // 查询每页数据
+        List<PaperDO> list = studentPaperMapper.getListByPage(page);
+
+        page.setList(list);
+        Integer totalCount = studentPaperMapper.getCountByPage(page);
+        page.setTotalCount(totalCount);
+        // 计算总页数
+        page.setTotalPage((int) Math.ceil((page.getTotalCount() * 1.0) / page.getCurrentCount()));
+        return page;
+    }
 }

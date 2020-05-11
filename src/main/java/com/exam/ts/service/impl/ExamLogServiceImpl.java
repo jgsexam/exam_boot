@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.exam.core.constant.CoreConstant;
+import com.exam.core.constant.PaperEnum;
+import com.exam.core.constant.ResultEnum;
 import com.exam.core.constant.SelectEnum;
+import com.exam.core.exception.ExamException;
 import com.exam.core.pojo.Page;
 import com.exam.core.utils.ShiroUtils;
 import com.exam.ex.pojo.BankDO;
@@ -45,7 +48,18 @@ public class ExamLogServiceImpl extends ServiceImpl<ExamLogMapper, ExamLogDO> im
     private StudentPaperMapper studentPaperMapper;
 
     @Override
-    public void addExamLog(String examId) {
+    public void addExamLog(String examId) throws ExamException {
+        // 先查看是否都统计完成
+        QueryWrapper<StudentPaperDO> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("paper_exam",examId);
+        // 1 正常
+        queryWrapper.eq("paper_delete",1);
+        queryWrapper.ne("paper_flag", PaperEnum.FINISH.getCode());
+        Integer count = studentPaperMapper.selectCount(queryWrapper);
+        if(count > 0){
+            throw new ExamException(ResultEnum.NO_FINISH);
+        }
+
         ExamLogDO examLogDO = new ExamLogDO();
         ExamDO examDO = examMapper.selectById(examId);
         RoomDO roomDO = roomMapper.selectById(examDO.getExamRoom());

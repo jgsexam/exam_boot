@@ -2,7 +2,9 @@ package com.exam.ts.controller;
 
 
 import com.exam.core.constant.ResultEnum;
+import com.exam.core.pojo.Page;
 import com.exam.core.utils.Result;
+import com.exam.ex.pojo.PaperDO;
 import com.exam.ts.pojo.StudentPaperDO;
 import com.exam.ts.pojo.DTO.ExPaperDTO;
 import com.exam.ts.service.StudentPaperService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -44,7 +47,22 @@ public class StudentPaperController {
 
 
     /**
-     * 返回所选考试的试卷id
+     * 分页查询(每场考试的试卷)
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequiresPermissions("paper:list")
+    public Result list(@RequestBody Page<PaperDO> page) {
+        try {
+            page = studentPaperService.getByPage(page);
+            return Result.ok(page);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
+        }
+    }
+
+    /**
+     * 返回所选考试的试卷集合
      */
     @GetMapping("/list/{id}")
     public Result listById(@PathVariable("id") String id){
@@ -65,6 +83,8 @@ public class StudentPaperController {
             return Result.build(ResultEnum.ERROR.getCode(), "查询失败！");
         }
     }
+
+
 
     /**
      * 提交学生试卷
